@@ -3,8 +3,8 @@
     <div v-if="$slots.header" class="cd-list--header">
       <slot name="header"></slot>
     </div>
-    <ul class="cd-list--internal" :class="listClass">
-      <li v-for="(row, index) in data" :key="rowKey(row, index)" class="cd-list--item" :class="[resolveRowClass(row, index)]">
+    <ul class="cd-list--internal" :class="listClass" :role="listRole">
+      <li v-for="(row, index) in data" :key="rowKey(row, index)" class="cd-list--item" :class="[resolveRowClass(row, index)]" :role="itemRole">
         <slot :row="row" :index="index"></slot>
       </li>
     </ul>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import RoleValidator from '@/common/list-aria-role'
 export default {
   name: 'cd-list',
   props: {
@@ -23,6 +24,8 @@ export default {
     collection: { type: Array, required: true, description: 'Содержимое списка' },
     keyField: { type: String, required: true, description: 'Имя свойства, где содержится идентификатор объекта в списке' },
     isRowVisible: { type: Function, description: 'Функция, которая по объекту и его индексу в массиве вычисляет, следует ли его рендерить' },
+    listRole: { type: String, validator: RoleValidator.validateListRole, description: 'aria-role списка' },
+    itemRole: { type: String, validator: RoleValidator.validateItemRole, description: 'aria-role элемента списка' },
     rowKey: {
       type: Function,
       default: function(row, index) {
