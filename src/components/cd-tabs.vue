@@ -1,9 +1,7 @@
 <template>
   <cd-list class="cd-tabs" :collection="tabs" :key-field="tabKey" list-class="cd-tabs--wrap" row-class="cd-tab--wrap">
     <div class="cd-tab" slot-scope="{ row, index }" :class="[row.class, { 'is-disabled pe-none': resolveTabDisabled(row, index) }]">
-      <slot :tab="row" :index="index">
-
-      </slot>
+      <slot :tab="row" :index="index"></slot>
     </div>
     <div class="cd-tabs--content" slot="footer">
       <slot name="content"></slot>
