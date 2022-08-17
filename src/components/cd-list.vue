@@ -1,10 +1,48 @@
 <template>
-  <div class="cd-list"></div>
+  <div class="cd-list">
+    <div v-if="$slots.header" class="cd-list--header">
+      <slot name="header"></slot>
+    </div>
+    <ul class="cd-list--internal" :class="listClass">
+      <li v-for="(row, index) in data" :key="rowKey(row, index)" class="cd-list--item" :class="[resolveRowClass(row, index)]">
+        <slot :row="row" :index="index"></slot>
+      </li>
+    </ul>
+    <div v-if="$slots.footer" class="cd-list--footer">
+      <slot name="footer"></slot>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'cd-list'
+  name: 'cd-list',
+  props: {
+    listClass: { type: [Array, Object, String], description: 'Класс CSS элемента <ul>' },
+    rowClass: { type: [Array, Object, String], description: 'Класс CSS элемента <li> списка' },
+    collection: { type: Array, required: true, description: 'Содержимое списка' },
+    keyField: { type: String, required: true, description: 'Имя свойства, где содержится идентификатор объекта в списке' },
+    isRowVisible: { type: Function, description: 'Функция, которая по объекту и его индексу в массиве вычисляет, следует ли его рендерить' },
+    rowKey: {
+      type: Function,
+      default: function(row, index) {
+        const keyfield = this.keyField
+        return row[keyfield] 
+      }
+    }
+  },
+  data (list) {
+    return {
+      data: list.isRowVisible === undefined ? list.collection : list.collection.filter((row, index) => list.isRowVisible(row, index))
+    }
+  },
+  computed: {
+    resolveRowClass() {
+      const rowClass = this.rowClass
+      const isFunction = typeof rowClass === 'function'
+      return (row, index) => rowClass === undefined ? row.class : [row.class, isFunction ? rowClass(row, index) : rowClass]
+    }
+  }
 }
 </script>
 
