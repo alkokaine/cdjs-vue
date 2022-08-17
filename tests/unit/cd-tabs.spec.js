@@ -37,8 +37,12 @@ describe('[cd-tabs] basics', () => {
       } 
     })
     Vue.nextTick().then(() => {
-      const tabwraps = 
-      expect(wrapper.findAll('li').length).toBe(tabs.length)
+      const lis = wrapper.findAll('li')
+      expect(lis.length).toBe(tabs.length)
+      expect(lis.wrappers.map(m => {
+        const attr = m.element.attributes.getNamedItem('role')
+        return attr !== null && attr.value === 'tab'
+      }).length).toBe(tabs.length)
       expect(wrapper.findAll('.cd-tab--wrap').length).toBe(tabs.length)
       expect(wrapper.findAll('.cd-tab').length).toBe(tabs.length)
       expect(wrapper.findAll('.cd-tab--test').length).toBe(tabs.length)
