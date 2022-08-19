@@ -1,5 +1,5 @@
 import decorator from '@/common/property-decorator'
-
+import propertyFlatter from '@/common/property-flatter'
 const property = {
   datafield: 'object_id',
   text: 'object_id'
@@ -21,7 +21,7 @@ const payload2 = {
 const invisible = {
   text: 'object_id',
   datafield: 'object_id',
-  isvisible: false
+  hidden: true
 }
 
 const editdisabled = {
@@ -33,7 +33,7 @@ const editdisabled = {
 const selectableInvisible = {
   text: 'object_id',
   datafield: 'object_id',
-  isvisible (payload) {
+  hidden (payload) {
     return payload.building_id < 10
   },
   canedit (payload) {
@@ -44,7 +44,7 @@ const ugly = {
   text: 'object_id',
   datafield: 'object_id',
   canedit: 'нет',
-  isvisible: 'да'
+  hidden: 'нет'
 }
 describe('property descriptor', () => {
   test('property without datafield has legend and rowkey ', () => {
@@ -55,25 +55,36 @@ describe('property descriptor', () => {
   test('raw property rowkey is object_id', () => {
     expect(decorator.propertyKey(property, 0)).toBe(`${property.datafield}_0`)
   })
-  test('property visibility', () => {
+  test('property visibility', done => {
     expect(decorator.isVisible(property, payload)).toBeTruthy()
     expect(decorator.isVisible(invisible, payload)).toBeFalsy()
-    expect(decorator.isVisible(selectableInvisible, payload)).toBeTruthy()
-    expect(decorator.isVisible(selectableInvisible, payload2)).toBeFalsy()
-  })
-  test ('property editable', (done) => {
-    expect(decorator.isEditable(selectableInvisible, payload)).toBeTruthy()
-    expect(decorator.isEditable(selectableInvisible, payload2)).toBeFalsy()
-    expect(decorator.isEditable(editdisabled, payload)).toBeFalsy()
-    
+    expect(decorator.isVisible(selectableInvisible, payload)).toBeFalsy()
+    expect(decorator.isVisible(selectableInvisible, payload2)).toBeTruthy()
     try {
-      const ugly_result = decorator.isEditable(ugly, payload)
-      expect(ugly_result).toBeUndefined()
-      done()
+      const ugly_result = decorator.isVisible(ugly, payload)
     } catch (err) {
       expect(err.message).toBeDefined()
       expect(err.message).toBe(typeof 'x')
       done()
     }
+  })
+  test ('property editable', (done) => {
+    expect(decorator.isEditable(selectableInvisible, payload)).toBeTruthy()
+    expect(decorator.isEditable(selectableInvisible, payload2)).toBeFalsy()
+    expect(decorator.isEditable(editdisabled, payload)).toBeFalsy()
+    try {
+      const ugly_result = decorator.isEditable(ugly, payload)
+    } catch (err) {
+      expect(err.message).toBeDefined()
+      expect(err.message).toBe(typeof 'x')
+      done()
+    }
+  })
+})
+describe('flatterer', () => {
+  test('flat array is a flat array', () => {
+    expect(propertyFlatter([], []).length).toBe(0)
+    expect(propertyFlatter(undefined, []).length).toBe(0)
+    expect(propertyFlatter([{ text: 'aaa', descriptor: [ {text: 'bbb'},{text: 'ccc'}, {text: 'ddd'}]}], []).length).toBe(4)
   })
 })

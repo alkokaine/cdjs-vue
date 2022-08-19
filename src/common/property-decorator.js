@@ -12,11 +12,11 @@ const is = (propertyname, property, payload) => {
         else if (typeof property[propertyname] === 'boolean') return property[propertyname]
         else throw new Error(typeof property[propertyname])
     }
-    return true
+    return false
 }
-
-const isVisible = (property, payload) => is('isvisible', property, payload)
+const isHidden = (property, payload) => is('hidden', property, payload)
+const isVisible = (property, payload) => !isHidden(property, payload)
 const isEditable = (property, payload) => is('canedit', property, payload)
 export default {
-    hasDescriptor, propertyKey, hasLegend, isVisible, isEditable
+    hasDescriptor, propertyKey, hasLegend, isHidden, isVisible, isEditable
 }
