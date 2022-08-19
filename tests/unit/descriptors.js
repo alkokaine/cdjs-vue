@@ -422,5 +422,6 @@ export default {
       ],
       class: 'row row-cols-2'
     }
-  ]
+  ],
+  object: {"BankName":"ОТДЕЛЕНИЕ МУРМАНСК БАНКА РОССИИ/ УФК по Мурманской области г. Мурманск","BIC":"014705901","City":"г Мурманск","Code":null,"CorrAccount":null,"CorrBank":null,"CurrentAccount":"40102810745370000041","EMail":"123dou@mail.ru","EndDate":null,"FaxNumber":"8(8152) 52-29-90","HeadEMail":"123dou@mail.ru","HeadFIO":"Патлаенко Ольга Владимировна","HeadPhoneNumber":null,"HeadPosition":"Заведующая","HeadReason":"Устава","HeadSignature":"в лице заведующей Патлаенко Ольги Владимировны","HouseBlock":null,"HouseNumber":"49","INN":"5190408210","Is24Group":false,"IsBudget":true,"IsDepartment":2,"IsFew":false,"IsIO":false,"KPP":"519001001","LawAddress":null,"MunAccount":"03234643477010004900","Name":"МУНИЦИПАЛЬНОЕ АВТОНОМНОЕ ДОШКОЛЬНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ Г. МУРМАНСКА № 123","ObjectStatusID":null,"OKPO":"51696061","OKVED":"85.11","ObjectTypeID":4,"OrderNumber":123,"PersonalAccount":"30496Ш82620","PersonalAccount2":null,"PhoneNumber":"(8152)53-78-38","PostAddress":null,"PostIndex":"183014","Region":"Первомайский","ShortName":"МАДОУ Г. МУРМАНСКА № 123","Street":"ул Баумана","UFK":"Управление финансов администрации города  Мурманска(МАДОУ г. Мурманска № 123)","WorkDaysCount":5,"WWW":"www.sadik123.ru","MainObjectID":121,"ParentObjectID":121,"CityID":1,"Parent":{"ObjectID":121,"UltraShortName":"МАДОУ №123"},"Main":{"ObjectID":121,"UltraShortName":"МАДОУ №123"},"ObjectType":{"ObjectTypeID":4,"Name":"МАДОУ","ObjectGroupID":3},"ObjectID":121,"UltraShortName":"МАДОУ №123"}
 }
