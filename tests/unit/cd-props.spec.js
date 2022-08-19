@@ -1,7 +1,7 @@
 import CDProps from '@/components/cd-props'
 import { mount } from '@vue/test-utils'
 import Vue from 'vue'
-import descriptor from './descriptors'
+import descriptor from '@/assets/descriptors'
 console.log(descriptor)
 describe('cd-props', () => {
  

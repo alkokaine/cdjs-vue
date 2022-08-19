@@ -1,17 +1,20 @@
 <template>
-  <cd-list class="cd-props" :collection="descriptor" key-field="datafield" :is-row-visible="isRowVisible">
-    <template v-if="$slots.header" slot="header">
+  <cd-list class="cd-props" :collection="descriptor" key-field="datafield" :is-row-visible="isRowVisible" list-class="list-unstyled">
+    <template slot="header">
       <slot name="header"></slot>
     </template>
-    <template slot-scope="{ row, index }">
-      <slot :property="row" :index="index">
-        <template v-if="hasDescriptor(row)">
-          <cd-props :class="row.class" :descriptor="row.descriptor" :payload="payload"></cd-props>
-        </template>
-        <template v-else>
-          {{ row }}
-        </template>
-      </slot>
+    <template slot-scope="prow">
+      <template v-if="hasDescriptor(prow.row)">
+        <slot :property="prow.row" :parentprop="parentprop" :index="prow.index" :hasInner="hasDescriptor(prow.row)">
+          <cd-props :payload="payload" :descriptor="prow.row.descriptor" :parentprop="prow.row">
+          </cd-props>
+        </slot>
+      </template>
+      <template v-else>
+        <slot :property="prow.row" :parentprop="parentprop" :index="prow.index">
+          {{ payload[prow.row.datafield] }}
+        </slot>
+      </template>
     </template>
     <template v-if="$slots.footer" slot="footer">
       <slot name="footer"></slot>
@@ -30,12 +33,7 @@ export default {
   props: {
     descriptor: { type: Array, required: true, description: 'Массив свойств' },
     payload: { type: Object, required: true, description: 'Объект, свойства которого мы рассматриваем' },
-    isRowVisible: { 
-      type: Function, 
-      default: function (row, index) {
-        return decorator.isVisible(row, this.payload)
-      }
-    }
+    parentprop: { type: Object, description: 'Объект-дескриптор' },
   },
   computed: {
     hasDescriptor () {
@@ -43,12 +41,14 @@ export default {
     },
     isRowVisible () {
       const props = this
-      return (property) => decorator.isVisible(property, props.payload)
+      return (property, index) => decorator.isVisible(property, props.payload) && !decorator.isHidden(property, props.payload)
     }
   }
 }
 </script>
 
 <style>
-
+  .d-contents {
+    display: contents;
+  }
 </style>
