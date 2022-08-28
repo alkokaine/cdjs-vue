@@ -60,5 +60,6 @@ export default {
   }
   .cd-fieldset.has-legend {
     margin-bottom: 2em;
+    padding-bottom: 1em;
   }
 </style>
