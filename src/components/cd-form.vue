@@ -2,7 +2,7 @@
   <div class="cd-form">
     <slot name="header"></slot>
     <el-form :model="formobject" size="mini" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
-      <cd-fieldset :descriptor="descriptor" :payload="formobject">
+      <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject">
         <el-form-item class="cd-form-item--wrap mb-0" slot-scope="{ property }">
           <p class="cd-label" slot="label">{{ property.text }}</p>
           <div class="cd-field--input">

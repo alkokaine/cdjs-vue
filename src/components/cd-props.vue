@@ -1,12 +1,12 @@
 <template>
-  <cd-list class="cd-props text-start" :collection="descriptor" key-field="datafield" :is-row-visible="isPropertyVisible" :list-class="['list-unstyled container', { 'px-0 inner' : inner }, parentprop.ulClass]" row-class="cd-property--wrap">
+  <cd-list class="cd-props text-start" :collection="descriptor" key-field="datafield" :is-row-visible="isPropertyVisible" :list-class="['list-unstyled property-list', parentprop.ulClass]" row-class="cd-property--wrap container">
     <template slot="header">
       <slot name="text"></slot>
     </template>
-    <div class="cd-property--wrap" slot-scope="{ row, index }">
+    <div class="cd-property" slot-scope="{ row, index }">
       <slot :property="row" :parent="parentprop" :index="index">
         <template v-if="hasDescriptor(row)">
-          <cd-props :descriptor="row.descriptor" :payload="payload" :parent="row"></cd-props>
+          <cd-props class="container" :descriptor="row.descriptor" :payload="payload" :parent="row"></cd-props>
         </template>
         <template v-else>
           {{ payload[row.datafield] }}
@@ -43,7 +43,4 @@ export default {
 </script>
 
 <style>
-  .d-contents {
-    display: contents;
-  }
 </style>

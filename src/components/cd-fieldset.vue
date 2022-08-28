@@ -1,6 +1,6 @@
 <template>
   <fieldset class="cd-fieldset d-block w-auto position-relative" :class="[{ 'border border-1 has-legend' : hasLegend(parent)}]">
-    <cd-props :descriptor="descriptor" :parentprop="parent" :payload="payload">
+    <cd-props :class="[{ 'mt-2': hasLegend(parent) }]" :descriptor="descriptor" :parentprop="parent" :payload="payload">
       <legend v-if="hasLegend(parent)" class="cd-legend position-absolute top-25 start-0 translate-middle-y ms-4" slot="text">
         <p class="cd-legend--text bg-secondary text-white px-2 user-select-none">{{ parent.text }}</p>
       </legend>
@@ -12,7 +12,7 @@
             </template>
           </cd-fieldset>
         </template>
-        <div v-else class="cd-field">
+        <div v-else class="cd-field row">
           <slot :property="row.property" :parent="parent"/>
         </div>
       </template>
