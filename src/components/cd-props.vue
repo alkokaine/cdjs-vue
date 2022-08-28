@@ -1,24 +1,18 @@
 <template>
-  <cd-list class="cd-props" :collection="descriptor" key-field="datafield" :is-row-visible="isRowVisible" list-class="list-unstyled">
+  <cd-list class="cd-props text-start" :collection="descriptor" key-field="datafield" :is-row-visible="isPropertyVisible" :list-class="['list-unstyled container', { 'px-0 inner' : inner }, parentprop.ulClass]" row-class="cd-property--wrap">
     <template slot="header">
-      <slot name="header"></slot>
+      <slot name="text"></slot>
     </template>
-    <template slot-scope="prow">
-      <template v-if="hasDescriptor(prow.row)">
-        <slot :property="prow.row" :parentprop="parentprop" :index="prow.index" :hasInner="hasDescriptor(prow.row)">
-          <cd-props :payload="payload" :descriptor="prow.row.descriptor" :parentprop="prow.row">
-          </cd-props>
-        </slot>
-      </template>
-      <template v-else>
-        <slot :property="prow.row" :parentprop="parentprop" :index="prow.index">
-          {{ payload[prow.row.datafield] }}
-        </slot>
-      </template>
-    </template>
-    <template v-if="$slots.footer" slot="footer">
-      <slot name="footer"></slot>
-    </template>
+    <div class="cd-property--wrap" slot-scope="{ row, index }">
+      <slot :property="row" :parent="parentprop" :index="index">
+        <template v-if="hasDescriptor(row)">
+          <cd-props :descriptor="row.descriptor" :payload="payload" :parent="row"></cd-props>
+        </template>
+        <template v-else>
+          {{ payload[row.datafield] }}
+        </template>
+      </slot>
+    </div>
   </cd-list>
 </template>
 
@@ -32,16 +26,17 @@ export default {
   },
   props: {
     descriptor: { type: Array, required: true, description: 'Массив свойств' },
-    payload: { type: Object, required: true, description: 'Объект, свойства которого мы рассматриваем' },
-    parentprop: { type: Object, description: 'Объект-дескриптор' },
+    parentprop: { type: Object, default: Object, description: 'Объект-дескриптор' },
+    payload: { type: Object, required: true },
+    inner: { type: Boolean }
   },
   computed: {
     hasDescriptor () {
       return (property) => decorator.hasDescriptor(property)
     },
-    isRowVisible () {
+    isPropertyVisible () {
       const props = this
-      return (property, index) => decorator.isVisible(property, props.payload) && !decorator.isHidden(property, props.payload)
+      return (property, index) => decorator.isPropertyVisible(property, props.payload, index)
     }
   }
 }
