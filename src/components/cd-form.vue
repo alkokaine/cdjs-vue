@@ -4,10 +4,7 @@
     <el-form :model="formobject" size="mini" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
       <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject">
         <el-form-item class="cd-form-item--wrap mb-0" slot-scope="{ property }">
-          <p class="cd-label" slot="label">{{ property.text }}</p>
-          <div class="cd-field--input">
-            {{ formobject[property.datafield] }}
-          </div>
+          <cd-cell :property="property" :value="formobject[property.datafield]"></cd-cell>
         </el-form-item>
       </cd-fieldset>
     </el-form>
@@ -18,11 +15,15 @@
 <script>
 import decorator from '@/common/property-decorator'
 import CDFieldset from './cd-fieldset.vue'
-
+import CDCell from './cd-cell.vue'
+import { Form, FormItem } from 'element-ui'
 export default {
   name: 'cd-form',
   components: {
-    'cd-fieldset': CDFieldset
+    'cd-fieldset': CDFieldset,
+    'cd-cell': CDCell,
+    'el-form': Form,
+    'el-form-item': FormItem
   },
   props: {
     descriptor: { type: Array, required: true },
