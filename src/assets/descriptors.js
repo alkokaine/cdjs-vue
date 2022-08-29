@@ -11,6 +11,7 @@ export default {
             {
               datafield: 'Name',
               text: 'Полное название',
+              liClass: 'row'
             },
             {
               descriptor: [
