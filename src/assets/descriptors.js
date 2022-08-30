@@ -23,7 +23,7 @@ export default {
                   text: 'Краткое название'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -38,7 +38,7 @@ export default {
                   input:'checkbox'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -52,7 +52,7 @@ export default {
                   text: 'Департамент'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -65,7 +65,7 @@ export default {
                   text: 'Код'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -78,7 +78,7 @@ export default {
                   text: 'Порядок сортировки'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -107,7 +107,7 @@ export default {
                   },
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
           ]
         },
@@ -125,7 +125,7 @@ export default {
                             text: 'Город'
                         },
                     ],
-                    ulClass: 'row row-cols-2'
+                    class: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -138,7 +138,7 @@ export default {
                             text: 'Улица'
                         },
                     ],
-                    ulClass: 'row row-cols-2'
+                    class: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -151,7 +151,7 @@ export default {
                             text: 'Корпус'
                         },
                     ],
-                    ulClass: 'row row-cols-2'
+                    class: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -164,7 +164,7 @@ export default {
                             text: 'E-mail'
                         },
                     ],
-                    ulClass: 'row row-cols-2'
+                    class: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -178,7 +178,7 @@ export default {
                             text: 'Сайт'
                         },
                     ],
-                    ulClass: 'row row-cols-2'
+                    class: 'row row-cols-2'
                 },
                 {
                     datafield: 'CityID',
@@ -187,7 +187,7 @@ export default {
             ]
         },
       ],
-      ulClass: 'row row-cols-2'
+      class: 'row row-cols-2'
     },
     {
       descriptor: [
@@ -206,7 +206,7 @@ export default {
                   text: 'ОКПО'
                 }
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -219,7 +219,7 @@ export default {
                     text: 'ОКВЭД'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -232,7 +232,7 @@ export default {
                   text: 'Корр/счет'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -246,7 +246,7 @@ export default {
                   text: 'Корр.банк'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               datafield: 'CurrentAccount',
@@ -263,7 +263,7 @@ export default {
                   text: 'Лицевой счет2'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               datafield: 'MunAccount',
@@ -294,7 +294,7 @@ export default {
                   input: 'checkbox'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -307,7 +307,7 @@ export default {
                   text: 'E-mail'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -320,7 +320,7 @@ export default {
                   text: 'Подпись для документов'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -334,12 +334,12 @@ export default {
                   input: 'autocomplete'
                 },
               ],
-              ulClass: 'row row-cols-2'
+              class: 'row row-cols-2'
             }
           ]
         }
       ],
-      ulClass: 'row row-cols-2'
+      class: 'row row-cols-2'
     }
   ],
   object: {
