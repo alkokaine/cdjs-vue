@@ -50,8 +50,6 @@ export default {
 </script>
 
 <style>
-  .cd-form-item {
-  }
   .cd-label {
     font-weight: bold;
     margin: unset;
