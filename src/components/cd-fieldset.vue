@@ -1,19 +1,17 @@
 <template>
   <fieldset class="cd-fieldset d-block w-auto position-relative" :class="[{ 'border border-1 has-legend' : hasLegend(parent)}]">
-    <cd-props :class="[{ 'mt-2': hasLegend(parent) }]" :descriptor="descriptor" :parentprop="parent" :payload="payload">
+    <cd-props :class="[{ 'mt-2': hasLegend(parent) }]" :descriptor="descriptor" :parentprop="parent" :payload="payload" :inner="inner">
       <legend v-if="hasLegend(parent)" class="cd-legend position-absolute top-25 start-0 translate-middle-y ms-4" slot="text">
         <p class="cd-legend--text bg-secondary text-white px-2 user-select-none">{{ parent.text }}</p>
       </legend>
-      <template slot-scope="row">
-        <template v-if="hasDescriptor(row.property)">
-          <cd-fieldset :descriptor="row.property.descriptor" :payload="payload" :parent="row.property" :inner="true">
-            <template slot-scope="{ property }">
-              <slot :property="property" :parent="parent"/>
-            </template>
-          </cd-fieldset>
-        </template>
-        <div v-else class="cd-field row">
-          <slot :property="row.property" :parent="parent"/>
+      <template slot-scope="{ property }">
+        <cd-fieldset v-if="hasDescriptor(property)" :descriptor="property.descriptor" :payload="payload" :parent="property" :inner="true">
+          <template slot-scope="row">
+            <slot :property="row.property" :parent="property"/>
+          </template>
+        </cd-fieldset>
+        <div v-else class="cd-field row mx-0">
+          <slot :property="property" :parent="parent"/>
         </div>
       </template>
     </cd-props>

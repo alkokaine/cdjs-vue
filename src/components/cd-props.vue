@@ -1,18 +1,18 @@
 <template>
-  <cd-list class="cd-props text-start" :collection="descriptor" key-field="datafield" :is-row-visible="isPropertyVisible" :list-class="['list-unstyled property-list', parentprop.ulClass]" row-class="cd-property--wrap container">
+  <cd-list class="cd-props text-start" :collection="descriptor" key-field="datafield" :is-row-visible="isPropertyVisible" :list-class="['list-unstyled property-list container', parentprop.ulClass, { 'mx-0 px-0': inner }]" row-class="cd-property--descriptor px-0">
     <template slot="header">
       <slot name="text"></slot>
     </template>
-    <div class="cd-property" slot-scope="{ row, index }">
-      <slot :property="row" :parent="parentprop" :index="index">
+    <slot slot-scope="{ row, index }" :property="row" :parent="parentprop" :index="index">
         <template v-if="hasDescriptor(row)">
-          <cd-props :descriptor="row.descriptor" :payload="payload" :parentprop="row"></cd-props>
+          <cd-props :descriptor="row.descriptor" :payload="payload" :parentprop="row" :inner="true"></cd-props>
         </template>
         <template v-else>
-          {{ payload[row.datafield] }}
+          <div class="cd-property">
+            {{ payload[row.datafield] }}
+          </div>
         </template>
       </slot>
-    </div>
   </cd-list>
 </template>
 
