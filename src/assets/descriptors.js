@@ -10,8 +10,7 @@ export default {
           descriptor: [
             {
               datafield: 'Name',
-              text: 'Полное название',
-              liClass: 'row'
+              text: 'Полное название'
             },
             {
               descriptor: [
