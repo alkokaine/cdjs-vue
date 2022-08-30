@@ -36,6 +36,7 @@ describe('cd-grid', () => {
     Vue.nextTick().then(() => {
       expect(wrapper.vm.collection).toBeDefined()
       expect(wrapper.vm.collection.length).toBe(3)
+      expect(wrapper.findAll('tr').length).toBe(3)
       done()
     })
   })
