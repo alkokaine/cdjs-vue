@@ -4,9 +4,11 @@
       <slot name="header"></slot>
     </div>
     <ul class="cd-list--internal" :class="listClass" :role="listRole">
-      <li v-for="(row, index) in data" :key="rowKey(row, index)" :class="[resolveRowClass(row, index)]" :role="itemRole">
-        <slot :row="row" :index="index"></slot>
-      </li>
+      <slot v-for="(row, index) in data" :row="row" :index="index">
+        <li :class="[resolveRowClass(row, index)]" :role="itemRole" :key="rowKey(row, index)">
+           <slot :row="row" :index="index"/>
+        </li>
+      </slot>
     </ul>
     <div v-if="$slots.footer" class="cd-list--footer">
       <slot name="footer"></slot>
