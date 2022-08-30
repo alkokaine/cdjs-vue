@@ -4,7 +4,7 @@
       <slot name="header"></slot>
     </div>
     <ul class="cd-list--internal" :class="listClass" :role="listRole">
-      <li v-for="(row, index) in data" :key="rowKey(row, index)" class="cd-list--item" :class="[resolveRowClass(row, index)]" :role="itemRole">
+      <li v-for="(row, index) in data" :key="rowKey(row, index)" :class="[resolveRowClass(row, index)]" :role="itemRole">
         <slot :row="row" :index="index"></slot>
       </li>
     </ul>
@@ -43,7 +43,7 @@ export default {
     resolveRowClass() {
       const rowClass = this.rowClass
       const isFunction = typeof rowClass === 'function'
-      return (row, index) => rowClass === undefined ? row.class : [row.class, isFunction ? rowClass(row, index) : rowClass]
+      return (row, index) => rowClass === undefined ? 'cd-list--item' : ['cd-list--item', isFunction ? rowClass(row, index) : rowClass]
     }
   }
 }
