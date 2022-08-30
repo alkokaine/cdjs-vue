@@ -198,7 +198,8 @@ export default {
               descriptor: [
                 {
                   datafield: 'INN',
-                  text: 'ИНН'
+                  text: 'ИНН',
+                  input: 'autocomplete'
                 },
                 {
                   datafield: 'OKPO',
@@ -237,7 +238,8 @@ export default {
               descriptor: [
                 {
                   datafield: 'BIC',
-                  text: 'БИК'
+                  text: 'БИК',
+                  input: 'autocomplete'
                 },
                 {
                   datafield: 'CorrBank',
@@ -328,7 +330,8 @@ export default {
                 },
                 {
                   datafield: 'LawAddress',
-                  text: 'Юридический адрес'
+                  text: 'Юридический адрес',
+                  input: 'autocomplete'
                 },
               ],
               ulClass: 'row row-cols-2'
