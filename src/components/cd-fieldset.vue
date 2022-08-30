@@ -6,11 +6,9 @@
       </legend>
       <template slot-scope="{ property }">
         <cd-fieldset v-if="hasDescriptor(property)" :descriptor="property.descriptor" :payload="payload" :parent="property" :inner="true">
-          <template slot-scope="row">
-            <slot :property="row.property" :parent="property"/>
-          </template>
+          <slot slot-scope="row" :property="row.property" :parent="property"/>
         </cd-fieldset>
-        <div v-else class="cd-field row mx-0">
+        <div class="cd-field" v-else>
           <slot :property="property" :parent="parent"/>
         </div>
       </template>
@@ -21,12 +19,10 @@
 <script>
 
 import decorator from '@/common/property-decorator'
-import CdList from './cd-list.vue'
 import CdProps from './cd-props.vue'
 export default {
   name: 'cd-fieldset',
   components: {
-    // 'cd-list': CdList,
     'cd-props': CdProps
   },
   props: {
