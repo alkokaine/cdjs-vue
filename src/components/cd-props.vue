@@ -6,7 +6,7 @@
     <div class="cd-property" slot-scope="{ row, index }">
       <slot :property="row" :parent="parentprop" :index="index">
         <template v-if="hasDescriptor(row)">
-          <cd-props class="container" :descriptor="row.descriptor" :payload="payload" :parent="row"></cd-props>
+          <cd-props :descriptor="row.descriptor" :payload="payload" :parentprop="row"></cd-props>
         </template>
         <template v-else>
           {{ payload[row.datafield] }}
