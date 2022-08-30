@@ -43,7 +43,7 @@ export default {
     resolveRowClass() {
       const rowClass = this.rowClass
       const isFunction = typeof rowClass === 'function'
-      return (row, index) => rowClass === undefined ? row.class : [row.class, isFunction ? rowClass(row, index) : rowClass]
+      return (row, index) => rowClass === undefined ? 'cd-list--item' : ['cd-list--item', isFunction ? rowClass(row, index) : rowClass]
     }
   }
 }
