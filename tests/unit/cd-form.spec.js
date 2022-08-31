@@ -21,7 +21,7 @@ describe('[cd-form] mounting', () => {
       expect(wrapper.findAllComponents(CDForm).length).toBe(1)
       expect(wrapper.findAll('.cd-fieldset').length).toBeGreaterThanOrEqual(hasDescriptors + 1)
       expect(wrapper.findAll('.cd-field').length).toBe(hasLabels)
-      expect(wrapper.findAll('.cd-props').length).toBe(wrapper.findAll('.cd-fieldset').length)
+      expect(wrapper.findAll('.cd-props--inner').length).toBe(wrapper.findAll('.cd-fieldset').length)
       expect(wrapper.findAllComponents(CDCell).length).toBe(hasLabels)
       expect(wrapper.findAll('.cd-cell--resolved').length).toBe(hasLabels)
       done()

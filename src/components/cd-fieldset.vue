@@ -1,29 +1,29 @@
 <template>
   <fieldset class="cd-fieldset d-block w-auto position-relative" :class="[{ 'border border-1 has-legend' : hasLegend(parent)}]">
-    <cd-props :class="[{ 'mt-2': hasLegend(parent) }]" :descriptor="descriptor" :parentprop="parent" :payload="payload" :inner="inner">
+    <cd-props-base :class="[{ 'mt-2': hasLegend(parent) }]" :descriptor="descriptor" :parentprop="parent" :payload="payload" :inner="inner">
       <legend v-if="hasLegend(parent)" class="cd-legend position-absolute top-25 start-0 translate-middle-y ms-4" slot="text">
         <p class="cd-legend--text bg-secondary text-white px-2 user-select-none">{{ parent.text }}</p>
       </legend>
-      <template slot-scope="{ property }">
-        <cd-fieldset v-if="hasDescriptor(property)" :descriptor="property.descriptor" :payload="payload" :parent="property" :inner="true">
+      <template slot-scope="{ property, hasDescriptor }">
+        <cd-fieldset v-if="hasDescriptor" :descriptor="property.descriptor" :payload="payload" :parent="property" :inner="true">
           <slot slot-scope="row" :property="row.property" :parent="property"/>
         </cd-fieldset>
         <div class="cd-field" v-else>
           <slot :property="property" :parent="parent"/>
         </div>
       </template>
-    </cd-props>
+    </cd-props-base>
   </fieldset>
 </template>
 
 <script>
 
 import decorator from '@/common/property-decorator'
-import CdProps from './cd-props.vue'
+import CdPropsBase from './cd-props-base.vue'
 export default {
   name: 'cd-fieldset',
   components: {
-    'cd-props': CdProps
+    'cd-props-base': CdPropsBase
   },
   props: {
     descriptor: { type: Array, required: true },
@@ -32,15 +32,8 @@ export default {
     inner: { type: Boolean, default: false }
   },
   computed: {
-    hasDescriptor () {
-      return (property) => decorator.hasDescriptor(property)
-    },
     hasLegend () {
       return (property) => decorator.hasLegend(property)
-    },
-    isPropertyVisible () {
-      const props = this
-      return (property, index) => decorator.isPropertyVisible(property, props.payload, index)
     }
   }
 }
