@@ -9,262 +9,185 @@ export default {
           text: 'Общее',
           descriptor: [
             {
-              datafield: 'date1',
-              input: 'date',
-              text: 'date1',
-              rules: [
-                {
-                  required: true,
-                  message: 'Укажите дату'
-                }
-              ]
-            },
-            {
               datafield: 'Name',
-              text: 'Полное название',
-              required: (payload) => payload.BuildingID > 0
-            },
-            {
-              input: 'select',
-              datafield: 'building_id',
-              slotdescriptor: [
-                {
-                  datafield: 'Name',
-                  class: 'building-name pb-1'
-                },
-                {
-                  datafield: 'BuildingTypeName',
-                  class: 'building-type-name pb-1'
-                },
-                {
-                  datafield: 'Address',
-                  class: 'building-address'
-                }
-              ],
-              // class: options.class,
-              text: 'Объект недвижимости',
-              onselect (payload, option, parent) {
-                Vue.set(payload, 'BuildingID', option.BuildingID)
-              },
-              resolveresult (response) {
-                return response.data.Data
-              },
-              // headers: keys.crossd,
-              url: '/local/api/building/object/196',
-              // reset: options.reset,
-              method: 'get',
-              valuekey: 'BuildingID',
-              labelkey: 'Name',
-              clearable: false,
-              isdisabled (option, payload, parent) {
-                return option.BuildingTypeID === 1
-              }
+              text: 'Полное название'
             },
             {
               descriptor: [
                 {
                   datafield: 'ShortName',
                   text: 'Сокращенное название'
-                }, {
+                },
+                {
                   datafield: 'UltraShortName',
                   text: 'Краткое название'
                 },
-                {
-                  datafield: 'test',
-                  text: 'test'
-                }
               ],
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
                 {
                   datafield: 'Is24Group',
-                  text: 'Is24Group'
+                  input: 'checkbox',
+                  text: 'Круглосуточно'
                 },
                 {
                   datafield: 'IsBudget',
-                  text: 'IsBudget'
-                  // Invalid prop: type check failed for prop "value".
+                  text: 'Бюджет',
+                  input:'checkbox'
                 },
-                {
-                  datafield: 'IsDepartment',
-                  text: 'IsDepartment'
-                }
               ],
+              class: 'row row-cols-2'
             },
-  
             {
               descriptor: [
                 {
                   datafield: 'IsFew',
-                  text: 'Малочисленная'
+                  text: 'Малочисленная',
+                  input: 'checkbox'
                 },
+                {
+                  datafield: 'IsDepartment',
+                  text: 'Департамент'
+                },
+              ],
+              class: 'row row-cols-2'
+            },
+            {
+              descriptor: [
                 {
                   datafield: 'WorkDaysCount',
-                  text: 'WorkDaysCount'
+                  text: 'Количество рабочих дней'
                 },
                 {
-                  datafield: 'ObjectID',
-                  text: 'ObjectID'
+                  datafield: 'Code',
+                  text: 'Код'
                 },
-                {
-                  datafield: 'slider',
-                  text: 'slider',
-                  input: 'slider'
-                }
               ],
+              class: 'row row-cols-2'
             },
-  
+            {
+              descriptor: [
+                {
+                  datafield: 'EndDate',
+                  text: 'Дата окончания'
+                },
+                {
+                  datafield: 'OrderNumber',
+                  text: 'Порядок сортировки'
+                },
+              ],
+              class: 'row row-cols-2'
+            },
             {
               descriptor: [
                 {
                   datafield: 'ObjectStatusID',
-                  text: 'ObjectStatusID'
+                  text: 'Cтатуса объекта',
+                  input: 'select',
+                  url: '/api/Global/Statuses',
+                  method: 'get',
+                  valuekey: 'ObjectStatusID',
+                  labelkey: 'Name',
+                  resolveresult(response) {
+                      return response.data.Data
+                  },
                 },
                 {
                   datafield: 'ObjectTypeID',
-                  text: 'ObjectTypeID'
+                  text: 'Тип объекта',
+                  input: 'select',
+                  url: '/api/Global/ObjectTypes/0',
+                  method: 'get',
+                  valuekey: 'ObjectTypeID',
+                  labelkey: 'Name',
+                  resolveresult(response) {
+                      return response.data.Data
+                  },
                 },
-                {
-                  datafield: 'MainObjectID',
-                  text: 'MainObjectID'
-                }
               ],
+              class: 'row row-cols-2'
             },
-  
-            {
-              descriptor: [
-                {
-                  datafield: 'Code',
-                  text: 'Code'
-                },
-                {
-                  datafield: 'EndDate',
-                  text: 'EndDate'
-                },
-                {
-                  datafield: 'OrderNumber',
-                  text: 'OrderNumber'
-                }
-              ],
-            },
-            {
-              datafield: 'ParentObjectID',
-              text: 'ParentObjectID'
-            }
           ]
         },
         {
-          text: 'Адрес и контактные данные',
-          descriptor: [
-            {
-              descriptor: [
+            text: 'Адрес и контактные данные',
+            descriptor: [
                 {
-                  datafield: 'address',
-                  text: 'address',
-                  input: 'autocomplete',
-                  method: 'post',
-                  labelkey: 'unrestricted_value',
-                  valuekey: 'unrestricted_value',
-                  // headers: keys.dadataheaders,
-                  onselect (payload, event, parent) {
-                    console.log(this, payload, event)
-                  },
-                  resolvepayload (payload, query, parent) {
-                    return {
-                      query: query,
-                      count: 20,
-                      locations_boost: [{
-                        kladr_id: '51'
-                      }]
-                    }
-                  },
-                  focustrigger: false,
-                  clearable: true,
-                  url: '/suggestions/address',
-                  resolveresult: (response) => (response.data.suggestions)
+                    descriptor: [
+                        {
+                            datafield: 'PostIndex',
+                            text: 'Почтовый индекс'
+                        },
+                        {
+                            datafield: 'City',
+                            text: 'Город'
+                        },
+                    ],
+                    class: 'row row-cols-2'
                 },
                 {
-                  datafield: 'PostIndex',
-                  text: 'Почтовый индекс'
+                    descriptor: [
+                        {
+                            datafield: 'Region',
+                            text: 'Район'
+                        },
+                        {
+                            datafield: 'Street',
+                            text: 'Улица'
+                        },
+                    ],
+                    class: 'row row-cols-2'
                 },
                 {
-                  datafield: 'City',
-                  text: 'Город'
-                }
-              ],
-            },
-            {
-              descriptor: [
-                {
-                  datafield: 'Region',
-                  text: 'Район'
+                    descriptor: [
+                        {
+                            datafield: 'HouseNumber',
+                            text: 'Дом'
+                        },
+                        {
+                            datafield: 'HouseBlock',
+                            text: 'Корпус'
+                        },
+                    ],
+                    class: 'row row-cols-2'
                 },
                 {
-                  datafield: 'Street',
-                  text: 'Улица'
-                }
-              ],
-            },
-            {
-              descriptor: [
-                {
-                  datafield: 'HouseNumber',
-                  text: 'Дом'
+                    descriptor: [
+                        {
+                            datafield: 'PhoneNumber',
+                            text: 'Телефон'
+                        },
+                        {
+                            datafield: 'EMail',
+                            text: 'E-mail'
+                        },
+                    ],
+                    class: 'row row-cols-2'
                 },
                 {
-                  datafield: 'HouseBlock',
-                  text: 'Корпус'
-                }
-              ],
-            },
-            {
-              descriptor: [
-                {
-                  datafield: 'PhoneNumber',
-                  text: 'Телефон',
-                  hidden (payload) {
-                    return payload.date1 === undefined || payload.date1 === null
-                  },
-                  canedit (payload) {
-                    return true
-                  },
-                  rules: function (payload) {
-                    const hasdate = payload.date1 instanceof Date && !isNaN(payload.date1)
-                    return [
-                      {
-                        required: !hasdate,
-                        message: 'Укажите номер телефона'
-                      }
-                    ]
-                  }
+                    descriptor: [
+                        {
+                            datafield: 'FaxNumber',
+                            text: 'Факс'
+                        },
+    
+                        {
+                            datafield: 'WWW',
+                            text: 'Сайт'
+                        },
+                    ],
+                    class: 'row row-cols-2'
                 },
                 {
-                  datafield: 'EMail',
-                  text: 'E-mail'
-                }
-              ]
-            },
-            {
-              descriptor: [
-                {
-                  datafield: 'FaxNumber',
-                  text: 'Факс'
+                    datafield: 'CityID',
+                    text: 'Номер города'
                 },
-  
-                {
-                  datafield: 'WWW',
-                  text: 'Сайт'
-                }
-              ]
-            },
-            {
-              datafield: 'CityID',
-              text: 'CityID'
-            }
-          ]
-        }
-      ]
+            ]
+        },
+      ],
+      class: 'row row-cols-2'
     },
     {
       descriptor: [
@@ -272,28 +195,31 @@ export default {
           text: 'Реквизиты',
           descriptor: [
             {
-              descriptor: [{
-                datafield: 'INN',
-                text: 'ИНН'
-              },
-              {
-                datafield: 'OKPO',
-                text: 'ОКПО'
-              }
-              ]
+              descriptor: [
+                {
+                  datafield: 'INN',
+                  text: 'ИНН',
+                  input: 'autocomplete'
+                },
+                {
+                  datafield: 'OKPO',
+                  text: 'ОКПО'
+                }
+              ],
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
-  
                 {
-                  datafield: 'KPP',
-                  text: 'КПП'
+                    datafield: 'KPP',
+                    text: 'КПП'
                 },
                 {
-                  datafield: 'OKVED',
-                  text: 'ОКВЭД'
-                }
-              ]
+                    datafield: 'OKVED',
+                    text: 'ОКВЭД'
+                },
+              ],
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -304,20 +230,23 @@ export default {
                 {
                   datafield: 'CorrAccount',
                   text: 'Корр/счет'
-                }
-              ]
+                },
+              ],
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
                 {
                   datafield: 'BIC',
-                  text: 'БИК'
+                  text: 'БИК',
+                  input: 'autocomplete'
                 },
                 {
                   datafield: 'CorrBank',
                   text: 'Корр.банк'
-                }
-              ]
+                },
+              ],
+              class: 'row row-cols-2'
             },
             {
               datafield: 'CurrentAccount',
@@ -332,17 +261,18 @@ export default {
                 {
                   datafield: 'PersonalAccount2',
                   text: 'Лицевой счет2'
-                }
-              ]
+                },
+              ],
+              class: 'row row-cols-2'
             },
             {
               datafield: 'MunAccount',
-              text: 'MunAccount'
+              text: 'Казначейский счет'
             },
             {
               datafield: 'UFK',
-              text: 'UFK'
-            }
+              text: 'УФК'
+            },
           ]
         },
         {
@@ -360,9 +290,11 @@ export default {
                 },
                 {
                   datafield: 'IsIO',
-                  text: 'Исполняющий обязаности'
-                }
-              ]
+                  text: 'Исполняющий обязаности',
+                  input: 'checkbox'
+                },
+              ],
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -373,37 +305,104 @@ export default {
                 {
                   datafield: 'HeadEMail',
                   text: 'E-mail'
-                }
-              ]
+                },
+              ],
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
                 {
                   datafield: 'HeadReason',
-                  text: 'HeadReason'
+                  text: 'На основании'
                 },
                 {
                   datafield: 'HeadSignature',
                   text: 'Подпись для документов'
-                }
-              ]
+                },
+              ],
+              class: 'row row-cols-2'
             },
             {
               descriptor: [
                 {
                   datafield: 'PostAddress',
-                  text: 'PostAddress'
+                  text: 'Почтовый адрес'
                 },
                 {
                   datafield: 'LawAddress',
-                  text: 'LawAddress'
-                }
-              ]
+                  text: 'Юридический адрес',
+                  input: 'autocomplete'
+                },
+              ],
+              class: 'row row-cols-2'
             }
           ]
         }
-      ]
+      ],
+      class: 'row row-cols-2'
     }
   ],
-  object: {"BankName":"ОТДЕЛЕНИЕ МУРМАНСК БАНКА РОССИИ/ УФК по Мурманской области г. Мурманск","BIC":"014705901","City":"г Мурманск","Code":null,"CorrAccount":null,"CorrBank":null,"CurrentAccount":"40102810745370000041","EMail":"123dou@mail.ru","EndDate":null,"FaxNumber":"8(8152) 52-29-90","HeadEMail":"123dou@mail.ru","HeadFIO":"Патлаенко Ольга Владимировна","HeadPhoneNumber":null,"HeadPosition":"Заведующая","HeadReason":"Устава","HeadSignature":"в лице заведующей Патлаенко Ольги Владимировны","HouseBlock":null,"HouseNumber":"49","INN":"5190408210","Is24Group":false,"IsBudget":true,"IsDepartment":2,"IsFew":false,"IsIO":false,"KPP":"519001001","LawAddress":null,"MunAccount":"03234643477010004900","Name":"МУНИЦИПАЛЬНОЕ АВТОНОМНОЕ ДОШКОЛЬНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ Г. МУРМАНСКА № 123","ObjectStatusID":null,"OKPO":"51696061","OKVED":"85.11","ObjectTypeID":4,"OrderNumber":123,"PersonalAccount":"30496Ш82620","PersonalAccount2":null,"PhoneNumber":"(8152)53-78-38","PostAddress":null,"PostIndex":"183014","Region":"Первомайский","ShortName":"МАДОУ Г. МУРМАНСКА № 123","Street":"ул Баумана","UFK":"Управление финансов администрации города  Мурманска(МАДОУ г. Мурманска № 123)","WorkDaysCount":5,"WWW":"www.sadik123.ru","MainObjectID":121,"ParentObjectID":121,"CityID":1,"Parent":{"ObjectID":121,"UltraShortName":"МАДОУ №123"},"Main":{"ObjectID":121,"UltraShortName":"МАДОУ №123"},"ObjectType":{"ObjectTypeID":4,"Name":"МАДОУ","ObjectGroupID":3},"ObjectID":121,"UltraShortName":"МАДОУ №123"}
+  object: {
+    "BankName":"ОТДЕЛЕНИЕ МУРМАНСК БАНКА РОССИИ/ УФК по Мурманской области г. Мурманск",
+    "BIC":"014705901",
+    "City":"г Мурманск",
+    "Code":null,
+    "CorrAccount":null,
+    "CorrBank":null,
+    "CurrentAccount":"40102810745370000041",
+    "EMail":"123dou@mail.ru",
+    "EndDate":null,
+    "FaxNumber":"8(8152) 52-29-90",
+    "HeadEMail":"123dou@mail.ru",
+    "HeadFIO":"Патлаенко Ольга Владимировна",
+    "HeadPhoneNumber":null,
+    "HeadPosition":"Заведующая",
+    "HeadReason":"Устава",
+    "HeadSignature":"в лице заведующей Патлаенко Ольги Владимировны",
+    "HouseBlock":null,
+    "HouseNumber":"49",
+    "INN":"5190408210",
+    "Is24Group":false,
+    "IsBudget":true,
+    "IsDepartment":2,
+    "IsFew":false,
+    "IsIO":false,
+    "KPP":"519001001",
+    "LawAddress":null,
+    "MunAccount":"03234643477010004900",
+    "Name":"МУНИЦИПАЛЬНОЕ АВТОНОМНОЕ ДОШКОЛЬНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ Г. МУРМАНСКА № 123",
+    "ObjectStatusID":null,
+    "OKPO":"51696061",
+    "OKVED":"85.11",
+    "ObjectTypeID":4,
+    "OrderNumber":123,
+    "PersonalAccount":"30496Ш82620",
+    "PersonalAccount2":null,
+    "PhoneNumber":"(8152)53-78-38",
+    "PostAddress":null,
+    "PostIndex":"183014",
+    "Region":"Первомайский",
+    "ShortName":"МАДОУ Г. МУРМАНСКА № 123",
+    "Street":"ул Баумана",
+    "UFK":"Управление финансов администрации города  Мурманска(МАДОУ г. Мурманска № 123)",
+    "WorkDaysCount":5,
+    "WWW":"www.sadik123.ru",
+    "MainObjectID":121,
+    "ParentObjectID":121,
+    "CityID":1,
+    "Parent":{
+      "ObjectID":121,
+      "UltraShortName":"МАДОУ №123"
+    },
+    "Main":{
+      "ObjectID":121,
+      "UltraShortName":"МАДОУ №123"
+    },"ObjectType":{
+      "ObjectTypeID":4,
+      "Name":"МАДОУ",
+      "ObjectGroupID":3
+    },
+    "ObjectID":121,
+    "UltraShortName":"МАДОУ №123"
+  }
 }

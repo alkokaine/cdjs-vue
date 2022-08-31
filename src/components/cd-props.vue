@@ -1,5 +1,5 @@
 <template>
-  <cd-props-base :descriptor="descriptor" :payload="payload">
+  <cd-props-base :descriptor="descriptor" :payload="payload" :parentprop="parentprop">
     <template slot-scope="{ property, hasDescriptor, parent }">
       <cd-props v-if="hasDescriptor" :descriptor="property.descriptor" :payload="payload" :parentprop="property"/>
       <div v-else class="cd-property">
@@ -18,7 +18,8 @@ export default {
   components: { 'cd-props-base': cdPropsBase },
   props: {
     descriptor: { type: Array, required: true },
-    payload: { type: Object, required: true }
+    payload: { type: Object, required: true },
+    parentprop: { type: Object }
   },
   data (base) {
     return {
