@@ -2,7 +2,7 @@
   <cd-props-base :descriptor="descriptor" :payload="payload" :parentprop="parentprop">
     <template slot-scope="{ property, hasDescriptor, parent }">
       <cd-props v-if="hasDescriptor" :descriptor="property.descriptor" :payload="payload" :parentprop="property"/>
-      <div v-else class="cd-property">
+      <div v-else class="cd-property" :data-property="property.datafield">
         <slot :property="property" :parent="parent" :hasDescriptor="hasDescriptor">
           <span>{{ payload[property.datafield] }}</span>
         </slot>
