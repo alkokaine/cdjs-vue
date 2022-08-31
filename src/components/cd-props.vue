@@ -1,50 +1,33 @@
 <template>
-  <cd-list class="cd-props text-start" :collection="descriptor" key-field="datafield" :is-row-visible="isPropertyVisible" :list-class="['list-unstyled property-list', parentprop.class]" row-class="cd-property--descriptor">
-    <template slot="header">
-      <slot name="text"></slot>
+  <cd-props-base :descriptor="descriptor" :payload="payload" :parentprop="parentprop">
+    <template slot-scope="{ property, hasDescriptor, parent }">
+      <cd-props v-if="hasDescriptor" :descriptor="property.descriptor" :payload="payload" :parentprop="property"/>
+      <div v-else class="cd-property" :data-property="property.datafield">
+        <slot :property="property" :parent="parent" :hasDescriptor="hasDescriptor">
+          <span>{{ payload[property.datafield] }}</span>
+        </slot>
+      </div>
     </template>
-    <slot slot-scope="{ row, index }" :property="row" :parent="parentprop" :index="index">
-      <template v-if="hasDescriptor(row)">
-        <cd-props :descriptor="row.descriptor" :payload="payload" :parentprop="row" :inner="true"></cd-props>
-      </template>
-      <template v-else>
-        <div class="cd-property">
-          {{ payload[row.datafield] }}
-        </div>
-      </template>
-    </slot>
-  </cd-list>
+  </cd-props-base>
 </template>
 
 <script>
-import CDList from './cd-list.vue'
-import decorator from '@/common/property-decorator'
+import cdPropsBase from './cd-props-base.vue'
 export default {
   name: 'cd-props',
-  components: {
-    'cd-list': CDList
-  },
+  components: { 'cd-props-base': cdPropsBase },
   props: {
-    descriptor: { type: Array, required: true, description: 'Массив свойств' },
-    parentprop: { type: Object, default: Object, description: 'Объект-дескриптор' },
+    descriptor: { type: Array, required: true },
     payload: { type: Object, required: true },
-    inner: { type: Boolean }
+    parentprop: { type: Object }
   },
-  computed: {
-    hasDescriptor () {
-      return (property) => decorator.hasDescriptor(property)
-    },
-    isPropertyVisible () {
-      const props = this
-      return (property, index) => decorator.isPropertyVisible(property, props.payload, index)
+  data (base) {
+    return {
     }
   }
 }
 </script>
 
 <style>
-  .cd-property--descriptor {
-    padding-left: 1em;
-    padding-right: 1em;
-  }
+
 </style>
