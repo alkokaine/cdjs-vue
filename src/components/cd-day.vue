@@ -1,8 +1,8 @@
 <template>
-  <div class="cd-day px-3 my-1">
-    <div class="cd-day--header" :class="{ 'is-prev': day.isprev, 'is-eve': day.code === 2, 'holiday': day.code === 1 }">
+  <div class="cd-day" :class="{ 'is-prev': day.isprev }" >
+    <div class="cd-day--header" :class="{ 'is-eve': day.code === 2, 'holiday': day.code === 1 }">
       <slot name="header">
-        <span class="cd-day--block">{{ number }}</span>
+        <div class="px-1 my-1">{{ num }}</div>
       </slot>
     </div>
     <template v-if="$slots.default">
@@ -17,9 +17,9 @@ export default {
   props: {
     day: { type: Object, required: true }
   },
-  data (day) {
+  data (block) {
     return {
-      number: day.day.date.date()
+      num: block.day.date.date()
     }
   }
 }
@@ -28,6 +28,12 @@ export default {
 <style>
   .cd-day--header {
     font-size: 0.8rem;
+  }
+  .compact {
+    width: 2em;
+  }
+  .cd-day {
+    cursor: pointer;
   }
   .is-prev {
     opacity: 42%;
@@ -41,10 +47,10 @@ export default {
   .is-eve {
     opacity: 70%;
   }
-  .cd-day {
-    cursor: pointer;
-  }
   .cd-day:hover {
+    background-color: #f1ebeb;
+  }
+  .is-selected {
     background-color: #f1ebeb;
   }
 </style>
