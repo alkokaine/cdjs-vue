@@ -2,7 +2,7 @@
   <div class="cd-day" :class="{ 'is-prev': day.isprev }" >
     <div class="cd-day--header" :class="{ 'is-eve': day.code === 2, 'holiday': day.code === 1 }">
       <slot name="header">
-        <div class="px-1 my-1">{{ num }}</div>
+        <div class="px-1 my-1">{{ day.number }}</div>
       </slot>
     </div>
     <template v-if="$slots.default">
@@ -19,7 +19,6 @@ export default {
   },
   data (block) {
     return {
-      num: block.day.date.date()
     }
   }
 }
