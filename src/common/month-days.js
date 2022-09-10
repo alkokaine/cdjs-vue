@@ -14,7 +14,7 @@ const prevMonthDays = (date) => {
   const lastDay = lastMonthDay(prevmonth.year(), prevmonth.month() + 1)
   const days = []
   while (lastDay.day() > 0) {
-    days.unshift({ day: lastDay.day(), number: lastDay.date(), date: lastDay.toISOString(true), isprev: true })
+    days.unshift({ date: moment(lastDay.toDate()), isprev: true })
     lastDay.subtract(1, 'days')
   }
   return days
