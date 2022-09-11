@@ -1,7 +1,7 @@
 <template>
   <cd-list class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day" :remote-method="getMonthDays" :resolve-result="resolveDays" :payload="date"
-    list-class="list-unstyled row"
-    :row-class="['col cd-weekday--container px-0', { 'mw-mc': compact, 'w-auto': !compact }]">
+    list-class="list-unstyled mx-auto container-sm row"
+    :row-class="['col cd-weekday--container px-0 mx-1', { 'mw-mc': compact, 'w-auto': !compact }]">
     <div slot="header">
       <slot name="month-header"></slot>
     </div>
@@ -15,7 +15,7 @@
           {{ row.weekday.short }}
         </p>
       </div>
-      <cd-day slot-scope="day" :day="day.row" class="mx-auto border-0" :class="{ 'is-selected border-1': isDaySelected(day),  'compact': compact }"
+      <cd-day slot-scope="day" :day="day.row" class="mx-auto mb-2 border-0" :class="{ 'is-selected border-1': isDaySelected(day),  'compact': compact }"
         @click.native.capture="onDaySelect({ $event, day: day.row, weekday: row })">
         <p class="my-0" :class="{ 'fw-bold': !compact }" slot="header">
           {{ day.row.date.date() }}
@@ -81,17 +81,18 @@ export default {
       weekdays: Array,
       isLoading: false,
       selectedWeekdays: [],
-      selectedDays: []
+      selectedDays: [],
+      days: Array
     }
   },
   methods: {
     getMonthDays (date, resolve) {
-      const days = Array.from(Array(date.daysInMonth()).keys())
+      this.days = Array.from(Array(date.daysInMonth()).keys())
         .map(d => ({ date: createDate(date.year(), date.month() + 1, d + 1) }))
       if (this.prependDays) {
-        resolve(prevMonthDays(date).concat(days))
+        resolve(prevMonthDays(date).concat(this.days))
       } else {
-        resolve(days)
+        resolve(this.days)
       }
     },
     resolveDays (days) {
@@ -163,6 +164,6 @@ export default {
     max-width: 50px;
   }
   .cd-month.compact {
-    width: 300px;
+    width: 350px;
   }
 </style>

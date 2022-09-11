@@ -1,7 +1,8 @@
 import { mount } from "@vue/test-utils"
 import CDMonth from '@/components/cd-month'
 import CDList from '@/components/cd-list'
-import { createDate, prevMonthDays, prevMonthWeekLength, daysInMonth } from '@/common/month-days'
+import CDDay from '@/components/cd-day'
+import { createDate, prevMonthDays, prevMonthWeekLength } from '@/common/month-days'
 import Vue from "vue"
 
 const monthFactory = (propsData) => (mount(CDMonth, {
@@ -21,7 +22,8 @@ describe('[CD-MONTH] Basics', () => {
       expect(wrapper.findAll('.cd-month').length).toBe(1)
       expect(wrapper.findAll('.cd-weekdays--wrap').length).toBe(7)
       expect(wrapper.findAllComponents(CDList).length).toBe(8)
+      expect(wrapper.vm.days.length).toBe(propsData.date.daysInMonth())
       done()
     })
-  })
+  }, 10000)
 })
