@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-form">
+  <div class="cd-form mt-4">
     <slot name="header"></slot>
     <el-form :model="formobject" size="mini" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
       <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject">
