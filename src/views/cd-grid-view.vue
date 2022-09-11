@@ -1,5 +1,11 @@
 <template>
-  <cd-grid :collection="collection" :descriptor="columns" key-field="ObjectID"></cd-grid>
+  <cd-grid :collection="collection" :select-rows="false" :descriptor="columns" key-field="ObjectID">
+    <template slot-scope="{ rowdetails, data }">
+      <template v-if="rowdetails">
+        {{ data.row }}
+      </template>
+    </template>
+  </cd-grid>
 </template>
 
 <script>
@@ -17,5 +23,5 @@ export default {
 </script>
 
 <style>
-
+  @import '~bootstrap/dist/css/bootstrap.css';
 </style>
