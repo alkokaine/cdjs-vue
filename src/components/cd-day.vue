@@ -45,7 +45,8 @@ export default {
     opacity: 70%;
   }
   .cd-day:hover {
-    background-color: #f1ebeb;
+    /* background-color: #f1ebeb; */
+    box-shadow: 0px 0px 3px 3px #f1ebeb;
   }
   .is-selected {
     background-color: #f1ebeb;
