@@ -1,7 +1,11 @@
 <template>
   <div class="cd-month-view">
     <h3>CD-MONTH</h3>
-    <cd-month :compact="compact" :select-weekdays="showcheckbox" :date="date"/>
+    <cd-month :compact="compact" :select-weekdays="showcheckbox" :date="date">
+      <div class="day-content" slot-scope="{ day }">
+        {{ day.date }}
+      </div>
+    </cd-month>
   </div>
 </template>
 
