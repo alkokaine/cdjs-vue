@@ -1,8 +1,11 @@
 <template>
   <cd-grid :collection="collection" :select-rows="false" :descriptor="columns" key-field="ObjectID">
-    <template slot-scope="{ rowdetails, data }">
-      <template v-if="rowdetails">
-        {{ data.row }}
+    <template slot-scope="{ header, row, property }">
+      <template v-if="header">
+        {{ property.text }}
+      </template>
+      <template v-else>
+        {{ row[property.datafield] }}
       </template>
     </template>
   </cd-grid>
