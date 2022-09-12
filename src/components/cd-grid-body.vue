@@ -1,7 +1,7 @@
 <template>
   <tbody v-loading="isLoading" class="cd-grid--body">
     <template v-for="(row, rindex) in collection">
-      <cd-row :key="rowKey(row, rindex)" :row="row" :on-row-select="onRowSelect" :show-checkbox="selectRows">
+      <cd-row :key="rowKey(row, rindex)" :row="row">
         <input v-if="selectRows" slot="select" type="checkbox" class="cd-grid--checkbox"/>
         <template v-slot:default="{ el }">
           <td v-for="(prop, cindex) in columns" :ref="propCellKey(prop, cindex)" :id="propCellKey(prop, rindex, cindex)" :key="propCellKey(prop, rindex, cindex)" class="cd-grid--cell">
