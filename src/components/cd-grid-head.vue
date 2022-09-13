@@ -1,12 +1,12 @@
 <template>
-  <thead class="cd-grid--head table-light border-top">
-    <cd-row row-key="header">
+  <thead class="cd-grid--head table-light border-top" :class="headClass">
+    <cd-row row-key="header" class="cd-header-row">
       <th v-if="selectRows" scope="col" slot="select" class="cd-checkbox--cell">
         <input type="checkbox" class="cd-grid--checkbox"/>
       </th>
       <th scope="col"></th>
-      <th scope="col" v-for="(col, jindex) in columns"
-        :key="jindex" :class="col.headerclass">
+      <th scope="col" v-for="(col, jindex) in columns" class="cd-header--cell"
+        :key="jindex" :class="[col.headerclass, isCellClassFunction ? cellClass(col, jindex) : cellClass]">
         <p class="mb-0">
           <slot :property="col" :propindex="jindex"></slot>
         </p>
@@ -27,7 +27,14 @@ export default {
     columns: { type: Array, required: true },
     onSelectAll: { type: Function },
     isSelected: { type: Boolean },
-    selectRows: { type: Boolean, default: false }
+    selectRows: { type: Boolean, default: false },
+    headClass: { type: [String, Object, Array] },
+    cellClass: { type: [String, Object, Array, Function] }
+  },
+  data (head) {
+    return {
+      isCellClassFunction: typeof head.cellClass === 'function'
+    }
   }
 }
 </script>
