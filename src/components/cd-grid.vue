@@ -29,7 +29,7 @@
 import flatterer from '@/common/property-flatter'
 import CdGridBody from './cd-grid-body.vue'
 import CdGridHead from './cd-grid-head.vue'
-import { Loading } from 'element-ui'
+
 const resolveborder = (borders) => {
   switch (borders) {
     case 'all': return 'table-bordered'
@@ -45,15 +45,12 @@ export default {
     'cd-grid-body': CdGridBody,
     'cd-grid-head': CdGridHead
   },
-  directives: {
-    'loading': Loading
-  },
   props: {
     showHeader: { type: Boolean, default: true },
     highlightOnHover: { type: Boolean, default: false },
     striped: { type: Boolean, default: false },
-    collection: { type: Array },
-    keyField: { type: String },
+    collection: { type: Array, required: true },
+    keyField: { type: String, required: true },
     rowDetails: { type: Boolean, defailt: false },
     descriptor: { type: Array },
     selectRows: { type: Boolean, default: false },

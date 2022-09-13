@@ -32,11 +32,16 @@
 </template>
 <script>
   import CDRow from './cd-row'
-
+  import Vue from 'vue'
+  import { Loading } from 'element-ui'
+  Vue.use(Loading)
   export default {
     name: 'cd-grid-body',
     components: {
       'cd-row': CDRow
+    },
+    directives: {
+      'loading': Loading
     },
     props: {
       tbodyClass: { type: [String, Array, Object] },
