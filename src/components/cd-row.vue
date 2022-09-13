@@ -1,5 +1,5 @@
 <template>
-  <tr :id="rowKey">
+  <tr :data-rowkey="rowKey" class="cd-grid--row">
     <slot name="select"></slot>
     <slot name="begin"></slot>
     <slot :el="$vnode.child"></slot>
