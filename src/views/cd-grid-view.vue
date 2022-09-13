@@ -1,11 +1,19 @@
 <template>
-  <cd-grid :collection="collection" :select-rows="false" :descriptor="columns" key-field="ObjectID">
+  <cd-grid :collection="collection" :select-rows="config.selectRows" :descriptor="columns" key-field="ObjectID" :show-header="config.showHeader" :zebra-cols="config.zebraCols" :zebra-rows="config.zebraRows" :highlight-on-hover="config.highlight" :small="config.small" :row-class="rowClass" :cell-class="cellClass">
+    <el-form slot="tuner" v-model="config" size="mini" inline>
+      <el-form-item prop="selectRows" label="Можно ли выбирать строки"><el-checkbox v-model="config.selectRows"/></el-form-item>
+      <el-form-item prop="showHeader" label="Показывать заголовок"><el-checkbox v-model="config.showHeader"/></el-form-item>
+      <el-form-item prop="zebraRows" label="Полосатые строки"><el-checkbox v-model="config.zebraRows"/></el-form-item>
+      <el-form-item prop="zebraCols" label="Полосатые колонки"><el-checkbox v-model="config.zebraCols"/></el-form-item>
+      <el-form-item prop="highlight" label="Выделять при движении"><el-checkbox v-model="config.highlight"/></el-form-item>
+      <el-form-item prop="small" label="Small table"><el-checkbox v-model="config.small"/></el-form-item>
+    </el-form>
     <template slot-scope="{ header, row, property }">
       <template v-if="header">
         {{ property.text }}
       </template>
       <template v-else>
-        {{ row[property.datafield] }}
+        <div>{{ row[property.datafield] }}</div>
       </template>
     </template>
   </cd-grid>
@@ -15,11 +23,49 @@
 import cdGrid from '@/components/cd-grid.vue'
 import descriptor from '@/assets/descriptors'
 export default {
-  components: { cdGrid },
+  components: { 
+    'cd-grid': cdGrid
+  },
   data (view) {
     return {
       collection: [descriptor.object, descriptor.object, descriptor.object],
-      columns: descriptor.objectDescriptor
+      columns: descriptor.objectDescriptor,
+      config: {},
+      configDescriptor: [
+        {
+          datafield: 'selectRows',
+          text: 'Можно ли выбирать строки',
+          input: 'checkbox'
+        },
+        {
+          datafield: 'showHeader',
+          text: 'Показывать заголовок',
+          input: 'checkbox'
+        },
+        {
+          datafield: 'zebraRows',
+          text: 'Полосатые строки',
+          input: 'checkbox'
+        },
+        {
+          datafield: 'zebraCols',
+          text: 'Полосатые колонки',
+          input: 'checkbox'
+        },
+        {
+          datafield: 'highlight',
+          text: 'Выдялеть при движении (wft)',
+          input: 'checkbox'
+        }
+      ]
+    }
+  },
+  computed: {
+    rowClass (vm) {
+      return (row, index) => `row-class-${index}`
+    },
+    cellClass (vm) {
+      return (rowinfo, propinfo) => propinfo.prop.datafield
     }
   }
 }
