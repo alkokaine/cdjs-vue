@@ -1,19 +1,25 @@
 <template>
   <tbody v-loading="isLoading" class="cd-grid--body">
     <template v-for="(row, rindex) in collection">
-      <cd-row :key="rowKey(row, rindex)" :row="row">
-        <input v-if="selectRows" slot="select" type="checkbox" class="cd-grid--checkbox"/>
-        <template v-slot:default="{ el }">
-          <td v-for="(prop, cindex) in columns" :ref="propCellKey(prop, cindex)" :id="propCellKey(prop, rindex, cindex)" :key="propCellKey(prop, rindex, cindex)" class="cd-grid--cell">
-            <slot :data="{ row, $rowindex: rindex, $el: el }" :property="{ prop, $propindex: cindex }"></slot>
-          </td>
-        </template>
-      </cd-row>
-      <tr v-if="expandable" :key="appendix(rowKey(row))">
-        <td class="cd-grid-row--expanded cd-grid--cell" :colspan="columnstotal">
-          <slot :rowdetails="true" :data="{ row, $rowindex: rindex }"/>
+      <cd-row :row-key="rowKey(row, rindex)" :key="rowKey(row,rindex)">
+        <td v-if="selectRows" slot="select" class="cd-checkbox--cell">
+          <input type="checkbox" class="cd-grid--checkbox"/>
         </td>
-      </tr>
+        <td class="cd-grid--cell" slot="begin">
+          <slot :begin="true" :row="row" :rowindex="rindex"></slot>
+        </td>
+        <td v-for="(prop, cindex) in columns" :ref="propCellKey(prop, cindex)" :id="propCellKey(prop, rindex, cindex)" :key="propCellKey(prop, rindex, cindex)" class="cd-grid--cell">
+          <slot :row="row" :rowindex="rindex" :property="prop" :propindex="cindex"></slot>
+        </td>
+        <td class="cd-grid--cell" slot="end">
+          <slot :end="true" :row="row" :rowindex="rindex"></slot>
+        </td>
+      </cd-row>
+      <tr v-if="rowDetails" :key="appendix(rowKey(row))">
+          <td class="cd-grid-row--expanded cd-grid--cell" :colspan="columnstotal">
+            <slot :rowdetails="true" :row="row" :rowindex="rindex"/>
+          </td>
+        </tr>
     </template>
   </tbody>
 </template>
@@ -28,7 +34,7 @@
     props: {
       collection: { type: Array, required: true },
       columns: { type: Array, required: true },
-      expandable: { type: Boolean, default: false },
+      rowDetails: { type: Boolean, default: false },
       keyField: { type: String, required: true },
       selectRows: { type: Boolean },
       isLoading: { type: Boolean, default: false },

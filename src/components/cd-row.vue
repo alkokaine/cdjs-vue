@@ -1,15 +1,9 @@
 <template>
-  <tr>
-    <td v-if="$slots.select" class="cd-checkbox--cell">
-      <slot name="select"></slot>
-    </td>
-    <td v-if="$slots.begin">
-      <slot name="begin"></slot>
-    </td>
-    <slot :el="$vnode.child">{{ row }}</slot>
-    <td v-if="$slots.end">
-      <slot name="end"></slot>
-    </td>
+  <tr :id="rowKey">
+    <slot name="select"></slot>
+    <slot name="begin"></slot>
+    <slot :el="$vnode.child"></slot>
+    <slot name="end"></slot>
   </tr>
 </template>
 
@@ -17,7 +11,7 @@
 export default {
   name: 'cd-row',
   props: {
-    row: { type: Object, required: true }
+    rowKey: { type: [String, Number], required: true }
   },
   data (cdrow) {
     return {}

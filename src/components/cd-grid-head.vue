@@ -1,27 +1,28 @@
 <template>
   <thead class="cd-grid--head table-light border-top">
-    <tr class="ms-0 me-0">
-      <th v-if="selectRows" class="cd-checkbox--cell">
-        <input type="checkbox" class="cd-grid--checkbox" v-on:change="onSelectAll($event)" :checked="isSelected"/>
+    <cd-row row-key="header">
+      <th v-if="selectRows" scope="col" slot="select" class="cd-checkbox--cell">
+        <input type="checkbox" class="cd-grid--checkbox"/>
       </th>
-      <template v-if="columns.length">
-        <th scope="col"
-          v-for="(col, jindex) in columns"
-          :key="jindex" :class="col.headerclass">
-            <p class="mb-0">{{ col.text }}</p>
-        </th>
-      </template>
-      <template v-else>
-        <th scope="col"></th>
-      </template>
       <th scope="col"></th>
-    </tr>
+      <th scope="col" v-for="(col, jindex) in columns"
+        :key="jindex" :class="col.headerclass">
+        <p class="mb-0">
+          <slot :property="col" :propindex="jindex"></slot>
+        </p>
+      </th>
+      <th scope="col"></th>
+    </cd-row>
   </thead>
 </template>
 
 <script>
+import CDRow from './cd-row.vue'
 export default {
   name: 'cd-grid-head',
+  components: {
+    'cd-row': CDRow
+  },
   props: {
     columns: { type: Array, required: true },
     onSelectAll: { type: Function },
