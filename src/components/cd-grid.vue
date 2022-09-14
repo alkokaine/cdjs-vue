@@ -3,14 +3,16 @@
     <div v-if="$slots.tuner" class="cd-grid--tuner">
       <slot name="tuner"></slot>
     </div>
-    <table class="cd-grid--table table border-bottom" :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm': small }, borderclass]">
+    <table class="cd-grid--table table border-bottom" 
+    :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm': small }, borderclass]">
       <caption v-if="$slots.caption" class="cd-grid--caption"><slot name="caption"/></caption>
       <cd-grid-head v-if="showHeader" :columns="columns" :select-rows="selectRows" :head-class="headClass">
         <template slot-scope="{ property }">
           <slot :header="true" :property="property">{{ property.text }}</slot>
         </template>
       </cd-grid-head>
-      <cd-grid-body :collection="collection" :tbody-class="tbodyClass" :select-rows="selectRows" :columns="columns" :key-field="keyField" :row-details="rowDetails" :on-cell-click="onCellClick" :row-class="rowClass" :cell-class="cellClass">
+      <cd-grid-body :collection="collection" :tbody-class="tbodyClass" :select-rows="selectRows" :columns="columns" 
+        :key-field="keyField" :row-details="rowDetails" :on-cell-click="onCellClick" :row-class="rowClass" :cell-class="cellClass">
         <span slot-scope="{ rowdetails, row, rowindex, property, propindex }" class="cd-cell--content">
           <template v-if="property">
             <slot :property="property" :row="row" :$rowindex="rowindex" :$propindex="propindex"></slot>

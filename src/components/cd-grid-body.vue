@@ -1,7 +1,8 @@
 <template>
   <tbody v-loading="isLoading" class="cd-grid--body" :class="tbodyClass">
     <template v-for="(row, rindex) in collection">
-      <cd-row :row-key="rowKey(row, rindex)" :key="rowKey(row,rindex)" class="cd-body-row" :class="[ isRowClassFunction ? rowClass(row, rindex) : rowClass]">
+      <cd-row :row-key="rowKey(row, rindex)" :key="rowKey(row,rindex)" class="cd-body-row" 
+        :class="[ isRowClassFunction ? rowClass(row, rindex) : rowClass]">
         <td v-if="selectRows" slot="select" class="cd-checkbox--cell">
           <input type="checkbox" class="cd-grid--checkbox"/>
         </td>
@@ -9,7 +10,9 @@
           <slot :begin="true" :row="row" :rowindex="rindex"></slot>
         </td>
         <template v-if="columns.length">
-          <td v-for="(prop, cindex) in columns" :ref="propCellKey(prop, cindex)" :id="propCellKey(prop, rindex, cindex)" :key="propCellKey(prop, rindex, cindex)" class="cd-grid--cell" :class="[prop.cellclass, isCellClassFunction ? cellClass({ row, rindex }, { prop, cindex }) : cellClass ]">
+          <td v-for="(prop, cindex) in columns" :ref="propCellKey(prop, cindex)"
+          :id="propCellKey(prop, rindex, cindex)" :key="propCellKey(prop, rindex, cindex)"
+          class="cd-grid--cell" :class="[prop.cellclass, isCellClassFunction ? cellClass({ row, rindex }, { prop, cindex }) : cellClass ]">
             <slot :row="row" :rowindex="rindex" :property="prop" :propindex="cindex"></slot>
           </td>
         </template>

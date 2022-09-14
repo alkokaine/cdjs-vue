@@ -1,5 +1,8 @@
 <template>
-  <cd-grid :collection="collection" :select-rows="config.selectRows" :descriptor="columns" key-field="ObjectID" :show-header="config.showHeader" :zebra-cols="config.zebraCols" :zebra-rows="config.zebraRows" :highlight-on-hover="config.highlight" :small="config.small" :row-class="rowClass" :cell-class="cellClass">
+  <cd-grid :collection="collection" :select-rows="config.selectRows" :descriptor="columns"
+    key-field="ObjectID" :show-header="config.showHeader" :zebra-cols="config.zebraCols"
+    :zebra-rows="config.zebraRows" :highlight-on-hover="config.highlight" :small="config.small"
+    :row-class="rowClass" :cell-class="cellClass">
     <el-form slot="tuner" v-model="config" size="mini" inline>
       <el-form-item prop="selectRows" label="Можно ли выбирать строки"><el-checkbox v-model="config.selectRows"/></el-form-item>
       <el-form-item prop="showHeader" label="Показывать заголовок"><el-checkbox v-model="config.showHeader"/></el-form-item>
@@ -23,6 +26,7 @@
 import cdGrid from '@/components/cd-grid.vue'
 import descriptor from '@/assets/descriptors'
 export default {
+  name: 'cd-grid-view',
   components: { 
     'cd-grid': cdGrid
   },
