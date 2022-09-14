@@ -3,14 +3,13 @@ import CDGrid from '@/components/cd-grid'
 import CDGridHead from '@/components/cd-grid-head'
 import { mount } from "@vue/test-utils"
 
-
-describe('[cd-grid] head class', () => {
-  const propsDataFactory = (headerclass = undefined) => ({
-    columns: descriptors.objectDescriptor,
-    keyField: 'ObjectID',
-    collection: [],
-    headClass: headerclass
-  })
+const propsDataFactory = (headerclass = undefined) => ({
+  columns: descriptors.objectDescriptor,
+  keyField: 'ObjectID',
+  collection: [],
+  headClass: headerclass
+})
+describe('[cd-grid] [head-class] is default or props value', () => {
   it ('[head-class] is undefined', done => {
     const gridwrapper = mount(CDGrid, { propsData: propsDataFactory() })
     expect(gridwrapper.vm.headClass).toBe('cd-grid--head-base')
@@ -23,19 +22,26 @@ describe('[cd-grid] head class', () => {
     expect(gridwrapper.findAll('.cd-head--test').length).toBe(1)
     done()
   })
-  it ('[head-class] is Array', done => {
-    const array = ['cd-head--test-array-1', 'cd-head--test-array-2']
-    const gridwrapper = mount(CDGrid, { propsData: propsDataFactory(array)})
+})
+describe ('[cd-grid] [head-class] is Array', () => {
+  const array = ['cd-head--test-array-1', 'cd-head--test-array-2']
+  const gridwrapper = mount(CDGrid, { propsData: propsDataFactory(array)})
+  it ('[cd-grid].headClass instance equals [array]', (done) => {
     expect(gridwrapper.vm.headClass).toBe(array)
-    const headWrappers = gridwrapper.findAllComponents(CDGridHead).wrappers
-    expect(headWrappers.length).toBe(1)
-    const wrapper = headWrappers[0]
-    expect(wrapper).toBeDefined()
-    expect(wrapper.vm.headClass).toBe(array)
-    expect(array.map(c => wrapper.element.className.indexOf(c) >= 0).every(e => e === true)).toBeTruthy()
-    const array1 = wrapper.find('.cd-head--test-array-1')
-    const array2 = wrapper.find('.cd-head--test-array-2')
-    expect(array1.element).toBe(array2.element)
+    done()
+  })
+  it ('[cd-grid] has ONE [cd-grid-head]', (done) => {
+    expect(gridwrapper.findAll(CDGridHead).length).toBe(1)
+    done()
+  })
+  it ('all classes from [array] are applied to [cd-grid-head] element', (done) => {
+    const headWrapper = gridwrapper.findComponent(CDGridHead)
+    const classes = Array.from(headWrapper.element.classList)
+    expect(array.map(c => classes.indexOf(c) >= 0).every(e => e === true)).toBeTruthy()
+    done()
+  })
+  it ('element with class [.cd-head--test-array-1] equals element with class [.cd-head--test-array-2]', (done) => {
+    expect(gridwrapper.find('.cd-head--test-array-1').element).toBe(gridwrapper.find('.cd-head--test-array-2').element)
     done()
   })
 })
