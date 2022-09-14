@@ -1,6 +1,7 @@
 import descriptors from "@/assets/descriptors"
 import CDGrid from '@/components/cd-grid'
 import CDGridHead from '@/components/cd-grid-head'
+import CDGridBody from '@/components/cd-grid-body'
 import { mount } from "@vue/test-utils"
 
 const propsDataFactory = (headerclass = undefined) => ({
@@ -8,6 +9,12 @@ const propsDataFactory = (headerclass = undefined) => ({
   keyField: 'ObjectID',
   collection: [],
   headClass: headerclass
+})
+const bodyClassFactory = (bodyClass = undefined)=> ({
+  columns: descriptors.objectDescriptor,
+  keyField: 'ObjectID',
+  collection: [],
+  tbodyClass: bodyClass
 })
 describe('[cd-grid] [head-class] is default or props value', () => {
   it ('[head-class] is undefined', done => {
@@ -42,6 +49,43 @@ describe ('[cd-grid] [head-class] is Array', () => {
   })
   it ('element with class [.cd-head--test-array-1] equals element with class [.cd-head--test-array-2]', (done) => {
     expect(gridwrapper.find('.cd-head--test-array-1').element).toBe(gridwrapper.find('.cd-head--test-array-2').element)
+    done()
+  })
+})
+
+describe('[cd-grid] [body-class] is default or props value', () => {
+  it ('[body-class] is undefined', done => {
+    const gridwrapper = mount(CDGrid, { propsData: bodyClassFactory() })
+    expect(gridwrapper.vm.tbodyClass).toBe('cd-grid--body-base')
+    expect(gridwrapper.findAll('.cd-grid--body-base').length).toBe(1)
+    done()
+  })
+  it ('[body-class] is [.cd-body--test]', done => {
+    const gridwrapper = mount(CDGrid, { propsData: bodyClassFactory('cd-body--test') })
+    expect(gridwrapper.vm.tbodyClass).toBe('cd-body--test')
+    expect(gridwrapper.findAll('.cd-body--test').length).toBe(1)
+    done()
+  })
+})
+describe ('[cd-grid] [body-class] is Array', () => {
+  const array = ['cd-body--test-array-1', 'cd-body--test-array-2']
+  const gridwrapper = mount(CDGrid, { propsData: bodyClassFactory(array)})
+  it ('[cd-grid].bodyClass instance equals [array]', (done) => {
+    expect(gridwrapper.vm.tbodyClass).toBe(array)
+    done()
+  })
+  it ('[cd-grid] has ONE [cd-grid-body]', (done) => {
+    expect(gridwrapper.findAll(CDGridBody).length).toBe(1)
+    done()
+  })
+  it ('all classes from [array] are applied to [cd-grid-body] element', (done) => {
+    const headWrapper = gridwrapper.findComponent(CDGridBody)
+    const classes = Array.from(headWrapper.element.classList)
+    expect(array.map(c => classes.indexOf(c) >= 0).every(e => e === true)).toBeTruthy()
+    done()
+  })
+  it ('element with class [.cd-body--test-array-1] equals element with class [.cd-body--test-array-2]', (done) => {
+    expect(gridwrapper.find('.cd-body--test-array-1').element).toBe(gridwrapper.find('.cd-body--test-array-2').element)
     done()
   })
 })
