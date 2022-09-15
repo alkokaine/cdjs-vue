@@ -129,7 +129,7 @@ describe('[cd-grid][head-cell] class is not default', () => {
     expect(headCell.mock.calls.length).toBe(wrapper.vm.columns.length)
     done()
   })
-  it (`[cd-grid] has ${wrapper.vm.columns} [.cd-header--cell] elements`, done => {
+  it (`[cd-grid] has ${wrapper.vm.columns.length} [.cd-header--cell] elements`, done => {
     expect(headerCells.length).toBe(wrapper.vm.columns.length)
     done()
   })
