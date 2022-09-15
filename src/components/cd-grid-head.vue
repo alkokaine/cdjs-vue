@@ -29,7 +29,7 @@ export default {
     isSelected: { type: Boolean },
     selectRows: { type: Boolean, default: false },
     headClass: { type: [String, Object, Array] },
-    cellClass: { type: [String, Object, Array, Function] }
+    cellClass: { type: [String, Object, Array, Function], default: 'cd-grid-head--cell-base' }
   },
   data (head) {
     return {

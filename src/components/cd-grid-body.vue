@@ -1,5 +1,5 @@
 <template>
-  <tbody v-loading="isLoading" class="cd-grid--body" :class="tbodyClass">
+  <tbody v-loading="isLoading" class="cd-grid--body">
     <template v-for="(row, rindex) in collection">
       <cd-row :row-key="rowKey(row, rindex)" :key="rowKey(row,rindex)" class="cd-body-row" 
         :class="[ isRowClassFunction ? rowClass(row, rindex) : rowClass]">
@@ -47,7 +47,7 @@
       'loading': Loading
     },
     props: {
-      tbodyClass: { type: [String, Array, Object] },
+      rowKey: { type: Function },
       collection: { type: Array, required: true },
       columns: { type: Array, required: true },
       rowDetails: { type: Boolean, default: false },
@@ -56,7 +56,7 @@
       isLoading: { type: Boolean, default: false },
       onCellClick: { type: Function },
       rowClass: { type: [String, Object, Array, Function] },
-      cellClass: { type: [String, Object, Array, Function] }
+      cellClass: { type: [String, Object, Array, Function], default: 'cd-grid-body--cell-base' }
     },
     data (body) {
       return {
@@ -66,10 +66,6 @@
       }
     },
     methods: {
-      rowKey (row, index) {
-        const keyfield = this.keyField
-        return row[keyfield] 
-      },
       appendix (key) {
         return `${key}_apx`
       },
