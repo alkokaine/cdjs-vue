@@ -55,7 +55,7 @@
       selectRows: { type: Boolean },
       isLoading: { type: Boolean, default: false },
       onCellClick: { type: Function },
-      rowClass: { type: [String, Object, Array, Function] },
+      rowClass: { type: [String, Object, Array, Function], default: 'cd-body-row--base' },
       cellClass: { type: [String, Object, Array, Function], default: 'cd-grid-body--cell-base' }
     },
     data (body) {
