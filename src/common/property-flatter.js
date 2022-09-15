@@ -1,5 +1,5 @@
 const hasArray = (payload, property) => Object.prototype.hasOwnProperty.call(payload, property) && Array.isArray(payload[property])
-import propertyDecorator from './property-decorator'
+
 export default function flatterer (arr, accum) {
     return (arr || []).reduce((acc, u) => { // выбираем между arr и пустым
       // массивом и выполняем над ним reduce
