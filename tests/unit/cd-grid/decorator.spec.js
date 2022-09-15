@@ -3,6 +3,7 @@ import CDGrid from '@/components/cd-grid'
 import CDGridHead from '@/components/cd-grid-head'
 import CDGridBody from '@/components/cd-grid-body'
 import { mount } from "@vue/test-utils"
+import Vue from "vue"
 
 const propsDataFactory = (headerclass = undefined) => ({
   columns: descriptors.objectDescriptor,
@@ -14,7 +15,7 @@ const bodyClassFactory = (bodyClass = undefined)=> ({
   columns: descriptors.objectDescriptor,
   keyField: 'ObjectID',
   collection: [],
-  tbodyClass: bodyClass
+  bodyClass: bodyClass
 })
 describe('[cd-grid] [head-class] is default or props value', () => {
   it ('[head-class] is undefined', done => {
@@ -38,7 +39,7 @@ describe ('[cd-grid] [head-class] is Array', () => {
     done()
   })
   it ('[cd-grid] has ONE [cd-grid-head]', (done) => {
-    expect(gridwrapper.findAll(CDGridHead).length).toBe(1)
+    expect(gridwrapper.findAllComponents(CDGridHead).length).toBe(1)
     done()
   })
   it ('all classes from [array] are applied to [cd-grid-head] element', (done) => {
@@ -56,13 +57,13 @@ describe ('[cd-grid] [head-class] is Array', () => {
 describe('[cd-grid] [body-class] is default or props value', () => {
   it ('[body-class] is undefined', done => {
     const gridwrapper = mount(CDGrid, { propsData: bodyClassFactory() })
-    expect(gridwrapper.vm.tbodyClass).toBe('cd-grid--body-base')
+    expect(gridwrapper.vm.bodyClass).toBe('cd-grid--body-base')
     expect(gridwrapper.findAll('.cd-grid--body-base').length).toBe(1)
     done()
   })
   it ('[body-class] is [.cd-body--test]', done => {
     const gridwrapper = mount(CDGrid, { propsData: bodyClassFactory('cd-body--test') })
-    expect(gridwrapper.vm.tbodyClass).toBe('cd-body--test')
+    expect(gridwrapper.vm.bodyClass).toBe('cd-body--test')
     expect(gridwrapper.findAll('.cd-body--test').length).toBe(1)
     done()
   })
@@ -71,11 +72,11 @@ describe ('[cd-grid] [body-class] is Array', () => {
   const array = ['cd-body--test-array-1', 'cd-body--test-array-2']
   const gridwrapper = mount(CDGrid, { propsData: bodyClassFactory(array)})
   it ('[cd-grid].bodyClass instance equals [array]', (done) => {
-    expect(gridwrapper.vm.tbodyClass).toBe(array)
+    expect(gridwrapper.vm.bodyClass).toBe(array)
     done()
   })
   it ('[cd-grid] has ONE [cd-grid-body]', (done) => {
-    expect(gridwrapper.findAll(CDGridBody).length).toBe(1)
+    expect(gridwrapper.findAllComponents(CDGridBody).length).toBe(1)
     done()
   })
   it ('all classes from [array] are applied to [cd-grid-body] element', (done) => {
