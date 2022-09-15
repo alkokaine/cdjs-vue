@@ -13,7 +13,7 @@
         </template>
       </cd-grid-head>
       <cd-grid-body :collection="collection" :class="resolveBodyClass" :select-rows="selectRows" :columns="columns" :row-key="rowKeyResolved"
-        :key-field="keyField" :row-details="rowDetails" :on-cell-click="onCellClick" :row-class="rowClass" :cell-class="bodyCellClass">
+        :key-field="keyField" :row-details="rowDetails" :row-class="rowClass" :cell-class="bodyCellClass">
         <span slot-scope="{ rowdetails, row, rowindex, property, propindex }" class="cd-cell--content">
           <template v-if="property">
             <slot :property="property" :row="row" :$rowindex="rowindex" :$propindex="propindex"></slot>
@@ -65,12 +65,6 @@ export default {
     rowClass: { type: [String, Object, Array, Function] },
     headCellClass: { type: [String, Object, Array, Function] },
     bodyCellClass: { type: [String, Object, Array, Function] },
-    onCellClick: {
-      type: Function, 
-      default: function (...args) {
-        console.log(args)
-      }
-    },
     rowKey: { 
       type: Function,
       default: function (row, index) {
