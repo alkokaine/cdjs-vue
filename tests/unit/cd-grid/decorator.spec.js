@@ -6,16 +6,22 @@ import { mount } from "@vue/test-utils"
 import Vue from "vue"
 
 const propsDataFactory = (headerclass = undefined) => ({
-  columns: descriptors.objectDescriptor,
+  descriptor: descriptors.objectDescriptor,
   keyField: 'ObjectID',
   collection: [],
   headClass: headerclass
 })
 const bodyClassFactory = (bodyClass = undefined)=> ({
-  columns: descriptors.objectDescriptor,
+  descriptor: descriptors.objectDescriptor,
   keyField: 'ObjectID',
   collection: [],
   bodyClass: bodyClass
+})
+const headCellClassFactory = (headCellClass) => ({
+  descriptor: descriptors.objectDescriptor,
+  keyField: 'ObjectID',
+  collection: [],
+  headCellClass
 })
 describe('[cd-grid] [head-class] is default or props value', () => {
   it ('[head-class] is undefined', done => {
@@ -87,6 +93,20 @@ describe ('[cd-grid] [body-class] is Array', () => {
   })
   it ('element with class [.cd-body--test-array-1] equals element with class [.cd-body--test-array-2]', (done) => {
     expect(gridwrapper.find('.cd-body--test-array-1').element).toBe(gridwrapper.find('.cd-body--test-array-2').element)
+    done()
+  })
+})
+
+describe('[cd-grid][head-cell] class is not default', () => {
+  it ('[cd-grid] has no [.cd-grid-head--cell-base] elements', (done) => {
+    const headCell = jest.fn((property, index) => (property.datafield))
+    const wrapper = mount(CDGrid, { propsData: headCellClassFactory(headCell) })
+    const headerCells = wrapper.findAll('.cd-header--cell')
+    const headercols = wrapper.vm.columns.map(c => wrapper.findAll(`.${c.datafield}`))
+    expect(headCell.mock.calls.length).toBe(wrapper.vm.columns.length)
+    expect(headerCells.length).toBe(wrapper.vm.columns.length)
+    expect(wrapper.findAll('.cd-grid-head--cell-base').length).toBe(0)
+    expect(headercols.every(e => e.wrappers.length === 1)).toBeTruthy()
     done()
   })
 })
