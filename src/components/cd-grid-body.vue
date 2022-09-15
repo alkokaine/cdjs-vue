@@ -6,7 +6,7 @@
         <td v-if="selectRows" slot="select" class="cd-checkbox--cell">
           <input type="checkbox" class="cd-grid--checkbox"/>
         </td>
-        <td class="cd-grid--cell" slot="begin">
+        <td class="cd-cell--placeholder" slot="begin">
           <slot :begin="true" :row="row" :rowindex="rindex"></slot>
         </td>
         <template v-if="columns.length">
@@ -21,12 +21,12 @@
             <slot :row="row" :rowindex="rindex" :empty="true"></slot>
           </td>
         </template>
-        <td class="cd-grid--cell" slot="end">
+        <td class="cd-cell--placeholder" slot="end">
           <slot :end="true" :row="row" :rowindex="rindex"></slot>
         </td>
       </cd-row>
-      <tr v-if="rowDetails" :key="appendix(rowKey(row))">
-        <td class="cd-grid-row--expanded cd-grid--cell" :colspan="columnstotal">
+      <tr v-if="rowDetails" :key="appendix(rowKey(row))" class="cd-row--details">
+        <td class="cd-grid-row--expanded" :colspan="columnstotal">
           <slot :rowdetails="true" :row="row" :rowindex="rindex"/>
         </td>
       </tr>
