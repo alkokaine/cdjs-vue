@@ -168,7 +168,7 @@ describe('[cd-grid][row-class] class', () => {
     expect(typeof wrapper.vm.rowClass).toBe('function')
     done()
   })
-  it ('[cd-grid].[row-class] calls collection.length times', (done) => {
+  it (`[cd-grid].[row-class] calls ${wrapper.vm.collection.length} times`, (done) => {
     expect(rowClass.mock.calls.length).toBe(wrapper.vm.collection.length)
     done()
   })
