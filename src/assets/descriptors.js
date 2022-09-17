@@ -404,5 +404,92 @@ export default {
     },
     "ObjectID":121,
     "UltraShortName":"МАДОУ №123"
-  }
+  },
+  inputObject: {
+    select: 1,
+    autocomplete: '2',
+    number: 3,
+    textarea: 4,
+    checkbox: false,
+    date: new Date(Date.now()),
+    datetime: 7,
+    email: 'foo@bar.net',
+    radio: 'no',
+    tel: '+791113121488',
+    url: 'bar.net',
+    text: 'aaa',
+    file: null
+  },
+  inputs: [
+    {
+      input: 'select',
+      datafield: 'select',
+      text: 'select'
+    },
+    {
+      input: 'autocomplete',
+      datafield: 'autocomplete',
+      text: 'autocomplete'
+    },
+    {
+      input: 'number',
+      datafield: 'number',
+      text: 'number'
+    },
+    {
+      input: 'textarea',
+      datafield: 'textarea',
+      text: 'textarea'
+    },
+    {
+      input: 'checkbox',
+      datafield: 'checkbox',
+      text: 'checkbox'
+    },
+    {
+      input: 'date',
+      datafield: 'date',
+      text: 'date'
+    },
+    {
+      input: 'datetime',
+      datafield: 'datetime',
+      text: 'datetime'
+    },
+    {
+      input: 'email',
+      datafield: 'email',
+      text: 'email'
+    },
+    {
+      input: 'radio',
+      datafield: 'radio',
+      text: 'radio'
+    },
+    {
+      input: 'range',
+      datafield: 'range',
+      text: 'range'
+    },
+    {
+      input: 'tel',
+      datafield: 'tel',
+      text: 'tel'
+    },
+    {
+      input: 'text',
+      datafield: 'text',
+      text: 'text'
+    },
+    {
+      input: 'url',
+      datafield: 'url',
+      text: 'url'
+    },
+    {
+      input: 'file',
+      datafield: 'file',
+      text: 'file'
+    }
+  ]
 }
