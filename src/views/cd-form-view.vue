@@ -11,8 +11,8 @@ export default {
   },
   data (view) {
     return {
-      descriptor: example.objectDescriptor,
-      payload: example.object
+      descriptor: example.inputs,
+      payload: example.inputObject
     }
   }
 }
