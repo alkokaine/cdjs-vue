@@ -5,7 +5,8 @@ import decorator from '@/common/property-decorator'
 import flatterer from '@/common/property-flatter'
 import CDCell from '@/components/cd-cell'
 import Vue from 'vue'
-
+import Element from 'element-ui'
+Vue.use(Element)
 describe('[cd-form] mounting', () => {
   const propsData = {
       descriptor: descriptor.objectDescriptor,
