@@ -424,7 +424,20 @@ export default {
     {
       input: 'select',
       datafield: 'select',
-      text: 'select'
+      text: 'select',
+      placeholder: 'select....',
+      valuekey: 'key',
+      labelkey: 'label',
+      values: [
+        {
+          key: 1,
+          label: 'first'
+        },
+        {
+          key: 2,
+          label: 'second'
+        }
+      ]
     },
     {
       input: 'autocomplete',
