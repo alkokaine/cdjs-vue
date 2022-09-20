@@ -1,5 +1,8 @@
 <template>
-  <cd-form :descriptor="descriptor" :payload="payload"></cd-form>
+  <div class="cd-form--view">
+    <cd-form :descriptor="descriptor" :payload="payload"></cd-form>
+    <cd-form :descriptor="objectDescriptor" :payload="object"></cd-form>
+  </div>
 </template>
 
 <script>
@@ -12,7 +15,9 @@ export default {
   data (view) {
     return {
       descriptor: example.inputs,
-      payload: example.inputObject
+      payload: example.inputObject,
+      objectDescriptor: example.objectDescriptor,
+      object: example.object
     }
   }
 }
