@@ -30,7 +30,10 @@ export default {
                 {
                   datafield: 'Is24Group',
                   input: 'checkbox',
-                  text: 'Круглосуточно'
+                  text: 'Круглосуточно',
+                  propClass (payload) {
+                    return `checkbox-${payload.ObjectID}`
+                  }
                 },
                 {
                   datafield: 'IsBudget',
