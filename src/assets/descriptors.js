@@ -23,14 +23,17 @@ export default {
                   text: 'Краткое название'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
                 {
                   datafield: 'Is24Group',
                   input: 'checkbox',
-                  text: 'Круглосуточно'
+                  text: 'Круглосуточно',
+                  propClass (payload) {
+                    return `checkbox-${payload.ObjectID}`
+                  }
                 },
                 {
                   datafield: 'IsBudget',
@@ -38,7 +41,7 @@ export default {
                   input:'checkbox'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -52,7 +55,7 @@ export default {
                   text: 'Департамент'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -65,7 +68,7 @@ export default {
                   text: 'Код'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -78,7 +81,7 @@ export default {
                   text: 'Порядок сортировки'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -107,7 +110,7 @@ export default {
                   },
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
           ]
         },
@@ -125,7 +128,7 @@ export default {
                             text: 'Город'
                         },
                     ],
-                    class: 'row row-cols-2'
+                    propClass: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -138,7 +141,7 @@ export default {
                             text: 'Улица'
                         },
                     ],
-                    class: 'row row-cols-2'
+                    propClass: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -151,7 +154,7 @@ export default {
                             text: 'Корпус'
                         },
                     ],
-                    class: 'row row-cols-2'
+                    propClass: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -164,7 +167,7 @@ export default {
                             text: 'E-mail'
                         },
                     ],
-                    class: 'row row-cols-2'
+                    propClass: 'row row-cols-2'
                 },
                 {
                     descriptor: [
@@ -178,7 +181,7 @@ export default {
                             text: 'Сайт'
                         },
                     ],
-                    class: 'row row-cols-2'
+                    propClass: 'row row-cols-2'
                 },
                 {
                     datafield: 'CityID',
@@ -187,7 +190,7 @@ export default {
             ]
         },
       ],
-      class: 'row row-cols-2'
+      propClass: 'row row-cols-2'
     },
     {
       descriptor: [
@@ -206,7 +209,7 @@ export default {
                   text: 'ОКПО'
                 }
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -219,7 +222,7 @@ export default {
                     text: 'ОКВЭД'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -232,7 +235,7 @@ export default {
                   text: 'Корр/счет'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -246,7 +249,7 @@ export default {
                   text: 'Корр.банк'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               datafield: 'CurrentAccount',
@@ -263,7 +266,7 @@ export default {
                   text: 'Лицевой счет2'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               datafield: 'MunAccount',
@@ -294,7 +297,7 @@ export default {
                   input: 'checkbox'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -307,7 +310,7 @@ export default {
                   text: 'E-mail'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -320,7 +323,7 @@ export default {
                   text: 'Подпись для документов'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             },
             {
               descriptor: [
@@ -334,12 +337,12 @@ export default {
                   input: 'autocomplete'
                 },
               ],
-              class: 'row row-cols-2'
+              propClass: 'row row-cols-2'
             }
           ]
         }
       ],
-      class: 'row row-cols-2'
+      propClass: 'row row-cols-2'
     }
   ],
   object: {
