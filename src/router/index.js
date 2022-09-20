@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/home-view.vue'
+import CdPropsView from '../views/cd-props-view.vue'
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/cd-props',
+    name: 'props',
+    component: CdPropsView
   }
 ]
 
