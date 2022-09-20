@@ -112,7 +112,10 @@ export default {
               ],
               propClass: 'row row-cols-2'
             },
-          ]
+          ],
+          isDisabled (payload) {
+            return payload.ObjectID === 121
+          }
         },
         {
             text: 'Адрес и контактные данные',
