@@ -1,11 +1,9 @@
 <template>
   <div class="cd-list-view">
-    <cd-list :remote-method="getdata" :payload="payload"
-      :resolve-result="resolveCollection" key-field="key"
-      :collection="collection" row-class="cd-list--test-item">
+    <cd-list :remote-method="getdata" :payload="payload" :resolve-result="resolveCollection" key-field="key" :is-row-visible="isRowVisible" :collection="collection" :row-class="rowClass">
       <div slot="header">
         <h3>CD-LIST</h3>
-        <input type="range" v-model.number="payload"/>
+        <input type="range" v-model.number.lazy="payload"/>
       </div>
       <span slot-scope="{ row }">{{ row }}</span>
     </cd-list>
@@ -29,12 +27,15 @@ export default {
       this.collection = result
     },
     getdata(payload, resolve) {
-      resolve(Array.from(Array(payload).keys()).map(m => ({ key: m })))
+      setTimeout(() => resolve(Array.from(Array(payload).keys()).map(m => ({ key: m }))), 500)
     }
   },
   computed: {
     rowClass (vm) {
       return (row, index) => (`cd-list-view--index-${index}-row-${row.key}-payload-${vm.payload}`)
+    },
+    isRowVisible (vm) {
+      return (row, index) => index % 3 === 0
     }
   }
 }
