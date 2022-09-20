@@ -1,5 +1,5 @@
 <template>
-  <cd-props :payload="object" :descriptor="properties"></cd-props>
+  <cd-props class="container text-start" :payload="object" :descriptor="properties"></cd-props>
 </template>
 
 <script>
