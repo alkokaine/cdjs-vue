@@ -1,10 +1,10 @@
 <template>
-  <cd-props-base :descriptor="descriptor" :payload="payload" :parentprop="parentprop">
+  <cd-props-base :descriptor="descriptor" :payload="payload" :owner="owner">
     <template slot-scope="{ property, hasDescriptor, parent }">
-      <cd-props v-if="hasDescriptor" :descriptor="property.descriptor" :payload="payload" :parentprop="property"/>
-      <div v-else class="cd-property" :data-property="property.datafield">
+      <cd-props v-if="hasDescriptor" :descriptor="property.descriptor" :payload="payload" :owner="property"/>
+      <div v-else class="cd-property" :data-property="property.datafield" :class="resolvePropertyClass(property.propClass)">
         <slot :property="property" :parent="parent" :hasDescriptor="hasDescriptor">
-          <span>{{ payload[property.datafield] }}</span>
+          <span class="cd-property--value">{{ payload[property.datafield] }}</span>
         </slot>
       </div>
     </template>
@@ -19,10 +19,14 @@ export default {
   props: {
     descriptor: { type: Array, required: true },
     payload: { type: Object, required: true },
-    parentprop: { type: Object }
+    owner: { type: Object }
   },
   data (base) {
-    return {
+    return {}
+  },
+  computed: {
+    resolvePropertyClass (vm) {
+      return (propClass) => typeof propClass === 'function' ? propClass(vm.payload) : propClass
     }
   }
 }
