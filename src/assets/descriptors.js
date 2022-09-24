@@ -7,6 +7,7 @@ export default {
       descriptor: [
         {
           text: 'Общее',
+          name: 'general',
           descriptor: [
             {
               datafield: 'Name',
@@ -115,79 +116,80 @@ export default {
           ]
         },
         {
-            text: 'Адрес и контактные данные',
-            descriptor: [
-                {
-                    descriptor: [
-                        {
-                            datafield: 'PostIndex',
-                            text: 'Почтовый индекс'
-                        },
-                        {
-                            datafield: 'City',
-                            text: 'Город'
-                        },
-                    ],
-                    propClass: 'row row-cols-2'
-                },
-                {
-                    descriptor: [
-                        {
-                            datafield: 'Region',
-                            text: 'Район'
-                        },
-                        {
-                            datafield: 'Street',
-                            text: 'Улица'
-                        },
-                    ],
-                    propClass: 'row row-cols-2'
-                },
-                {
-                    descriptor: [
-                        {
-                            datafield: 'HouseNumber',
-                            text: 'Дом'
-                        },
-                        {
-                            datafield: 'HouseBlock',
-                            text: 'Корпус'
-                        },
-                    ],
-                    propClass: 'row row-cols-2'
-                },
-                {
-                    descriptor: [
-                        {
-                            datafield: 'PhoneNumber',
-                            text: 'Телефон'
-                        },
-                        {
-                            datafield: 'EMail',
-                            text: 'E-mail'
-                        },
-                    ],
-                    propClass: 'row row-cols-2'
-                },
-                {
-                    descriptor: [
-                        {
-                            datafield: 'FaxNumber',
-                            text: 'Факс'
-                        },
-    
-                        {
-                            datafield: 'WWW',
-                            text: 'Сайт'
-                        },
-                    ],
-                    propClass: 'row row-cols-2'
-                },
-                {
-                    datafield: 'CityID',
-                    text: 'Номер города'
-                },
-            ]
+          text: 'Адрес и контактные данные',
+          descriptor: [
+              {
+                  descriptor: [
+                      {
+                          datafield: 'PostIndex',
+                          text: 'Почтовый индекс'
+                      },
+                      {
+                          datafield: 'City',
+                          text: 'Город'
+                      },
+                  ],
+                  propClass: 'row row-cols-2'
+              },
+              {
+                  descriptor: [
+                      {
+                          datafield: 'Region',
+                          text: 'Район'
+                      },
+                      {
+                          datafield: 'Street',
+                          text: 'Улица'
+                      },
+                  ],
+                  propClass: 'row row-cols-2'
+              },
+              {
+                  descriptor: [
+                      {
+                          datafield: 'HouseNumber',
+                          text: 'Дом'
+                      },
+                      {
+                          datafield: 'HouseBlock',
+                          text: 'Корпус'
+                      },
+                  ],
+                  propClass: 'row row-cols-2'
+              },
+              {
+                  descriptor: [
+                      {
+                          datafield: 'PhoneNumber',
+                          text: 'Телефон'
+                      },
+                      {
+                          datafield: 'EMail',
+                          text: 'E-mail'
+                      },
+                  ],
+                  propClass: 'row row-cols-2'
+              },
+              {
+                  descriptor: [
+                      {
+                          datafield: 'FaxNumber',
+                          text: 'Факс'
+                      },
+  
+                      {
+                          datafield: 'WWW',
+                          text: 'Сайт'
+                      },
+                  ],
+                  propClass: 'row row-cols-2'
+              },
+              {
+                  datafield: 'CityID',
+                  text: 'Номер города'
+              },
+          ],
+          name: 'address-contacts'
         },
       ],
       propClass: 'row row-cols-2'
@@ -276,10 +278,12 @@ export default {
               datafield: 'UFK',
               text: 'УФК'
             },
-          ]
+          ],
+          name: 'requisities'
         },
         {
           text: 'Руководитель',
+          name: 'manager',
           descriptor: [
             {
               datafield: 'HeadPosition',
