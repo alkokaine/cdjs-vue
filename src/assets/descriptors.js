@@ -1,6 +1,9 @@
 /* eslint-disable */ 
 import Vue from 'vue'
- 
+const generalPropClass = jest.fn((payload) => {
+  if (payload.BIC === '014705901') return 'cd-custom-property-class'
+})
+
 export default {
   objectDescriptor: [
     {
@@ -113,7 +116,8 @@ export default {
               ],
               propClass: 'row row-cols-2'
             },
-          ]
+          ],
+          propClass: generalPropClass
         },
         {
           text: 'Адрес и контактные данные',
@@ -411,5 +415,6 @@ export default {
     },
     "ObjectID":121,
     "UltraShortName":"МАДОУ №123"
-  }
+  },
+  generalPropClass
 }
