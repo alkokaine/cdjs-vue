@@ -5,6 +5,11 @@
       <slot name="text"></slot>
     </template>
     <slot slot-scope="{ row, index }" :property="row" :parent="owner" :config="config(row)" :index="index"/>
+    <template slot="footer">
+      <template v-if="!hasDescriptor">
+        {{ payload }}
+      </template>
+    </template>
   </cd-list>
 </template>
 
@@ -24,7 +29,8 @@ export default {
   },
   data (propsbase) {
     return {
-      propClass: decorator.resolvePropertyClass(propsbase.owner, propsbase.payload)
+      propClass: decorator.resolvePropertyClass(propsbase.owner, propsbase.payload),
+      hasDescriptor: propsbase.descriptor.length > 0
     }
   },
   computed: {
