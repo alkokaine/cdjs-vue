@@ -17,14 +17,7 @@ export default {
     'cd-list': CDList
   },
   props: {
-    config: {
-      type: Function,
-      default: function (property) {
-        return {
-          hasDescriptor: decorator.hasDescriptor(property)
-        }
-      }
-    },
+    config: { type: Function, required: true },
     descriptor: { type: Array, required: true, description: 'Массив свойств', default: () => ([]) },
     owner: { type: Object, default: Object, description: 'Объект-дескриптор' },
     payload: { type: Object, required: true }
