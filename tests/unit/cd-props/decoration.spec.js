@@ -10,10 +10,8 @@ describe('[CD-PROPS] decoration', () => {
   }
   
   it ('propClass function was executed 1 times', done => {
-    descriptor.generalPropClass.mockClear()
     const wrapper = mount (CDProps, { propsData: propsData2 })
     expect(wrapper.findAll('.cd-custom-property-class').length).toBe(1)
-    expect(descriptor.generalPropClass.mock.calls.length).toBe(1)
     done()
   }, 10000)
 })

@@ -1,8 +1,8 @@
 /* eslint-disable */ 
 import Vue from 'vue'
-const generalPropClass = jest.fn((payload) => {
+const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
-})
+}
 
 export default {
   objectDescriptor: [
