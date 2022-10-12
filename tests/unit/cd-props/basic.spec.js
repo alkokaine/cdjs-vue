@@ -1,17 +1,33 @@
 import CDProps from '@/components/cd-props'
 import { mount } from '@vue/test-utils'
-import Vue from 'vue'
 import descriptor from '@/assets/descriptors'
 import flatterer from '@/common/property-flatter'
-describe('cd-props', () => {
- 
-  const propsData = {
-    descriptor:  descriptor.objectDescriptor,
-    payload: descriptor.object
+import Vue from 'vue'
+describe('[CD-PROPS] Basics', () => {
+  const propsData = {}
+  const propsData2 = {
+    payload: descriptor.object,
+    descriptor: descriptor.objectDescriptor
   }
+  const consoleErrorSpy = jest.spyOn(console, 'error')
+  const props = mount(CDProps, { propsData })
+  it ('screams about required properties', (done) => {
+    expect(consoleErrorSpy).toBeCalledWith(expect.stringContaining('descriptor'))
+    expect(consoleErrorSpy).toBeCalledWith(expect.stringContaining('payload'))
+    props.setProps({
+      descriptor: descriptor.objectDescriptor
+    })
+    expect(consoleErrorSpy.mock.calls.length).toBe(3)
+      const keyfields = consoleErrorSpy.mock.calls.filter(e => e.some(s => s.includes('payload')))
+      expect(keyfields.length).toBe(2)
+      props.setProps({ payload: descriptor.object }).then(() => {
+        expect(consoleErrorSpy.mock.calls.length).toBe(3)
+        done()
+      })
+  }, 10000)
   it ('cd-props is mounted with properties', (done) => {
-    const wrapper = mount(CDProps, { propsData })
-    const fields_count = (flatterer(propsData.descriptor, [])).filter(prop => prop.datafield !== undefined).length
+    const wrapper = mount(CDProps, { propsData: propsData2 })
+    const fields_count = (flatterer(propsData2.descriptor, [])).filter(prop => prop.datafield !== undefined).length
     expect(wrapper.findAll('.cd-property').length).toBe(fields_count)
     done()
   }, 10000)
@@ -31,10 +47,10 @@ describe('cd-props', () => {
     done()
   })
   it ('cd-props changes [.cd-property].text after change payload property value', (done) => {
-    const wrapper = mount(CDProps, { propsData })
+    const wrapper = mount(CDProps, { propsData: propsData2 })
     const property = wrapper.findAll('.cd-property').wrappers.find(e => e.attributes('data-property') === 'UltraShortName')
-    expect(property.text()).toBe(propsData.payload.UltraShortName)
-    Vue.set(propsData.payload, 'UltraShortName', 'foo')
+    expect(property.text()).toBe(propsData2.payload.UltraShortName)
+    Vue.set(propsData2.payload, 'UltraShortName', 'foo')
     Vue.nextTick().then(() => {
       expect(property.text()).toBe('foo')
       done()

@@ -80,6 +80,23 @@ describe('property descriptor', () => {
       done()
     }
   })
+  test ('resolve property class', done => {
+    const property = {
+      propClass (payload) {
+        return payload.int === 3 ? 'cd-property-three' : 'cd-property-non-three'
+      }
+    }
+    const payload = {
+      int: 2
+    }
+    const payload2 = {
+      int: 3
+    }
+    expect(decorator.resolvePropertyClass(property, payload)).toBe('cd-property-non-three')
+    expect(decorator.resolvePropertyClass(payload, payload)).toBeUndefined()
+    expect(decorator.resolvePropertyClass(property, payload2)).toBe('cd-property-three')
+    done()
+  })
 })
 describe('flatterer', () => {
   test('flat array is a flat array', () => {

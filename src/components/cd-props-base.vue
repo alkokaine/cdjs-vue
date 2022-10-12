@@ -1,10 +1,15 @@
 <template>
   <cd-list class="cd-properties" :collection="descriptor" key-field="datafield" row-class="cd-property--descriptor" :is-row-visible="isPropertyVisible"
-    :list-class="['list-unstyled cd-properties--list', isOwnerClassFunction ? owner.propClass(payload) : owner.propClass ]">
+    :list-class="['list-unstyled cd-properties--list', propClass ]">
     <template slot="header">
       <slot name="text"></slot>
     </template>
-    <slot slot-scope="{ row, index }" :property="row" :parent="owner" :hasDescriptor="hasDescriptor(row)" :index="index"/>
+    <slot slot-scope="{ row, index }" :property="row" :parent="owner" :config="config(row)" :index="index"/>
+    <template slot="footer">
+      <template v-if="!hasDescriptor">
+        {{ payload }}
+      </template>
+    </template>
   </cd-list>
 </template>
 
@@ -17,19 +22,18 @@ export default {
     'cd-list': CDList
   },
   props: {
-    descriptor: { type: Array, required: true, description: 'Массив свойств' },
+    config: { type: Function, required: true },
+    descriptor: { type: Array, required: true, description: 'Массив свойств', default: () => ([]) },
     owner: { type: Object, default: Object, description: 'Объект-дескриптор' },
     payload: { type: Object, required: true }
   },
   data (propsbase) {
     return {
-      isOwnerClassFunction: typeof propsbase.owner.propClass === 'function'
+      propClass: decorator.resolvePropertyClass(propsbase.owner, propsbase.payload),
+      hasDescriptor: propsbase.descriptor.length > 0
     }
   },
   computed: {
-    hasDescriptor () {
-      return (property) => decorator.hasDescriptor(property)
-    },
     isPropertyVisible (vm) {
       return (property, index) => decorator.isPropertyVisible(property, vm.payload, index)
     }
