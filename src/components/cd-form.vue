@@ -1,10 +1,13 @@
 <template>
   <div class="cd-form mt-4">
     <slot name="header"></slot>
-    <el-form :model="formobject" size="mini" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
-      <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject">
-        <el-form-item class="cd-form-item--wrap mb-0" slot-scope="{ property }">
-          <cd-cell :property="property" :value="formobject[property.datafield]"></cd-cell>
+    <el-form :model="formobject" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
+      <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject" :is-disabled="resolveDisabled" :fieldConfig="fieldConfig">
+        <el-form-item class="text-start cd-form-item--wrap mb-0 pt-2" slot-scope="{ property, config, value }" :prop="property.datafield" :rules="resolveRules(property)">
+          <slot :model="formobject" :property="property">
+            <span slot="label" class="fw-bold cd-form--label">{{ property.text }}</span>
+            <cd-cell :property="property" :value="value" :option-disabled="isOptionDisabled" :input="config"></cd-cell>
+          </slot>
         </el-form-item>
       </cd-fieldset>
     </el-form>
@@ -16,14 +19,12 @@
 import decorator from '@/common/property-decorator'
 import CDFieldset from './cd-fieldset.vue'
 import CDCell from './cd-cell.vue'
-import { Form, FormItem } from 'element-ui'
+import fetchData from '@/common/fetch-data'
 export default {
   name: 'cd-form',
   components: {
     'cd-fieldset': CDFieldset,
-    'cd-cell': CDCell,
-    'el-form': Form,
-    'el-form-item': FormItem
+    'cd-cell': CDCell
   },
   props: {
     descriptor: { type: Array, required: true },
@@ -41,17 +42,63 @@ export default {
     hasDescriptor () {
       return (property, index) => decorator.hasDescriptor(property)
     },
-    isPropertyVisible () {
-      const payload = this.formobject
-      return (property, index) => decorator.isPropertyVisible(property, payload, index)
+    isOptionDisabled ({ formobject }) {
+      return (option, isdisabled) => {
+        if (isdisabled === undefined) return false
+        if (typeof isdisabled === 'boolean') return isdisabled
+        if (typeof isdisabled === 'function') return isdisabled(option, formobject)
+      }
+    },
+    resolveDisabled ({ formobject }) {
+      return ({ isDisabled }) => {
+        if (isDisabled === undefined) return false
+        if (typeof isDisabled === 'boolean') return isDisabled
+        if (typeof isDisabled === 'function') return isDisabled(formobject)
+      }
+    },
+    resolveRules ({ formobject }) {
+      return ({ rules }) => {
+        if (rules === undefined) return []
+        if (Array.isArray(rules)) return rules
+        if (typeof rules === 'function') return rules(formobject)
+      }
+    },
+    fieldConfig (vm) {
+      return ({ input }) => ({
+        select: input === 'select',
+        autocomplete: input === 'autocomplete',
+        number: ['number', 'money', 'amount'].includes(input),
+        textarea: input === 'textarea',
+        checkbox: input === 'checkbox',
+        date: input === 'date',
+        datetime: input === 'datetime',
+        email: input === 'email',
+        radio: input === 'radio',
+        range: input === 'range',
+        tel: input === 'tel',
+        text: input === 'text' || input === undefined,
+        url: input === 'url',
+        file: input === 'file'
+      })
     }
+  },
+  methods: {
+    
   }
 }
 </script>
 
 <style>
-  .cd-label {
-    font-weight: bold;
-    margin: unset;
+  .el-form-item__content {
+    font-size: inherit!important;
+    line-height: unset!important;
+  }
+  .el-form-item__label {
+    text-align: left;
+    line-height: unset!important;
+  }
+  .cd-form-item--wrap {
+    display: block;
+    width: auto;
   }
 </style>
