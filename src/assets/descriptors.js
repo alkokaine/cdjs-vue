@@ -56,7 +56,8 @@ export default {
                 },
                 {
                   datafield: 'IsDepartment',
-                  text: 'Департамент'
+                  text: 'Департамент',
+                  input: 'checkbox'
                 },
               ],
               propClass: 'row row-cols-2'
@@ -72,7 +73,7 @@ export default {
                   text: 'Код'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end'
             },
             {
               descriptor: [
@@ -85,7 +86,7 @@ export default {
                   text: 'Порядок сортировки'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end'
             },
             {
               descriptor: [
@@ -136,7 +137,7 @@ export default {
                           text: 'Город'
                       },
                   ],
-                  propClass: 'row row-cols-2'
+                  propClass: 'row row-cols-2 align-items-end'
               },
               {
                   descriptor: [
@@ -334,7 +335,7 @@ export default {
                   text: 'Подпись для документов'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end'
             },
             {
               descriptor: [
@@ -348,7 +349,7 @@ export default {
                   input: 'autocomplete'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end'
             }
           ]
         }
