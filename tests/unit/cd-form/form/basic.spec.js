@@ -7,7 +7,7 @@ import CDCell from '@/components/cd-cell'
 import Vue from 'vue'
 import Element from 'element-ui'
 Vue.use(Element)
-describe('[cd-form] mounting', () => {
+describe('[cd-form]', () => {
   const propsData = {
       descriptor: descriptor.objectDescriptor,
       payload: descriptor.object
@@ -22,7 +22,7 @@ describe('[cd-form] mounting', () => {
       expect(wrapper.findAllComponents(CDForm).length).toBe(1)
       expect(wrapper.findAll('.cd-fieldset').length).toBeGreaterThanOrEqual(hasDescriptors + 1)
       expect(wrapper.findAll('.cd-field').length).toBe(hasLabels)
-      expect(wrapper.findAll('.cd-props--inner').length).toBe(wrapper.findAll('.cd-fieldset').length)
+      expect(wrapper.findAll('.cd-properties').length).toBe(wrapper.findAll('.cd-fieldset').length)
       expect(wrapper.findAllComponents(CDCell).length).toBe(hasLabels)
       expect(wrapper.findAll('.cd-cell--resolved').length).toBe(hasLabels)
       done()

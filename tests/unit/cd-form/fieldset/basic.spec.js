@@ -19,7 +19,6 @@ describe('[cd-fieldset]', () => {
     Vue.nextTick().then(() => {
       expect(wrapper.findAll('.cd-fieldset').length).toBeGreaterThanOrEqual(hasDescriptors + 1)
       expect(wrapper.findAll('.cd-field').length).toBe(hasLabels)
-      expect(wrapper.findAll('.cd-props--inner').length).toBe(wrapper.findAll('.cd-fieldset').length)
       done()
     })
   }, 10000)
