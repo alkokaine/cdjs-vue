@@ -461,7 +461,10 @@ export default {
       text: 'select2',
       placeholder: 'select ...',
       labelkey: 'name',
+      remote: true,
+      filterable: true,
       valuekey: 'wikiDataId',
+      keyfield: 'wikiDataId',
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       method: 'get',
       headers: {
@@ -470,6 +473,7 @@ export default {
       },    
       resolvePayload (query, payload) {
         return {
+          namePrefix: query,
           limit: 10
         }
       },
