@@ -3,10 +3,11 @@
     <slot name="header"></slot>
     <el-form :model="formobject" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
       <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject" :is-disabled="resolveDisabled" :fieldConfig="fieldConfig">
-        <el-form-item class="text-start cd-form-item--wrap mb-0 pt-2" slot-scope="{ property, config, value }" :prop="property.datafield" :rules="resolveRules(property)">
+        <el-form-item class="text-start cd-form-item--wrap mb-0 pt-2" slot-scope="{ property, config }" :prop="property.datafield" :rules="resolveRules(property)">
           <slot :model="formobject" :property="property">
             <span slot="label" class="fw-bold cd-form--label">{{ property.text }}</span>
-            <cd-cell :property="property" :value="value" :option-disabled="isOptionDisabled" :input="config"></cd-cell>
+            <cd-cell :fetch="fetch(property)" :property="property" v-model="formobject[property.datafield]" :option-disabled="isOptionDisabled" :input="config"
+              :payload="resolvePayload(property)"></cd-cell>
           </slot>
         </el-form-item>
       </cd-fieldset>
@@ -39,6 +40,22 @@ export default {
     }
   },
   computed: {
+    fetch ({ formobject }) {
+      return (property) => ((query, callback) => {
+        fetchData({
+          adapter: property.adapter,
+          method: property.method,
+          url: property.url,
+          headers: property.headers,
+          payload: property.resolvePayload !== undefined && typeof property.resolvePayload === 'function'
+            ? (property.filterable ? property.resolvePayload(query, formobject) : property.resolvePayload(formobject))
+            : query,
+          timeout: property.timeout,
+        }).then((response) => {
+          property.resolveResult(response, callback)
+        })
+      })
+    },
     hasDescriptor () {
       return (property, index) => decorator.hasDescriptor(property)
     },
@@ -63,6 +80,12 @@ export default {
         if (typeof rules === 'function') return rules(formobject)
       }
     },
+    resolvePayload ({ formobject }) {
+      return ({ resolvePayload }) => {
+        if (typeof resolvePayload === 'function') return resolvePayload(formobject)
+        return resolvePayload
+      }
+    },
     fieldConfig (vm) {
       return ({ input }) => ({
         select: input === 'select',
@@ -83,7 +106,6 @@ export default {
     }
   },
   methods: {
-    
   }
 }
 </script>
