@@ -1,14 +1,16 @@
 <template>
   <div class="cd-cell" :class="[cellClassResolved]">
     <template v-if="input.number">
-      <input type="number" class="el-input__inner" :min="property.min" :max="property.max" :value="cellvalue" :disabled="disabled"/>
+      <input :placeholder="property.placeholder" type="number" class="el-input__inner" :min="property.min" :max="property.max" :value="cellvalue" :disabled="disabled"/>
     </template>
     <template v-else-if="input.select">
       <el-select class="cd-select" :placeholder="property.placeholder" :value="cellvalue" :disabled="disabled">
-        <cd-list class="cd-select--options" :collection="collection" :key-field="property.valuekey" :list-class="['list-unstyled', property.listClass]" rowClass="cd-option">
+        <cd-list class="cd-select--options" :collection="collection" :key-field="property.valuekey" :list-class="['list-unstyled', property.listClass]" row-class="cd-option">
           <el-option slot-scope="{ row }" :value="row[property.keyfield]" :label="row[property.labelkey]" :disabled="optionDisabled(row, property.isdisabled)">
             <template v-if="property.slotdescriptor">
-              <cd-props :descriptor="property.slotdescriptor" :payload="row"></cd-props>
+              <cd-props :descriptor="property.slotdescriptor" :payload="row">
+                <div slot-scope="prop">{{ prop }}</div>
+              </cd-props>
             </template>
             <template v-else>
               {{ row[property.labelkey] }}
@@ -20,7 +22,9 @@
     <template v-else-if="input.autocomplete">
       <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder" :value="cellvalue" :fetch-suggestions="fetch" :disabled="disabled">
         <div class="cd-autocomplete-item--wrap" slot-scope="{ item }">
-          <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item" :descriptor="property.slotdescriptor" :payload="item"/>
+          <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item" :descriptor="property.slotdescriptor" :payload="item">
+            <div slot-scope="{ value }">{{ value }}</div>
+          </cd-props>
           <span v-else>{{ item[property.labelkey] }}</span>
         </div>
       </el-autocomplete>
@@ -60,6 +64,7 @@
 </template>
 <script>
   import CDList from './cd-list.vue'
+  import CDProps from './cd-props.vue'
   export default {
     name: 'cd-cell',
     props: {
@@ -76,12 +81,11 @@
           if (typeof isdisabled === 'function') return isdisabled(option)
         }
       },
-      fetchData: { type: Function, default: function (config, query, callback) {
-
-      }}
+      fetch: { type: Function }
     },
     components: {
-      'cd-list': CDList
+      'cd-list': CDList,
+      'cd-props': CDProps
     },
     data (cell) {
       return {
@@ -96,9 +100,6 @@
       }
     },
     methods: {
-      fetch (query, callback) {
-        this.fetchData({ config: this.property, query }, callback)
-      }
     }
   }
 </script>
