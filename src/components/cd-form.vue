@@ -42,18 +42,22 @@ export default {
   computed: {
     fetch ({ formobject }) {
       return (property) => ((query, callback) => {
-        fetchData({
-          adapter: property.adapter,
-          method: property.method,
-          url: property.url,
-          headers: property.headers,
-          payload: property.resolvePayload !== undefined && typeof property.resolvePayload === 'function'
-            ? (property.filterable ? property.resolvePayload(query, formobject) : property.resolvePayload(formobject))
-            : query,
-          timeout: property.timeout,
-        }).then((response) => {
-          property.resolveResult(response, callback)
-        })
+        if (property.values !== undefined && Array.isArray(property.values)) {
+          callback(property.values)
+        } else if (property.url) {
+          fetchData({
+            adapter: property.adapter,
+            method: property.method,
+            url: property.url,
+            headers: property.headers,
+            payload: property.resolvePayload !== undefined && typeof property.resolvePayload === 'function'
+              ? (property.filterable ? property.resolvePayload(query, formobject) : property.resolvePayload(formobject))
+              : query,
+            timeout: property.timeout,
+          }).then((response) => {
+            property.resolveResult(response, callback)
+          })
+        }
       })
     },
     hasDescriptor () {
