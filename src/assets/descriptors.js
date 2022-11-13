@@ -1,5 +1,6 @@
 /* eslint-disable */ 
 import Vue from 'vue'
+import adapter from 'axios/lib/adapters/http'
 const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
 }
@@ -457,7 +458,29 @@ export default {
     {
       input: 'autocomplete',
       datafield: 'autocomplete',
-      text: 'autocomplete'
+      text: 'autocomplete',
+      url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
+      adapter: adapter,
+      method: 'get',
+      slotdescriptor: [
+        {
+          datafield: 'code'
+        },
+        {
+          datafield: 'name'
+        }
+      ],
+      headers: {
+        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
+        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+      },    
+      resolvePayload (query, payload) {
+        console.log(query, payload)
+        return {}
+      },
+      resolveResult (response, callback) {
+        callback(response.data.data)
+      }
     },
     {
       input: 'number',
