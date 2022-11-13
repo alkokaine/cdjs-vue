@@ -486,7 +486,7 @@ export default {
       datafield: 'autocomplete',
       clearable: true,
       text: 'autocomplete',
-      labelkey: 'code',
+      labelkey: 'name',
       valuekey: 'wikiDataId',
       triggerOnFocus: true,
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
