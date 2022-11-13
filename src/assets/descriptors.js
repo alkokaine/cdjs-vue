@@ -456,6 +456,28 @@ export default {
       ]
     },
     {
+      input: 'select',
+      datafield: 'select2',
+      text: 'select2',
+      placeholder: 'select ...',
+      labelkey: 'name',
+      valuekey: 'wikiDataId',
+      url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
+      method: 'get',
+      headers: {
+        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
+        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+      },    
+      resolvePayload (query, payload) {
+        return {
+          limit: 10
+        }
+      },
+      resolveResult (response, callback) {
+        callback(response.data.data)
+      }
+    },
+    {
       input: 'autocomplete',
       datafield: 'autocomplete',
       clearable: true,
