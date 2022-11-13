@@ -1,6 +1,8 @@
 <template>
   <div class="cd-form--view">
-    <cd-form :descriptor="descriptor" :payload="payload"></cd-form>
+    <cd-form :descriptor="descriptor" :payload="payload" :sync="true">
+      <div slot="header">{{ payload }}</div>
+    </cd-form>
     <cd-form :descriptor="objectDescriptor" :payload="object"></cd-form>
   </div>
 </template>
