@@ -45,6 +45,7 @@ export default {
   },
   watch: {
     payload: {
+      deep: true,
       handler (newvalue, oldvalue) {
         if (this.remoteMethod !== undefined && typeof this.remoteMethod === 'function') this.remoteMethod(newvalue, this.resolveResult)
       }
