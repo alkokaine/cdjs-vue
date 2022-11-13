@@ -7,7 +7,9 @@
           <slot :model="formobject" :property="property">
             <span slot="label" class="fw-bold cd-form--label">{{ property.text }}</span>
             <cd-cell :fetch="fetch(property)" :property="property" v-model="formobject[property.datafield]" :option-disabled="isOptionDisabled" :input="config"
-              :payload="resolvePayload(property)"></cd-cell>
+              :payload="resolvePayload(property)"
+              :on-select="onSelect(property)"
+              :on-change="onChange(property)"></cd-cell>
           </slot>
         </el-form-item>
       </cd-fieldset>
@@ -40,6 +42,16 @@ export default {
     }
   },
   computed: {
+    onSelect ({ formobject }) {
+      return ({ onSelect }) => {
+        if (onSelect !== undefined && typeof onSelect === 'function') onSelect(formobject)
+      }
+    },
+    onChange ({ formobject }) {
+      return ({ onChange }) => {
+        if (onChange !== undefined && typeof onChange === 'function') onChange(formobject)
+      }
+    },
     fetch ({ formobject }) {
       return (property) => ((query, callback) => {
         if (property.values !== undefined && Array.isArray(property.values)) {
