@@ -37,6 +37,7 @@ describe('remote', () => {
 
     const geodb = {
         adapter,
+        method: 'get',
         url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
         error: m_error,
         after: m_after,
