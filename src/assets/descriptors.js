@@ -458,10 +458,13 @@ export default {
     {
       input: 'autocomplete',
       datafield: 'autocomplete',
+      clearable: true,
       text: 'autocomplete',
       labelkey: 'code',
+      valuekey: 'wikiDataId',
+      triggerOnFocus: true,
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
-      adapter: adapter,
+      //adapter: adapter,
       method: 'get',
       slotdescriptor: [
         {
@@ -476,7 +479,6 @@ export default {
         'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
       },    
       resolvePayload (query, payload) {
-        console.log(query, payload)
         return {
           limit: 10
         }
@@ -488,7 +490,8 @@ export default {
     {
       input: 'number',
       datafield: 'number',
-      text: 'number'
+      text: 'number',
+      clearable: true,
     },
     {
       input: 'textarea',
