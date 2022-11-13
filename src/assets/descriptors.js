@@ -459,6 +459,7 @@ export default {
       input: 'autocomplete',
       datafield: 'autocomplete',
       text: 'autocomplete',
+      labelkey: 'code',
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       adapter: adapter,
       method: 'get',
@@ -476,7 +477,9 @@ export default {
       },    
       resolvePayload (query, payload) {
         console.log(query, payload)
-        return {}
+        return {
+          limit: 10
+        }
       },
       resolveResult (response, callback) {
         callback(response.data.data)
