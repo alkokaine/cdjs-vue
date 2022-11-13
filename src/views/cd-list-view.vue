@@ -6,8 +6,8 @@
         <input type="text" v-model="payload.namePrefix"/>
       </div>
       <span slot-scope="{ row }">{{ row }}</span>
-      <div slot="footer">
-        {{ total }}
+      <div v-if="error.code" slot="footer">
+        <a href="#" @click="getdata(payload, resolveCollection)">{{ error.code }} {{ error.message }}</a>
       </div>
     </cd-list>
   </div>
@@ -17,6 +17,7 @@
 import CDList from '@/components/cd-list.vue'
 import fetchData from '@/common/fetch-data'
 import adapter from 'axios/lib/adapters/http'
+import { AxiosError } from 'axios'
 export default {
   components: {
     'cd-list': CDList
@@ -24,6 +25,7 @@ export default {
   data (view) {
     return {
       collection: [],
+      error: AxiosError,
       total: 0,
       payload: {
         limit: 10
@@ -40,9 +42,13 @@ export default {
       fetchData({
         adapter,
         payload,
+        before (config) {
+          list.error = AxiosError
+          return config
+        },
         method: 'get',
         error (reason) {
-          list.$message(`${reason.code} ${reason.message}`)
+          list.error = reason
         },
         timeout:5000,
         url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
