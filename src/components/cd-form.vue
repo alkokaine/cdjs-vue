@@ -9,7 +9,9 @@
             <cd-cell :fetch="fetch(property)" :property="property" v-model="formobject[property.datafield]" :option-disabled="isOptionDisabled" :input="config"
               :payload="resolvePayload(property)"
               :on-select="onSelect(property)"
-              :on-change="onChange(property)"></cd-cell>
+              :on-change="onChange(property)"
+              :on-input="onInput(property)">
+            </cd-cell>
           </slot>
         </el-form-item>
       </cd-fieldset>
@@ -23,6 +25,7 @@ import decorator from '@/common/property-decorator'
 import CDFieldset from './cd-fieldset.vue'
 import CDCell from './cd-cell.vue'
 import fetchData from '@/common/fetch-data'
+import { throttle } from 'lodash'
 export default {
   name: 'cd-form',
   components: {
@@ -52,8 +55,13 @@ export default {
         if (onChange !== undefined && typeof onChange === 'function') onChange(formobject)
       }
     },
+    onInput ({ formobject }) {
+      return ({ onInput }) => {
+        if (onInput !== undefined && typeof onInput === 'function' ) onInput(formobject)
+      }
+    },
     fetch ({ formobject }) {
-      return (property) => ((query, callback) => {
+      return (property) => throttle((query, callback) => {
         if (property.values !== undefined && Array.isArray(property.values)) {
           callback(property.values)
         } else if (property.url) {
@@ -70,7 +78,7 @@ export default {
             property.resolveResult(response, callback)
           })
         }
-      })
+      }, property.timeout)
     },
     hasDescriptor () {
       return (property, index) => decorator.hasDescriptor(property)
