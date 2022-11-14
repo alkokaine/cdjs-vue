@@ -8,13 +8,16 @@
     </template>
     <template v-else-if="input.select">
       <el-select class="cd-select" :placeholder="property.placeholder"
-        :value="value" :disabled="disabled" :clearable="property.clearable">
+        :remote="property.remote" :filterable="property.filterable"
+        :value="value" :disabled="disabled" :remote-method="query => fetch(query, resolveOptions)"
+        :clearable="property.clearable" :multiple="property.multiple" :collapse-tags="property.collapseTags"
+        :value-key="property.valuekey" :label-key="property.labelkey">
         <cd-list class="cd-select--options" :collection="collection" :payload="payload"
           :key-field="property.valuekey" :list-class="['list-unstyled', property.listClass]"
           row-class="cd-option">
-          <el-option slot-scope="{ row }" :value="row[property.keyfield]"
+          <el-option slot-scope="{ row }" :value="row[property.valuekey]"
             :label="row[property.labelkey]" :disabled="optionDisabled(row, property.isdisabled)"
-            v-on:click.native="onOptionSelect({ $event, item: row, property }, property.onSelect)">
+            v-on:click.native="onOptionSelect({ $event, item: row, property }, onSelect)">
             <template v-if="property.slotdescriptor">
               <cd-props :descriptor="property.slotdescriptor" :payload="row">
                 <div slot-scope="prop">{{ prop }}</div>
@@ -30,8 +33,8 @@
     <template v-else-if="input.autocomplete">
       <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder" :value="value"
         :fetch-suggestions="fetch" :disabled="disabled" :clearable="property.clearable" :value-key="property.valuekey"
-        :trigger-on-focus="property.triggerOnFocus" @select="onSelect({ property, $event }, property.onSelect)" @change="onChange({ property, $event }, propery.onChange)">
-        <div class="cd-autocomplete-item--wrap" slot-scope="{ item }" v-on:click.capture="onOptionSelect({ $event, item, property }, property.onSelect)">
+        :trigger-on-focus="property.triggerOnFocus">
+        <div class="cd-autocomplete-item--wrap" slot-scope="{ item }" v-on:click.capture="onOptionSelect({ $event, item, property }, onSelect)">
           <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item"
             :descriptor="property.slotdescriptor" :payload="item">
             <div slot-scope="{ value }">{{ value }}</div>
@@ -62,7 +65,7 @@
     <template v-else-if="input.range">
       <el-slider class="cd-slider" :value="value" :vertical="property.vertical"
         :height="property.height" :min="property.min" :max="property.max" :step="property.step"
-        :range="property.range"></el-slider>
+        :range="property.range" @input="onCellInput({ $event, property }, onInput)"></el-slider>
     </template>
     <template v-else-if="input.tel">
       <input class="el-input__inner" :placeholder="property.placeholder" type="tel" :value="value" :disabled="disabled"/>
@@ -98,7 +101,10 @@
           if (typeof isdisabled === 'function') return isdisabled(option)
         }
       },
-      fetch: { type: Function }
+      fetch: { type: Function },
+      onSelect: { type: Function },
+      onChange: { type: Function },
+      onInput: { type: Function }
     },
     components: {
       'cd-list': CDList,
@@ -106,7 +112,7 @@
     },
     data (cell) {
       return {
-        collection: Array
+        collection: (cell.property.values || [])
       }
     },
 
@@ -116,14 +122,24 @@
       }
     },
     methods: {
-      onSelect ({ property, $event }, callback) {
-        this.$emit('input', )
+      onCellChange ({ property, $event }, callback ) {
+        // this.$emit('input', $event)
       },
-      onChange ({ property, $event }, callback ) {
-        console.log($event)
+      onCellInput ({ property, $event }, callback) {
+        this.$emit('input', $event)
       },
       onOptionSelect ({ $event, item, property }, callback) {
-        this.$emit('input', item[property.valuekey])
+        if (property.input === 'autocomplete') {
+          if (property.formatSelected !== undefined && typeof property.formatSelected === 'function')
+            this.$emit('input', property.formatSelected(item))
+          else 
+            this.$emit('input', item[property.labelkey])
+        } else {
+          this.$emit('input', item[property.valuekey]) 
+        }
+      },
+      resolveOptions (data) {
+        this.collection = data
       }
     }
   }
