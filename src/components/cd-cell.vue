@@ -77,7 +77,7 @@
       <input class="el-input__inner" type="file" :value="value" :disabled="disabled"/>
     </template>
     <template v-else>
-      <el-input type="text" :placeholder="property.placeholder" :value="value" :disabled="disabled"/>
+      <el-input type="text" :placeholder="property.placeholder" :value="value" :disabled="disabled" @input="onCellInput({ $event, property }, onInput)"/>
     </template>
   </div>
 </template>
