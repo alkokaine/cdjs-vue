@@ -25,7 +25,7 @@ import decorator from '@/common/property-decorator'
 import CDFieldset from './cd-fieldset.vue'
 import CDCell from './cd-cell.vue'
 import fetchData from '@/common/fetch-data'
-import { throttle } from 'lodash'
+
 export default {
   name: 'cd-form',
   components: {
@@ -61,7 +61,7 @@ export default {
       }
     },
     fetch ({ formobject }) {
-      return (property) => throttle((query, callback) => {
+      return (property) => (query, callback) => {
         if (property.values !== undefined && Array.isArray(property.values)) {
           callback(property.values)
         } else if (property.url) {
@@ -78,7 +78,7 @@ export default {
             property.resolveResult(response, callback)
           })
         }
-      }, property.timeout)
+      }
     },
     hasDescriptor () {
       return (property, index) => decorator.hasDescriptor(property)
