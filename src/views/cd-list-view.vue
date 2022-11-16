@@ -17,6 +17,7 @@
 import CDList from '@/components/cd-list.vue'
 import fetchData from '@/common/fetch-data'
 import adapter from 'axios/lib/adapters/http'
+import { geo } from '@/../keys'
 import { AxiosError } from 'axios'
 export default {
   components: {
@@ -52,10 +53,7 @@ export default {
         },
         timeout:5000,
         url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
-        headers: {
-            'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-          }
+        headers: geo
       }).then(response => { 
         list.total = response.data.metadata.totalCount
         list.resolveCollection(response.data.data)
