@@ -170,10 +170,13 @@
   }
   .cd-slider {
     width: -webkit-fill-available;
-    display: inline-block;
+    display: flex;
   }
   .cd-checkbox {
     font-size: inherit!important;
+  }
+  .el-input__inner {
+    width: unset!important;
   }
 </style>
 <style scoped>
