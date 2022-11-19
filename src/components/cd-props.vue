@@ -10,6 +10,9 @@
         <slot :property="property" :parent="parent" :config="config" :value="payload[property.datafield]"></slot>
       </div>
     </template>
+    <div v-if="$slots.content" slot="content">
+      <slot name="content"></slot>
+    </div>
   </cd-props-base>
 </template>
 
