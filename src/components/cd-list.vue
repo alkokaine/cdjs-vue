@@ -38,13 +38,13 @@ export default {
     } 
   },
   data (list) {
-    if (list.remoteMethod !== undefined && typeof list.remoteMethod === 'function') list.remoteMethod(list.payload, list.resolveResult)
     return {
       isRowClassFunction: typeof list.rowClass === 'function'
     }
   },
   watch: {
     payload: {
+      deep: true,
       handler (newvalue, oldvalue) {
         if (this.remoteMethod !== undefined && typeof this.remoteMethod === 'function') this.remoteMethod(newvalue, this.resolveResult)
       }
