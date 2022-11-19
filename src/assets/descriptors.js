@@ -52,7 +52,7 @@ export default {
               descriptor: [
                 {
                   datafield: 'IsFew',
-                  text: 'Малочисленная',
+                  text: 'Малочисл.',
                   input: 'checkbox'
                 },
                 {
