@@ -5,11 +5,9 @@
       <slot name="text"></slot>
     </template>
     <slot slot-scope="{ row, index }" :property="row" :parent="owner" :config="config(row)" :index="index"/>
-    <template slot="footer">
-      <template v-if="!hasDescriptor">
-        {{ payload }}
-      </template>
-    </template>
+    <div v-if="$slots.content" slot="footer">
+      <slot name="content"></slot>
+    </div>
   </cd-list>
 </template>
 
