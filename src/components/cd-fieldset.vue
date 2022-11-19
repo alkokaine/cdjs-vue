@@ -8,7 +8,7 @@
         <cd-fieldset v-if="config.hasDescriptor" :descriptor="property.descriptor" :owner="property" :payload="payload" :isDisabled="isDisabled" :field-config="fieldConfig">
           <slot slot-scope="row" :property="row.property" :parent="property" :value="payload[row.property.datafield]" :config="fieldConfig(row.property)"/>
         </cd-fieldset>
-        <div v-else class="cd-field" :class="resolvePropertyClass(property)">
+        <div v-else class="cd-field pt-2" :class="resolvePropertyClass(property)">
           <slot :property="property" :parent="owner" :value="payload[property.datafield]" :config="fieldConfig(property)"/>
         </div>
       </template>
