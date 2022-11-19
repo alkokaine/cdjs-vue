@@ -38,7 +38,6 @@ export default {
     } 
   },
   data (list) {
-    if (list.remoteMethod !== undefined && typeof list.remoteMethod === 'function') list.remoteMethod(list.payload, list.resolveResult)
     return {
       isRowClassFunction: typeof list.rowClass === 'function'
     }
