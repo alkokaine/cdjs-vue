@@ -3,10 +3,13 @@
     <slot name="header"></slot>
     <el-form :model="formobject" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
       <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject" :is-disabled="resolveDisabled" :fieldConfig="fieldConfig">
-        <el-form-item class="text-start cd-form-item--wrap mb-0 pt-2" slot-scope="{ property, config }" :prop="property.datafield" :rules="resolveRules(property)">
+        <el-form-item class="text-start cd-form-item--wrap mb-0" slot-scope="{ property, config }" :prop="property.datafield" :rules="resolveRules(property)">
           <slot :model="formobject" :property="property">
-            <span slot="label" class="fw-bold cd-form--label">{{ property.text }}</span>
-            <cd-cell :fetch="fetch(property)" :property="property" v-model="formobject[property.datafield]" :option-disabled="isOptionDisabled" :input="config"
+            <span slot="label" class="fw-bold cd-form--label" :class="labelClass(property)">{{ property.text }}</span>
+            <cd-cell :fetch="fetch(property)" :property="property" 
+              v-model="formobject[property.datafield]" 
+              :option-disabled="isOptionDisabled" 
+              :input="config" :class="[inputClass(property)]"
               :payload="resolvePayload(property)"
               :on-select="onSelect(property)"
               :on-change="onChange(property)"
@@ -45,6 +48,12 @@ export default {
     }
   },
   computed: {
+    inputClass ({ formobject }) {
+      return ({ inputClass }) => {
+        if (inputClass !== undefined && typeof inputClass === 'function') inputClass(formobject)
+        return inputClass
+      }
+    },
     onSelect ({ formobject }) {
       return ({ onSelect }) => {
         if (onSelect !== undefined && typeof onSelect === 'function') onSelect(formobject)
@@ -110,6 +119,12 @@ export default {
         return resolvePayload
       }
     },
+    labelClass ({ formobject }) {
+      return ({ labelClass }) => {
+        if (typeof labelClass === 'function') return labelClass(formobject)
+        return labelClass
+      }
+    },
     fieldConfig (vm) {
       return ({ input }) => ({
         select: input === 'select',
@@ -136,15 +151,11 @@ export default {
 
 <style>
   .el-form-item__content {
-    font-size: inherit!important;
     line-height: unset!important;
   }
   .el-form-item__label {
-    text-align: left;
     line-height: unset!important;
   }
   .cd-form-item--wrap {
-    display: block;
-    width: auto;
   }
 </style>
