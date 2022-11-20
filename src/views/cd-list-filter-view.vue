@@ -18,42 +18,50 @@
       </div>
       <div slot="footer">
         <el-pagination :current-page="countryPage" :total="total" :page-size="payload.limit" v-on:current-change="onPageChange($event, payload)" :layout="layout"></el-pagination>
+        <el-dialog width="80%" :visible.sync="showDialog" :close-on-click-modal="false" @close="ondialogclose">
+          <div slot="title" class="h3">
+            <p>Всего регионов {{ country.numRegions }}</p>
+          </div>
+          <cd-form name="regions-filter" :payload="regionPayload" :descriptor="descriptor" :sync="true">
+            <cd-list slot="footer" v-if="showDialog" name="regions" :collection="regions" key-field="wikiDataId" :payload="regionPayload" :resolve-result="resolveRegions" :remote-method="getRegions" list-class="row list-unstyled" :row-class="resolveRegionClass">
+              <div slot-scope="{ row }">
+                <div @click="getRegionDetails($event, row)">{{ row.name }}</div>
+                <cd-props v-if="isregiondetails(row)" class="container-sm text-start border region-details" :payload="region" :descriptor="regiondetails">
+                  <div slot-scope="{ property, value }">
+                    <label class="cd-form--label">{{ property.datafield }}:</label> 
+                    <template v-if="isCities(property)">
+                      <el-button type="text" @click="showCities($event, row)">{{ value }}</el-button>
+                    </template>
+                    <template v-else>
+                      <span>{{ value }}</span>
+                    </template>
+                  </div>
+                  <cd-list v-if="showCityList" class="region-cities mx-3" slot="content" key-field="id" name="cities" :remote-method="getCities" :payload="cityPayload" :resolve-result="resolveCities" :collection="cities" list-class="list-unstyled row mx-auto" row-class="city-tile m-2 p-2 border border-1 border-white bg-white rounded-3">
+                    <cd-form slot="header" :payload="cityPayload" :descriptor="descriptor" :sync="true">
+                      <el-pagination slot="footer" :current-page="cityPage" :total="totalcities" :layout="layout" :page-size="cityPayload.limit" v-on:current-change="onPageChange($event, cityPayload)"></el-pagination>
+                    </cd-form>
+                    <cd-props slot-scope="{ row }" :payload="row" :descriptor="cityDescriptor">
+                      <div slot-scope="{ property, value }" v-on:click="getCity($event, row)">
+                        <label class="fw-bold cd-form--label">{{ property.datafield }}:</label>
+                        <span class="city-property">{{ value }}</span>
+                      </div>
+                      <div v-if="city.id" slot="content">
+                        <cd-props :payload="city" :descriptor="citydetails">
+                          <span slot="content">{{ city }}</span>
+                        </cd-props>
+                      </div>
+                    </cd-props>
+                  </cd-list>  
+                </cd-props>
+              </div>
+              <div slot="footer">
+                <el-pagination :current-page="currentPage" :total="country.numRegions" :layout="layout" :page-size="regionPayload.limit" v-on:current-change="onPageChange($event, regionPayload)"></el-pagination>
+              </div>
+            </cd-list>
+          </cd-form>
+        </el-dialog>
       </div>
     </cd-list> 
-    <el-dialog width="80%" :visible.sync="showDialog" :close-on-click-modal="false" @close="ondialogclose">
-      <div slot="title" class="h3">
-        <p>Всего регионов {{ country.numRegions }}</p>
-      </div>
-      <cd-form name="regions-filter" :payload="regionPayload" :descriptor="descriptor" :sync="true">
-        <cd-list slot="footer" v-if="showDialog" name="regions" :collection="regions" key-field="wikiDataId" :payload="regionPayload" :resolve-result="resolveRegions" :remote-method="getRegions" list-class="row list-unstyled" :row-class="resolveRegionClass">
-          <div slot-scope="{ row }">
-            <div @click="getRegionDetails($event, row)">{{ row.name }}</div>
-            <cd-props v-if="isregiondetails(row)" class="container-sm text-start border" :payload="region" :descriptor="regiondetails">
-              <div slot-scope="{ property, value }">
-                <label class="cd-label">{{ property.datafield }}:</label> 
-                <template v-if="isCities(property)">
-                  <el-button type="text" @click="showCities($event, row)">{{ value }}</el-button>
-                </template>
-                <template v-else>
-                  <span>{{ value }}</span>
-                </template>
-              </div>
-              <div v-if="showCityList" class="region-cities" slot="content">
-                <cd-list key-field="id" name="cities" :remote-method="getCities" :payload="cityPayload" :resolve-result="resolveCities" :collection="cities">
-                  <cd-form slot="header" :payload="cityPayload" :descriptor="descriptor" :sync="true">
-                    <el-pagination slot="footer" :current-page="cityPage" :total="totalcities" :layout="layout" :page-size="cityPayload.limit" v-on:current-change="onPageChange($event, cityPayload)"></el-pagination>
-                  </cd-form>
-                  <span slot-scope="{ row }">{{ row }}</span>
-                </cd-list>
-              </div>
-            </cd-props>
-          </div>
-          <div slot="footer">
-            <el-pagination :current-page="currentPage" :total="country.numRegions" :layout="layout" :page-size="regionPayload.limit" v-on:current-change="onPageChange($event, regionPayload)"></el-pagination>
-          </div>
-        </cd-list>
-      </cd-form>
-    </el-dialog>
   </div>
 </template>
 
@@ -104,6 +112,29 @@ export default {
       cities: [],
       cityPage: 1,
       totalcities: 0,
+      cityDescriptor: [
+        {
+          datafield: 'city'
+        },
+        {
+          datafield: 'name',
+        },
+        {
+          datafield: 'latitude',
+        },
+        {
+          datafield: 'longitude'
+        },
+        {
+          datafield: 'population'
+        },
+        {
+          datafield: 'wikiDataId'
+        },
+        {
+          datafield: 'id'
+        }
+      ],
       payload: {
         limit: 1,
         namePrefix: '',
@@ -251,7 +282,9 @@ export default {
       this.showDialog = false
       this.regions = Array
       this.regionPayload.limit = 1
-      this.cities = Array
+      this.cities = Array,
+      this.totalcities = 0
+      this.cityPayload.limit = 1
     },
     getRegionDetails(event, row) {
       const list = this
@@ -263,6 +296,9 @@ export default {
       }).then(response => {
         list.region = response.data.data
       })
+    },
+    getCity (event, row ) {
+      const list = this
     },
     showCities () {
       this.showCityList = true
@@ -337,5 +373,17 @@ export default {
   }
   .pointer {
     cursor: pointer;
+  }
+  .region-details {
+    cursor: default;
+  }
+  .city-tile {
+    max-width: 23%;
+  }
+  .region-cities {
+    width: 100%;
+  }
+  .city-property {
+    word-spacing: normal;
   }
 </style>
