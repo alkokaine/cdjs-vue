@@ -47,8 +47,6 @@
       <textarea class="el-textarea__inner" :value="value" 
       @change="onCellChange({ $event, property }, onChange)" 
       :disabled="disabled"></textarea>
-      <el-input class="cd-input" type="textarea" :placeholder="property.placeholder"
-        :value="value" :disabled="disabled"/>
     </template>
     <template v-else-if="input.checkbox">
       <el-checkbox class="cd-checkbox" :value="value" :disabled="disabled"></el-checkbox>
