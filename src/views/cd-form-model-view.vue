@@ -24,8 +24,4 @@ export default {
 </script>
 
 <style>
-  code {
-    white-space: pre;
-    text-align: start;
-  }
 </style>

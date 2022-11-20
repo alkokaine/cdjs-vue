@@ -1,7 +1,9 @@
 <template>
   <div class="cd-form--view">
-    <cd-form :descriptor="descriptor" :payload="payload" :sync="true">
-      <div slot="header">{{ payload }}</div>
+    <cd-form class="row" :descriptor="descriptor" :payload="io" :show-controls="true" :on-submit="onSubmit" :on-reset="onReset" form-class="col">
+      <code slot="footer" class="col">
+        <p>{{ io }}</p>
+      </code>
     </cd-form>
     <cd-form :descriptor="objectDescriptor" :payload="object"></cd-form>
   </div>
@@ -17,9 +19,17 @@ export default {
   data (view) {
     return {
       descriptor: example.inputs,
-      payload: example.inputObject,
+      io: example.inputObject,
       objectDescriptor: example.objectDescriptor,
       object: example.object
+    }
+  },
+  methods: {
+    onSubmit (...args) {
+      console.log(args)
+    },
+    onReset(...args) {
+      console.log(args)
     }
   }
 }
