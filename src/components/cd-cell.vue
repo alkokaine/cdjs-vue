@@ -1,9 +1,9 @@
 <template>
-  <div class="cd-cell" :class="[cellClassResolved]">
+  <div class="cd-cell" :class="[{ 'cd-slide--wrap': input.range, 'el-textarea': input.textarea, 'el-input': !(input.select || input.autocomplete || input.checkbox) }, cellClassResolved]">
     <template v-if="input.number">
-      <input :placeholder="property.placeholder" type="number"
-        class="el-input__inner" :min="property.min" :max="property.max"
-        :value="value" :disabled="disabled"
+      <input :placeholder="property.placeholder" type="number" class="el-input__inner cd-input__inner" 
+        :min="property.min" :max="property.max" :value="value" :disabled="disabled" 
+        @change="onCellChange({ $event, property }, onChange)"
         :clearable="property.clearable"/>
     </template>
     <template v-else-if="input.select">
@@ -44,6 +44,9 @@
       </el-autocomplete>
     </template>
     <template v-else-if="input.textarea">
+      <textarea class="el-textarea__inner" :value="value" 
+      @change="onCellChange({ $event, property }, onChange)" 
+      :disabled="disabled"></textarea>
       <el-input class="cd-input" type="textarea" :placeholder="property.placeholder"
         :value="value" :disabled="disabled"/>
     </template>
@@ -59,25 +62,24 @@
         type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"></el-date-picker>
     </template>
     <template v-else-if="input.email">
-      <el-input type="email" :placeholder="property.placeholder" :value="value" :disabled="disabled"/>
+      <input type="email" class="el-input__inner cd-input__inner" :placeholder="property.placeholder" :value="value" :disabled="disabled" @change="onCellChange({ $event, property }, onChange)"/>
     </template>
     <template v-else-if="input.radio"></template>
     <template v-else-if="input.range">
-      <el-slider class="cd-slider" :value="value" :vertical="property.vertical"
-        :height="property.height" :min="property.min" :max="property.max" :step="property.step"
-        :range="property.range" @input="onCellInput({ $event, property }, onInput)"></el-slider>
+      <input type="range" class="cd-slider align-middle" :min="property.min" :max="property.max" :value="value" :step="property.step"
+      @change="onCellChange({ $event, property}, onChange)"/> 
     </template>
     <template v-else-if="input.tel">
-      <input class="el-input__inner" :placeholder="property.placeholder" type="tel" :value="value" :disabled="disabled"/>
+      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder" type="tel" :value="value" :disabled="disabled" @change="onCellChange({ $event, property}, onChange)"/>
     </template>
     <template v-else-if="input.url">
-      <input class="el-input__inner" :placeholder="property.placeholder" type="url" :value="value" :disabled="disabled"/>
+      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder" type="url" :value="value" :disabled="disabled" @change="onCellChange({ $event, property}, onChange)"/>
     </template>
     <template v-else-if="input.file">
-      <input class="el-input__inner" type="file" :value="value" :disabled="disabled"/>
+      <input class="el-input__inner cd-input__inner" type="file" :value="value" :disabled="disabled"/>
     </template>
     <template v-else>
-      <el-input type="text" :placeholder="property.placeholder" :value="value" :disabled="disabled" @input="onCellInput({ $event, property }, onInput)"/>
+      <input type="text" class="el-input__inner cd-input__inner" :placeholder="property.placeholder" :value="value" :disabled="disabled" @change="onCellChange({ $event, property }, onChange)"/>
     </template>
   </div>
 </template>
@@ -123,10 +125,24 @@
     },
     methods: {
       onCellChange ({ property, $event }, callback ) {
+        if (['range', 'number'].indexOf(property.input) != -1 && $event instanceof Event) {
+          try {
+            const _number = Number($event.target.valueAsNumber)
+            this.$emit('input', _number)
+          }
+          catch (err) {
+            console.error(err)
+          }
+        }
+        else if (['checkbox'].indexOf(property.input) != -1) {
+          console.warn('checkbox value change')
+        }
+        else if ([undefined, 'textarea', 'text', 'email', 'tel', 'url'].indexOf(property.input) != -1 && $event instanceof Event) {
+          this.$emit('input', $event.target.value)
+        }
         // this.$emit('input', $event)
       },
       onCellInput ({ property, $event }, callback) {
-        this.$emit('input', $event)
       },
       onOptionSelect ({ $event, item, property }, callback) {
         if (property.input === 'autocomplete') {
@@ -157,26 +173,27 @@
     font-size: inherit!important;
   }
   .cd-select {
-    width: -webkit-fill-available;
+    width: 100%;
   }
   .cd-autocomplete {
-    width: -webkit-fill-available;
   }
   .cd-date {
-    width: -webkit-fill-available!important;
   }
   .cd-date-time {
-    width: -webkit-fill-available!important;
   }
   .cd-slider {
-    width: -webkit-fill-available;
-    display: flex;
   }
   .cd-checkbox {
     font-size: inherit!important;
   }
   .el-input__inner {
-    width: unset!important;
+    width: unset;
+  }
+  .cd-input__inner {
+    width: 100%;
+  }
+  .cd-autocomplete {
+    width: 100%;
   }
 </style>
 <style scoped>
@@ -189,4 +206,20 @@
   input[type=number] {
     -moz-appearance: textfield;
   }
+  input[type="range"] {
+    width: 100%;
+  }
+  input[type=”range”]::-webkit-slider-thumb{}
+
+  input[type=”range”]::-moz-range-thumb{}
+
+  input[type=”range”]::-ms-thumb{}
+  input[type=”range”]::-webkit-slider-runnable-track{}
+
+  input[type=”range”]::-moz-range-track{}
+
+  input[type=”range”]::-ms-track{}
+
+
+
 </style>
