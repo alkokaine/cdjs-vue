@@ -1,7 +1,7 @@
 <template>
   <div class="cd-form mt-4">
     <slot name="header"></slot>
-    <el-form :model="formobject" ref="innerform" class="cd-form--content" :class="formclass" :rules="rules" @submit.native.prevent>
+    <el-form :model="formobject" ref="innerform" class="cd-form--content" :class="formClass" :rules="rules" @submit.native.prevent>
       <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject" :is-disabled="resolveDisabled" :fieldConfig="fieldConfig">
         <el-form-item class="text-start cd-form-item--wrap mb-0" slot-scope="{ property, config }" :prop="property.datafield" :rules="resolveRules(property)">
           <slot :model="formobject" :property="property">
@@ -20,6 +20,12 @@
       </cd-fieldset>
     </el-form>
     <slot name="footer"></slot>
+    <div v-if="showControls" class="cd-form--buttons">
+      <slot name="controls">
+        <button class="el-button" type="submit" @click="validate(formobject, onSubmit)">Сохранить</button>
+        <button class="el-button" type="reset" @click="onReset">Отменить</button>
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -39,7 +45,10 @@ export default {
     descriptor: { type: Array, required: true },
     payload: { type: Object, required: true },
     sync: { type: Boolean, default: false },
-    formclass: { type: [Array, Object, String] },
+    formClass: { type: [Array, Object, String] },
+    showControls: { type: Boolean, default: false },
+    onSubmit: { type: Function },
+    onReset: { type: Function },
     rules: { type: Array }
   },
   data (form) {
@@ -145,6 +154,9 @@ export default {
     }
   },
   methods: {
+    validate (payload, onSubmit) {
+      onSubmit(payload)
+    }
   }
 }
 </script>
