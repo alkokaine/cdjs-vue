@@ -4,7 +4,7 @@
       <slot name="header"></slot>
     </div>
     <ul class="cd-list--internal" :class="listClass" :role="listRole">
-      <li v-for="(row, index) in filtered" :class="[resolveRowClass(row, index)]" :role="itemRole" :key="rowKey(row, index)">
+      <li v-for="(row, index) in filtered" :class="['cd-list--item', isRowClassFunction ? rowClass(row, index) : rowClass]" :role="itemRole" :key="rowKey(row, index)">
         <slot :row="row" :index="index"/>
       </li>
     </ul>
@@ -38,11 +38,13 @@ export default {
     } 
   },
   data (list) {
-    if (list.remoteMethod !== undefined && typeof list.remoteMethod === 'function') list.remoteMethod(list.payload, list.resolveResult)
-    return {}
+    return {
+      isRowClassFunction: typeof list.rowClass === 'function'
+    }
   },
   watch: {
     payload: {
+      deep: true,
       handler (newvalue, oldvalue) {
         if (this.remoteMethod !== undefined && typeof this.remoteMethod === 'function') this.remoteMethod(newvalue, this.resolveResult)
       }
@@ -54,11 +56,6 @@ export default {
       return (isRowVisible !== undefined && typeof isRowVisible === 'function')
         ? (this.collection.filter(isRowVisible))
         : this.collection
-    },
-    resolveRowClass() {
-      const rowClass = this.rowClass
-      const isFunction = typeof rowClass === 'function'
-      return (row, index) => rowClass === undefined ? 'cd-list--item' : ['cd-list--item', isFunction ? rowClass(row, index) : rowClass]
     }
   }
 }

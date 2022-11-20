@@ -1,9 +1,13 @@
 <template>
-  <cd-list class="cd-props--inner text-start" :collection="descriptor" key-field="datafield" :is-row-visible="isPropertyVisible" :list-class="['list-unstyled property-list', parentprop.class]" row-class="cd-property--descriptor">
+  <cd-list class="cd-properties" :collection="descriptor" key-field="datafield" row-class="cd-property--descriptor" :is-row-visible="isPropertyVisible"
+    :list-class="['list-unstyled cd-properties--list', propClass ]">
     <template slot="header">
       <slot name="text"></slot>
     </template>
-    <slot slot-scope="{ row, index }" :property="row" :parent="parentprop" :hasDescriptor="hasDescriptor(row)" :index="index"/>
+    <slot slot-scope="{ row, index }" :property="row" :parent="owner" :config="config(row)" :index="index"/>
+    <div v-if="$slots.content" slot="footer">
+      <slot name="content"></slot>
+    </div>
   </cd-list>
 </template>
 
@@ -16,18 +20,20 @@ export default {
     'cd-list': CDList
   },
   props: {
-    descriptor: { type: Array, required: true, description: 'Массив свойств' },
-    parentprop: { type: Object, default: Object, description: 'Объект-дескриптор' },
-    payload: { type: Object, required: true },
-    inner: { type: Boolean }
+    config: { type: Function, required: true },
+    descriptor: { type: Array, required: true, description: 'Массив свойств', default: () => ([]) },
+    owner: { type: Object, default: Object, description: 'Объект-дескриптор' },
+    payload: { type: Object, required: true }
+  },
+  data (propsbase) {
+    return {
+      propClass: decorator.resolvePropertyClass(propsbase.owner, propsbase.payload),
+      hasDescriptor: propsbase.descriptor.length > 0
+    }
   },
   computed: {
-    hasDescriptor () {
-      return (property) => decorator.hasDescriptor(property)
-    },
-    isPropertyVisible () {
-      const props = this
-      return (property, index) => decorator.isPropertyVisible(property, props.payload, index)
+    isPropertyVisible (vm) {
+      return (property, index) => decorator.isPropertyVisible(property, vm.payload, index)
     }
   }
 }
