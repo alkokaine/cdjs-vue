@@ -1,20 +1,24 @@
 <template>
   <div class="cd-cell" :class="[{ 'cd-slide--wrap': input.range, 'el-textarea': input.textarea, 'el-input': !(input.select || input.autocomplete || input.checkbox) }, cellClassResolved]">
     <template v-if="input.number">
-      <input :placeholder="property.placeholder" type="number" class="el-input__inner cd-input__inner" 
-        :min="property.min" :max="property.max" :value="value" :disabled="disabled" 
-        @change="onCellChange({ $event, property }, onChange)"
-        :clearable="property.clearable"/>
+      <input :placeholder="property.placeholder" type="number" 
+        class="el-input__inner cd-input__inner" 
+        :min="property.min" :max="property.max" 
+        :value="value" :disabled="disabled"
+        :clearable="property.clearable"
+        @change="onCellChange({ $event, property }, onChange)"/>
     </template>
     <template v-else-if="input.select">
       <el-select class="cd-select" :placeholder="property.placeholder"
         :remote="property.remote" :filterable="property.filterable"
-        :value="value" :disabled="disabled" :remote-method="query => fetch(query, resolveOptions)"
-        :clearable="property.clearable" :multiple="property.multiple" :collapse-tags="property.collapseTags"
-        :value-key="property.valuekey" :label-key="property.labelkey">
-        <cd-list class="cd-select--options" :collection="collection" :payload="payload"
-          :key-field="property.valuekey" :list-class="['list-unstyled', property.listClass]"
-          row-class="cd-option">
+        :value="value" :disabled="disabled" :clearable="property.clearable"
+        :multiple="property.multiple" :collapse-tags="property.collapseTags"
+        :value-key="property.valuekey" :label-key="property.labelkey"
+        :remote-method="query => fetch(query, resolveOptions)">
+        <cd-list class="cd-select--options" row-class="cd-option" 
+          :list-class="['list-unstyled', property.listClass]"
+          :collection="collection" :payload="payload"
+          :key-field="property.valuekey">
           <el-option slot-scope="{ row }" :value="row[property.valuekey]"
             :label="row[property.labelkey]" :disabled="optionDisabled(row, property.isdisabled)"
             v-on:click.native="onOptionSelect({ $event, item: row, property }, onSelect)">
@@ -31,10 +35,12 @@
       </el-select>
     </template>
     <template v-else-if="input.autocomplete">
-      <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder" :value="value"
-        :fetch-suggestions="fetch" :disabled="disabled" :clearable="property.clearable" :value-key="property.valuekey"
+      <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder"
+        :value="value" :fetch-suggestions="fetch" :disabled="disabled"
+        :clearable="property.clearable" :value-key="property.valuekey"
         :trigger-on-focus="property.triggerOnFocus">
-        <div class="cd-autocomplete-item--wrap" slot-scope="{ item }" v-on:click.capture="onOptionSelect({ $event, item, property }, onSelect)">
+        <div class="cd-autocomplete-item--wrap" slot-scope="{ item }"
+          v-on:click.capture="onOptionSelect({ $event, item, property }, onSelect)">
           <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item"
             :descriptor="property.slotdescriptor" :payload="item">
             <div slot-scope="{ value }">{{ value }}</div>
@@ -45,8 +51,8 @@
     </template>
     <template v-else-if="input.textarea">
       <textarea class="el-textarea__inner" :value="value" 
-      @change="onCellChange({ $event, property }, onChange)" 
-      :disabled="disabled"></textarea>
+        @change="onCellChange({ $event, property }, onChange)" 
+        :disabled="disabled"></textarea>
     </template>
     <template v-else-if="input.checkbox">
       <el-checkbox class="cd-checkbox" :value="value" :disabled="disabled"></el-checkbox>
@@ -60,24 +66,34 @@
         type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"></el-date-picker>
     </template>
     <template v-else-if="input.email">
-      <input type="email" class="el-input__inner cd-input__inner" :placeholder="property.placeholder" :value="value" :disabled="disabled" @change="onCellChange({ $event, property }, onChange)"/>
+      <input type="email" class="el-input__inner cd-input__inner" 
+        :placeholder="property.placeholder" :value="value" :disabled="disabled"
+        @change="onCellChange({ $event, property }, onChange)"/>
     </template>
     <template v-else-if="input.radio"></template>
     <template v-else-if="input.range">
-      <input type="range" class="cd-slider align-middle" :min="property.min" :max="property.max" :value="value" :step="property.step"
-      @change="onCellChange({ $event, property}, onChange)"/> 
+      <input type="range" class="cd-slider align-middle" 
+        :min="property.min" :max="property.max" :value="value" :step="property.step"
+        @change="onCellChange({ $event, property}, onChange)"/> 
     </template>
     <template v-else-if="input.tel">
-      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder" type="tel" :value="value" :disabled="disabled" @change="onCellChange({ $event, property}, onChange)"/>
+      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder"
+        type="tel" :value="value" :disabled="disabled"
+        @change="onCellChange({ $event, property}, onChange)"/>
     </template>
     <template v-else-if="input.url">
-      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder" type="url" :value="value" :disabled="disabled" @change="onCellChange({ $event, property}, onChange)"/>
+      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder"
+        type="url" :value="value" :disabled="disabled"
+        @change="onCellChange({ $event, property}, onChange)"/>
     </template>
     <template v-else-if="input.file">
-      <input class="el-input__inner cd-input__inner" type="file" :value="value" :disabled="disabled"/>
+      <input class="el-input__inner cd-input__inner" type="file" :value="value" 
+        :disabled="disabled"/>
     </template>
     <template v-else>
-      <input type="text" class="el-input__inner cd-input__inner" :placeholder="property.placeholder" :value="value" :disabled="disabled" @change="onCellChange({ $event, property }, onChange)"/>
+      <input type="text" class="el-input__inner cd-input__inner" :placeholder="property.placeholder" 
+        :value="value" :disabled="disabled"
+        @change="onCellChange({ $event, property }, onChange)"/>
     </template>
   </div>
 </template>
