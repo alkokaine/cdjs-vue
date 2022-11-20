@@ -5,6 +5,7 @@ import CdPropsView from '../views/cd-props-view.vue'
 import CDListView from '../views/cd-list-view.vue'
 import CDFormView from '../views/cd-form-view.vue'
 import CDListFilterView from '../views/cd-list-filter-view.vue'
+import CDFormModelView from '../views/cd-form-model-view.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,6 +33,11 @@ const routes = [
     path: '/cd-list-filter',
     name: 'cd-list-filter',
     component: CDListFilterView
+  },
+  {
+    path: '/cd-form-model',
+    name: 'cd-form-v-model',
+    component: CDFormModelView
   }
 ]
 
