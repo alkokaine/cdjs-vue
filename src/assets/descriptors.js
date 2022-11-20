@@ -342,7 +342,9 @@ export default {
               descriptor: [
                 {
                   datafield: 'PostAddress',
-                  text: 'Почтовый адрес'
+                  text: 'Почтовый адрес',
+                  labelClass: 'fs-1',
+                  inputClass: 'p-4 m-4'
                 },
                 {
                   datafield: 'LawAddress',
@@ -350,7 +352,7 @@ export default {
                   input: 'autocomplete'
                 },
               ],
-              propClass: 'row row-cols-2 align-items-end'
+              propClass: 'row row-cols-2 align-items-end border border-1 border-white my-2 py-2'
             }
           ]
         }
@@ -552,7 +554,11 @@ export default {
     {
       input: 'range',
       datafield: 'range',
-      text: 'range'
+      text: 'range',
+      vertical: true,
+      min: 20,
+      max: 120,
+      step: 1,
     },
     {
       input: 'tel',
