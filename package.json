@@ -6,10 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
-    "cypress:open": "cypress open"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.6",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.0",
     "core-js": "^3.8.3",
