@@ -4,7 +4,7 @@ import HomeView from '../views/home-view.vue'
 import CDGridView from '../views/cd-grid-view.vue'
 import CdPropsView from '../views/cd-props-view.vue'
 import CDListView from '../views/cd-list-view.vue'
-
+import CDPropsGridView from '../views/cd-props-grid-view.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -27,6 +27,11 @@ const routes = [
     path: '/cd-list',
     name: 'cd-list',
     component: CDListView
+  },
+  {
+    path: '/cd-props-grid',
+    name: 'cd-props-grid',
+    component: CDPropsGridView
   }
 ]
 
