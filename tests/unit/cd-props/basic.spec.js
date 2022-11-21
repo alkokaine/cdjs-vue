@@ -2,6 +2,7 @@ import CDProps from '@/components/cd-props'
 import { mount } from '@vue/test-utils'
 import descriptor from '@/assets/descriptors'
 import flatterer from '@/common/property-flatter'
+import utils from '@/common/cd-vue-utils'
 import Vue from 'vue'
 describe('[CD-PROPS] Basics', () => {
   const propsData = {}
@@ -9,6 +10,10 @@ describe('[CD-PROPS] Basics', () => {
     payload: descriptor.object,
     descriptor: descriptor.objectDescriptor
   }
+  it ('[cd-props] has described properties', done => {
+    expect(utils.isComponentDescribed(CDProps)).toBe(true)
+    done()
+  })
   const consoleErrorSpy = jest.spyOn(console, 'error')
   const props = mount(CDProps, { propsData })
   it ('screams about required properties', (done) => {
