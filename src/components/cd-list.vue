@@ -19,9 +19,9 @@ import RoleValidator from '@/common/list-aria-role'
 export default {
   name: 'cd-list',
   props: {
-    payload: { type: [Array, Object, Number, String, Date, Function] },
-    remoteMethod: { type: Function },
-    resolveResult: { type: Function },
+    payload: { type: [Array, Object, Number, String, Date, Function], description: 'Параметры загрузки данных в список' },
+    remoteMethod: { type: Function, description: 'Метод получения данных для списка' },
+    resolveResult: { type: Function, description: 'Функция, выполняющаяся при успешном получении данных' },
     listClass: { type: [Array, Object, String], description: 'Класс CSS элемента <ul>' },
     rowClass: { type: [Function, Array, Object, String], description: 'Класс CSS элемента <li> списка' },
     collection: { type: [Array, Function], required: true, description: 'Содержимое списка' },
@@ -34,7 +34,8 @@ export default {
       default: function(row, index) {
         const keyfield = this.keyField
         return row[keyfield] 
-      }
+      },
+      description: 'Функция, возвращающая значение первичного ключа объекта в списке'
     } 
   },
   data (list) {
