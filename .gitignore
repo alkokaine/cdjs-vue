@@ -2,10 +2,11 @@
 node_modules
 coverage
 /dist
+keys.js
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/
-
+keys.js
 
 # local env files
 .env.local
