@@ -1,5 +1,8 @@
 <template>
   <cd-list :collection="collection" :key-field="keyField" list-class="list-unstyled row" row-class="col">
+    <div v-if="$slots.header" slot="header">
+      <slot name="header"></slot>
+    </div>
     <template slot-scope="{ row }">
       <cd-rec-list v-if="row[recursive]" :collection="row[recursive]" :key-field="keyField" :recursive="recursive">
         <template slot-scope="{ li }">
