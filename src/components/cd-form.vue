@@ -42,14 +42,14 @@ export default {
     'cd-cell': CDCell
   },
   props: {
-    descriptor: { type: Array, required: true },
-    payload: { type: Object, required: true },
-    sync: { type: Boolean, default: false },
-    formClass: { type: [Array, Object, String] },
-    showControls: { type: Boolean, default: false },
-    onSubmit: { type: Function },
-    onReset: { type: Function },
-    rules: { type: Array }
+    descriptor: { type: Array, required: true, description: 'Свойства объекта: перечень дескрипторов' },
+    payload: { type: Object, required: true, description: 'Объект, свойства которого показаны на элементе <fieldset>' },
+    sync: { type: Boolean, default: false, description: 'Синхронизировать ли значения полей формы со значениями свойств объекта payload' },
+    formClass: { type: [Array, Object, String], description: 'CSS класс для элемента <form>' },
+    showControls: { type: Boolean, default: false, description: 'Показывать или нет кнопки отмены/отправки' },
+    onSubmit: { type: Function, description: 'Функция выполнится при сабмите формы' },
+    onReset: { type: Function, description: 'Функция выполнится при отмене изменений формы' },
+    rules: { type: Array, description: 'Правила для валидации' }
   },
   data (form) {
     return {

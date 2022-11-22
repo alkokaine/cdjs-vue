@@ -32,11 +32,11 @@ export default {
     }
   },
   props: {
-    descriptor: { type: Array, required: true },
-    payload: { type: Object, required: true },
-    owner: { type: Object, default: Object },
-    isDisabled: { type: Function },
-    fieldConfig: { type: Function, required: true, default: (prop) => ({}) }
+    descriptor: { type: Array, required: true, description: 'Массив полей компонента fieldset' },
+    payload: { type: Object, required: true, description: 'Объект на компоненте fieldset' },
+    owner: { type: Object, default: Object, description: 'Родительский дескриптор' },
+    isDisabled: { type: Function, description: 'Функция, возвращающая для дескриптора true или false, определающие будет ли задисаблен элемент fieldset' },
+    fieldConfig: { type: Function, required: true, default: (prop) => ({}), description: 'Функция, возвращающая настройки для дескриптора' }
   },
   computed: {
     hasLegend () {
