@@ -1,6 +1,7 @@
 import CDTabs from '@/components/cd-tabs'
 import { mount } from '@vue/test-utils'
 import Vue from 'vue'
+import utils from '@/common/cd-vue-utils'
 const tabs = [{ datafield: 'xyz', class: 'xyz-class' }, { datafield: 'yzx' }, { datafield: 'zxy' }]
 const basicsMount = {
   tabs,

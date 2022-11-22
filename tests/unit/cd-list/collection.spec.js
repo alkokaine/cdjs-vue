@@ -1,10 +1,13 @@
 import { mount } from "@vue/test-utils"
 import CDList from '@/components/cd-list'
 import Vue from "vue"
-const listFactory = (propsData) => (mount(CDList, {
+const listFactory = (propsData, mounted) => (mount(CDList, {
   propsData,
   scopedSlots: {
     default: '<div slot-scope="{ row }">{{ row }}</div>'
+  },
+  mounted () {
+    if (mounted !== undefined) mounted()
   }
 }))
 
@@ -143,7 +146,7 @@ describe ('[CD-LIST] Remote Collection', () => {
 
 describe ('[CD-LIST] Collection Manipulation', () => {
   const collection = []
-  const payload = 12
+  var payload = 0
   const remoteMethod = jest.fn((payload, resolve) => {
     resolve(Array.from(Array(payload).keys()))
   })
@@ -155,10 +158,13 @@ describe ('[CD-LIST] Collection Manipulation', () => {
   })
   const keyField = 'key'
   const wrapper = listFactory({ collection, payload, remoteMethod, resolveResult, keyField })
+  
   it ('check if retrieved [collection] has 12 items', (done) => {
-    expect(collection.length).toBe(12)
-    expect(wrapper.findAll('li').length).toBe(12)
-    done()
+    wrapper.setProps({ payload: 12 }).then(() => {
+      expect(collection.length).toBe(12)
+      expect(wrapper.findAll('li').length).toBe(12)
+      done()
+    })
   })
   it ('add new element, [collection] has 13 items', (done) => {
     collection.push({ key: 122 })
