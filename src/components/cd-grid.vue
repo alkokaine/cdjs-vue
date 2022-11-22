@@ -49,27 +49,27 @@ export default {
     'cd-grid-head': CdGridHead
   },
   props: {
-    showHeader: { type: Boolean, default: true },
-    highlightOnHover: { type: Boolean, default: false },
-    striped: { type: Boolean, default: false },
-    collection: { type: Array, required: true },
-    keyField: { type: String, required: true },
-    rowDetails: { type: Boolean, defailt: false },
-    descriptor: { type: Array },
-    selectRows: { type: Boolean, default: false },
-    small: { type: Boolean, default: false },
-    zebraRows: { type: Boolean, default: false },
-    zebraCols: { type: Boolean, default: false },
-    bodyClass: { type: [String, Object, Array, Function], default: 'cd-grid--body-base' },
-    headClass: { type: [String, Object, Array, Function], default: 'cd-grid--head-base' },
-    rowClass: { type: [String, Object, Array, Function] },
-    headCellClass: { type: [String, Object, Array, Function] },
-    bodyCellClass: { type: [String, Object, Array, Function] },
+    showHeader: { type: Boolean, default: true, description: 'Показывать ли заголовок грида' },
+    highlightOnHover: { type: Boolean, default: false, description: 'Подсвечивать при перемещении мыши' },
+    collection: { type: Array, required: true,description: 'Данные в гриде' },
+    keyField: { type: String, required: true, description: 'Ключевое свойство строки грида' },
+    rowDetails: { type: Boolean, defailt: false, description: 'Подготовительная работа к слоту с деталями строки грида' },
+    descriptor: { type: Array, description: 'Массив дескрипторов, по которым будут отрисованы колонки грида' },
+    selectRows: { type: Boolean, default: false, description: 'Показывать ли чекбоксы для выделения строк грида' },
+    small: { type: Boolean, default: false, description: 'Компактный размер' },
+    zebraRows: { type: Boolean, default: false, description: 'Полосатые строки' },
+    zebraCols: { type: Boolean, default: false, description: 'Полосатые колонки' },
+    bodyClass: { type: [String, Object, Array, Function], default: 'cd-grid--body-base', description: 'CSS класс элемента <tbody>' },
+    headClass: { type: [String, Object, Array, Function], default: 'cd-grid--head-base', description: 'CSS класс элемента <thead>' },
+    rowClass: { type: [String, Object, Array, Function], description: 'CSS класс элемента <tr>' },
+    headCellClass: { type: [String, Object, Array, Function],description: 'CSS класс элемента <th>' },
+    bodyCellClass: { type: [String, Object, Array, Function],description: 'CSS класс элемента <td>' },
     rowKey: { 
       type: Function,
       default: function (row, index) {
         return row[this.keyField]
-      }
+      },
+      description: 'Функция, возвращающая значение ключевого поля '
     }
 
   },
