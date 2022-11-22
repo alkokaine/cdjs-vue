@@ -1,5 +1,5 @@
 <template>
-  <cd-list class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day" :remote-method="getMonthDays" :resolve-result="resolveDays" :payload="date"
+  <cd-list class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
     list-class="list-unstyled mx-auto container-sm row"
     :row-class="['col cd-weekday--container px-0 mx-1', { 'mw-mc': compact, 'w-auto': !compact }]">
     <div slot="header">
@@ -47,13 +47,12 @@ export default {
     'el-checkbox': Checkbox
   },
   props: {
-    date: { type: Object, reqiured: true },
-    sixDays: { type: Boolean, default: false },
-    prependDays: { type: Boolean, default: true },
-    compact: { type: Boolean, default: false },
-    pre: { type: Boolean, default: true },
-    selectWeekdays: { type: Boolean, default: false },
-    onWeekdaySelect: { type: Function },
+    date: { type: Object, reqiured: true, description: 'Дата, месяц который отрисовывает календарь' },
+    sixDays: { type: Boolean, default: false, description: 'Признак шестидневной рабочей недели' },
+    prependDays: { type: Boolean, default: true, description: 'Если месяц начинается не с понедельника и prepend-days = true, то присоединим дни из предыдущего месяца так, чтобы первое число указанного месяца было в своей клетке дня недели' },
+    compact: { type: Boolean, default: false, description: 'Компактный режим' },
+    selectWeekdays: { type: Boolean, default: false, description: 'Режим выбора дня недели (появится чекбокс)' },
+    onWeekdaySelect: { type: Function, description: 'Функция, которую выполним по выбору дня недели' },
     onDaySelect: {
       type: Function,
       default: function ({ $event, day, weekday }) {
@@ -73,35 +72,50 @@ export default {
             calendar.selectedWeekdays.push(weekday.day)
           }
         }
-      }
+      },
+      description: 'Функция, которая выполнится при выборе дня'
     }
   },
   data (calendar) {
     return {
-      weekdays: Array,
+      weekdays,
       isLoading: false,
       selectedWeekdays: [],
       selectedDays: [],
       days: Array
     }
   },
-  methods: {
-    getMonthDays (date, resolve) {
-      this.days = Array.from(Array(date.daysInMonth()).keys())
-        .map(d => ({ date: createDate(date.year(), date.month() + 1, d + 1) }))
-      if (this.prependDays) {
-        resolve(prevMonthDays(date).concat(this.days))
-      } else {
-        resolve(this.days)
+  watch: {
+    date: { 
+      immediate: true,
+      handler (newvalue) {
+        var _days = Array.from(Array(newvalue.daysInMonth()).keys())
+          .map(d => ({ date: createDate(newvalue.year(), newvalue.month() + 1, d + 1)}))
+        if (this.prependDays) {
+          _days = prevMonthDays(newvalue).concat(_days)
+        }
+        this.weekdays = weekdays.map(m => ({
+          days: _days.filter(d => d.date.day() === m.day ),
+          weekday: m.weekday,
+          order: m.order,
+          day: m.day
+        }))
       }
-    },
+    }
+  },
+  methods: {
+
+    // getMonthDays (date, resolve) {
+    //   this.days = Array.from(Array(date.daysInMonth()).keys())
+    //     .map(d => ({ date: createDate(date.year(), date.month() + 1, d + 1) }))
+    //   if (this.prependDays) {
+    //     resolve(prevMonthDays(date).concat(this.days))
+    //   } else {
+    //     resolve(this.days)
+    //   }
+    // },
     resolveDays (days) {
-      this.weekdays = weekdays.map(m => ({
-        days: days.filter(d => d.date.day() === m.day ),
-        weekday: m.weekday,
-        order: m.order,
-        day: m.day
-      }))
+      
     },
     weekdayselect({ $event, row }, callback) {
       const calendar = this
