@@ -14,7 +14,7 @@ export default {
     'cd-grid': CDGrid
   },
   props: {
-    component: { type: Object, required: true }
+    component: { type: Object, required: true, description: 'Компонент, чьи свойства покажет грид' }
   },
   data (grid) {
     return {
