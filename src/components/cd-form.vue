@@ -56,6 +56,13 @@ export default {
       formobject: form.sync ? form.payload : structuredClone(form.payload)
     }
   },
+  watch: {
+    payload: {
+      handler (newvalue) {
+        this.formobject = this.sync ? newvalue : structuredClone(newvalue)
+      }
+    }
+  },
   computed: {
     inputClass ({ formobject }) {
       return ({ inputClass }) => {
