@@ -24,9 +24,9 @@ export default {
     'cd-list': CDList
   },
   props: {
-    collection: { type: Array },
-    recursive: { type: String },
-    keyField: { type: String }
+    collection: { type: Array, description: 'Содержимое списка' },
+    recursive: { type: String, description: 'Свойство, по которому будет строиться рекурсивный список' },
+    keyField: { type: String, description: 'Ключ объекта' }
   },
   data (list) {
     return {}

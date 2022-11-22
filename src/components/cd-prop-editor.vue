@@ -11,8 +11,8 @@ import propertyDescriptor from '@/assets/property-descriptor'
 import CDForm from '@/components/cd-form.vue'
 export default {
   props: {
-    payload: { type: Object, required: true },
-    descriptor: { type: Array, default: () => propertyDescriptor }
+    payload: { type: Object, required: true, description: 'Редактируемый объект' },
+    descriptor: { type: Array, default: () => propertyDescriptor, description: 'Дескриптор формы-редактора, по умолчанию -- [ { datafield: %datafield%, text: %text%, input: %input%... } ]' }
   },
   components: {
     'cd-form': CDForm
