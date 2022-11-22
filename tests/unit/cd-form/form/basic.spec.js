@@ -6,6 +6,7 @@ import flatterer from '@/common/property-flatter'
 import CDCell from '@/components/cd-cell'
 import Vue from 'vue'
 import Element from 'element-ui'
+import utils from '@/common/cd-vue-utils'
 Vue.use(Element)
 describe('[cd-form]', () => {
   const propsData = {
@@ -15,7 +16,10 @@ describe('[cd-form]', () => {
   const flat = flatterer(propsData.descriptor, [])
   const hasDescriptors = flat.filter(p => decorator.hasDescriptor(p)).length
   const hasLabels = flat.filter(p => !decorator.hasDescriptor(p)).length
-
+  it ('[cd-form] has described properties', done => {
+    expect(utils.isComponentDescribed(CDForm)).toBe(true)
+    done()
+  })
   it ('[cd-form] is mounted', done => {
     const wrapper = mount(CDForm, { propsData: propsData })
     Vue.nextTick().then(() => {
