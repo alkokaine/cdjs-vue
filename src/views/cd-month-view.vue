@@ -1,16 +1,16 @@
 <template>
   <div class="cd-month-view">
-    <h3>CD-MONTH</h3>
     <cd-month :compact="compact" :select-weekdays="showcheckbox" :date="date">
-      <cd-list slot-scope="{ day }" :collection="resolveMatches(day)" key-field="_id" class="py-2" list-class="list-unstyled" row-class="match-short">
+      <h3 slot="month-header">CD-MONTH</h3>
+      <cd-list slot-scope="{ day }" :collection="resolveMatches(day)" key-field="_id" class="py-2" list-class="list-unstyled" row-class="match-short py-2">
         <div slot-scope="{ row }" class="row justify-content-center">
           <div class="col home-team mw-50">
-            <div class="w-auto">
+            <div class="w-auto team-flag border border-1">
               <img :src="row.event.home_flag" />
             </div>
           </div>
           <div class="col away-team mw-50">
-            <div class="w-auto">
+            <div class="w-auto team-flag border border-1">
               <img :src="row.event.away_flag"/>
             </div>
           </div>
