@@ -2,17 +2,15 @@
   <div class="cd-month-view">
     <h3>CD-MONTH</h3>
     <cd-month :compact="compact" :select-weekdays="showcheckbox" :date="date">
-      <cd-list slot-scope="{ day }" :collection="resolveMatches(day)" key-field="_id" list-class="list-unstyled">
+      <cd-list slot-scope="{ day }" :collection="resolveMatches(day)" key-field="_id" class="py-2" list-class="list-unstyled" row-class="match-short">
         <div slot-scope="{ row }" class="row justify-content-center">
           <div class="col home-team mw-50">
             <div class="w-auto">
-              <span class="d-inline-block w-100"></span>
               <img :src="row.event.home_flag" />
             </div>
           </div>
           <div class="col away-team mw-50">
             <div class="w-auto">
-              <span class="d-inline-block w-100"></span>
               <img :src="row.event.away_flag"/>
             </div>
           </div>
@@ -25,12 +23,10 @@
 <script>
 import CDList from '@/components/cd-list.vue'
 import CDMonth from '@/components/cd-month.vue'
-import adapter from 'axios/lib/adapters/http'
 import { createDate } from '@/common/month-days'
 import keys from '@/../keys'
 import fetchData from '@/common/fetch-data'
 import moment from 'moment'
-import Vue from 'vue'
 export default {
   components: {
     'cd-month': CDMonth,
