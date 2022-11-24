@@ -1,21 +1,18 @@
 <template>
   <div class="cd-list">
-    <div v-if="$slots.header" class="cd-list--header">
-      <slot name="header"></slot>
-    </div>
+    <slot name="header" class="cd-list--header"></slot>
     <ul class="cd-list--internal" :class="listClass" :role="listRole">
       <li v-for="(row, index) in filtered" :class="['cd-list--item', isRowClassFunction ? rowClass(row, index) : rowClass]" :role="itemRole" :key="rowKey(row, index)">
         <slot :row="row" :index="index"/>
       </li>
     </ul>
-    <div v-if="$slots.footer" class="cd-list--footer">
-      <slot name="footer"></slot>
-    </div>
+    <slot name="footer" :isempty="isempty" class="cd-list--footer"></slot>
   </div>
 </template>
 
 <script>
 import RoleValidator from '@/common/list-aria-role'
+const collection = []
 export default {
   name: 'cd-list',
   props: {
@@ -24,7 +21,7 @@ export default {
     resolveResult: { type: Function, description: 'Функция, выполняющаяся при успешном получении данных' },
     listClass: { type: [Array, Object, String], description: 'Класс CSS элемента <ul>' },
     rowClass: { type: [Function, Array, Object, String], description: 'Класс CSS элемента <li> списка' },
-    collection: { type: [Array, Function], required: true, description: 'Содержимое списка' },
+    collection: { type: [Array, Function], required: true, default: () => (collection), description: 'Содержимое списка' },
     keyField: { type: String, required: true, description: 'Имя свойства, где содержится идентификатор объекта в списке' },
     isRowVisible: { type: Function, description: 'Функция, которая по объекту и его индексу в массиве вычисляет, следует ли его рендерить' },
     listRole: { type: String, validator: RoleValidator.validateListRole, description: 'aria-role списка' },
@@ -52,11 +49,14 @@ export default {
     }
   },
   computed: {
-    filtered () {
-      const isRowVisible = this.isRowVisible
-      return (isRowVisible !== undefined && typeof isRowVisible === 'function')
-        ? (this.collection.filter(isRowVisible))
-        : this.collection
+    isempty ({ filtered }) {
+      return filtered.length === 0
+    },
+    filtered ({ collection, isRowVisible }) {
+      if (Array.isArray(collection) && collection.length > 0) {
+        return isRowVisible !== undefined && typeof isRowVisible === 'function' ? collection.filter(isRowVisible) : collection
+      }
+      return []
     }
   }
 }
