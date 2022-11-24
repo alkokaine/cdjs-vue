@@ -33,6 +33,7 @@ import CDMonth from '@/components/cd-month.vue'
 import { createDate } from '@/common/month-days'
 import keys from '@/../keys'
 import fetchData from '@/common/fetch-data'
+import { schedule } from '@/assets/match-info'
 import moment from 'moment'
 export default {
   components: {
@@ -66,9 +67,6 @@ export default {
         const view = this
         fetchData({
           method: 'get',
-          error (reason) {
-            console.error(reason)
-          },
           timeout:5000,
           url: '/qatar2022/match',
           headers: keys.qatar2022
@@ -78,7 +76,10 @@ export default {
             event: m
           }))
         }).catch(reason => {
-          console.error(reason)
+          view.matches = schedule.map(m => ({
+            moment: moment(new Date(m.local_date)),
+            event: m
+          }))
         })
       }
     }
