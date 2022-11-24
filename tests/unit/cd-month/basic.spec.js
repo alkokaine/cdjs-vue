@@ -15,7 +15,8 @@ describe('[CD-MONTH] Basics', () => {
   const propsData = {
     date: date,
     selectWeekdays: false,
-    compact: false
+    compact: false,
+    schedule: []
   }
   it ('[cd-month] has described properties', done => {
     expect(utils.isComponentDescribed(CDMonth)).toBe(true)
@@ -23,10 +24,13 @@ describe('[CD-MONTH] Basics', () => {
   })
   it ('[CD-MONTH] is mounted', done => {
     const wrapper = monthFactory(propsData)
-    expect(wrapper.findAll('.cd-month').length).toBe(1)
-    expect(wrapper.findAll('.cd-weekdays--wrap').length).toBe(7)
-    expect(wrapper.findAllComponents(CDList).length).toBe(8)
-    expect(wrapper.findAll('.cd-day').length).toBeGreaterThanOrEqual(propsData.date.daysInMonth())
-    done()
+    Vue.nextTick().then(() => {
+      expect(wrapper.findAll('.cd-month').length).toBe(1)
+      expect(wrapper.findAll('.cd-weekdays--wrap').length).toBe(7)
+      expect(wrapper.findAllComponents(CDList).length).toBe(8)
+      expect(wrapper.findAll('.cd-day').length).toBeGreaterThanOrEqual(propsData.date.daysInMonth())
+      done()
+    })
+    
   }, 30000)
 })
