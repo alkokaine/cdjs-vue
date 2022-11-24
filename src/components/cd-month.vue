@@ -12,8 +12,8 @@
           <el-checkbox :id="checkboxid(row.day)" class="el-checkbox" type="checkbox" :value="isChecked(row)" @change="weekdayselect({ $event, row }, onWeekdaySelect)"/>
         </p>
         <p class="my-0 px-0">
-          <template v-if="compact">{{ row.weekday.short }}</template>
-          <template v-else>{{ row.weekday.long }}</template>
+          <template v-if="compact">{{ row.info.short }}</template>
+          <template v-else>{{ row.info.long }}</template>
         </p>
       </div>
       <cd-day slot-scope="day" :day="day.row" class="mx-auto mb-2 border-0" :class="[`week-${day.row.week}`, { 'is-selected border-1': isDaySelected(day),  'compact': compact }]"
@@ -23,7 +23,7 @@
         </p>
         <template v-if="!compact">
           <div class="cd-day--content-wrapper px-2">
-            <slot :day="day.row"></slot>
+            <slot :day="day.row" :events="dayContent(day)"></slot>
           </div>
         </template>
       </cd-day>
@@ -56,6 +56,7 @@ export default {
       default: 'schedule',
       description: 'Режим календаря, schedule (по умолчанию) -- месяц разбит по неделям; list -- дни идут списком'
     },
+    compareDate: { type: Function, required: true, description: 'функция возвращает true, если даты параметров функции совпадают' },
     schedule: { type: Array, required: true, description: 'Массив "событий"' },
     date: { type: Object, reqiured: true, description: 'Дата, месяц который отрисовывает календарь' },
     sixDays: { type: Boolean, default: false, description: 'Признак шестидневной рабочей недели' },
@@ -94,6 +95,7 @@ export default {
     }
   },
   methods: {
+
     weekdayselect({ $event, row }, callback) {
       const calendar = this
       const indexOf =calendar.selectedWeekdays.findIndex(w => w === row.day)
@@ -115,6 +117,11 @@ export default {
     }
   },
   computed: {
+    dayContent ({ schedule, compareDate }) {
+      return (day) => {
+        return  (schedule.filter(s => compareDate(s, day)))
+      }
+    },
     days ({ date, prependDays }) {
       return (prependDays ? prevMonthDays(date) : [])
         .concat(
@@ -124,11 +131,10 @@ export default {
     },
     weekdays ({ days }) {
       return weekdays.map(m => ({
-        days: days.filter(d => d.date.day() === m.day).map(d => ({ date: d.date, week: d.date.week() })),
-        weekday: m.weekday,
+        days: days.filter(d => d.date.day() === m.day).map(d => ({date: d.date,week: d.date.week() })),
+        info: m.weekday,
         order: m.order,
-        day: m.day,
-        year: m.year
+        day: m.day
       }))
     },
     checkboxid () {
@@ -140,11 +146,15 @@ export default {
         return calendar.selectedWeekdays.indexOf(row.day) >= 0
       }
     },
-    weekdayClass () {
-      const calendar = this
+    weekdayClass ({ selectedWeekdays, sixDays }) {
+
       return (weekday, index) => {
-        const isselected = calendar.selectedWeekdays.indexOf(weekday.day) >= 0
-        if (index === 5 && !calendar.sixDays || index === 6) return `holiday`
+        const isselected = selectedWeekdays.indexOf(weekday.day) >= 0
+        if (index === 5 && !sixDays || index === 6) return `holiday`
+        return [`weekday-${weekday.info.long.toLowerCase()}s`, {
+          'is-selected': selectedWeekdays.indexOf(weekday.day) >= 0,
+          'holiday': index === 5 && !sixDays || index == 6
+        }]
       }
     },
     isDaySelected () {
