@@ -1,7 +1,9 @@
 <template>
   <div class="cd-month-view">
     <cd-month :compact="compact" :select-weekdays="showcheckbox" :date="date">
-      <h3 slot="month-header">CD-MONTH</h3>
+      <h3 slot="month-header">CD-MONTH
+        <el-date-picker v-model="mdate"></el-date-picker>
+      </h3>
       <cd-list slot-scope="{ day }" :collection="resolveMatches(day)" key-field="_id" class="py-2" list-class="list-unstyled" row-class="match-short py-2">
         <div slot-scope="{ row }" class="row justify-content-center">
           <div class="col home-team mw-50">
@@ -36,24 +38,25 @@ export default {
     return {
       compact: false,
       showcheckbox: true,
-      date: createDate(2022, 11, 1),
+      // date: createDate(2022, 11, 1=),
+      mdate: new Date(Date.now()),
       matches: Array
     }
   },
   computed: {
+    date ({ mdate }) {
+      return createDate(mdate.getFullYear(), mdate.getMonth()+1, mdate.getDate())
+    },
     resolveMatches ({ matches }) {
       return ({ date }) => {
         if (matches.filter === undefined) {
           return []
         }
         else {
-          const res_ = matches.filter(m =>
+          return matches.filter(m =>
             m.moment.date() === date.date() &&
             m.moment.month() === date.month() &&
-            m.moment.year() === date.year()
-          )
-          setTimeout(() => console.log(res_), 300)
-          return res_
+            m.moment.year() === date.year())
         }
       }
     }
@@ -77,6 +80,8 @@ export default {
             moment: moment(new Date(m.local_date)),
             event: m
           }))
+        }).catch(reason => {
+          console.error(reason)
         })
       }
     }
