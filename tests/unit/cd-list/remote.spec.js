@@ -71,6 +71,6 @@ describe('remote', () => {
             done()
         }
         fetchData(geodb).then(callback)
-    })
+    }, 10000)
     
 })
