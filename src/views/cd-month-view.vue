@@ -1,10 +1,10 @@
 <template>
   <div class="cd-month-view">
-    <cd-month :compact="compact" :select-weekdays="showcheckbox" :date="date">
+    <cd-month :select-weekdays="showcheckbox" :date="date" :schedule="matches" :compareDate="compareDate">
       <h3 slot="month-header">CD-MONTH
         <el-date-picker v-model="mdate"></el-date-picker>
       </h3>
-      <cd-list slot-scope="{ day }" :collection="resolveMatches(day)" key-field="_id" class="py-2" list-class="list-unstyled" row-class="match-short py-2">
+      <cd-list slot-scope="{ events }" :collection="events" key-field="_id" class="py-2" list-class="list-unstyled" row-class="match-short py-2 mx-2">
         <div slot-scope="{ row }" class="row justify-content-center">
           <div class="col home-team mw-50">
             <div class="w-auto team-flag border border-1">
@@ -17,6 +17,11 @@
             </div>
           </div>
         </div>
+        <template slot="footer" slot-scope="{ isempty }">
+          <div v-if="isempty" class="empty-day">
+            <span>нет событий</span>
+          </div>
+        </template>
       </cd-list>
     </cd-month>
   </div>
@@ -38,27 +43,20 @@ export default {
     return {
       compact: false,
       showcheckbox: true,
-      // date: createDate(2022, 11, 1=),
       mdate: new Date(Date.now()),
-      matches: Array
+      matches: []
+    }
+  },
+  methods: {
+    compareDate ({ moment }, { row }) {
+      return moment.date() === row.date.date() && 
+        moment.month() === row.date.month() && 
+        moment.year() === row.date.year()
     }
   },
   computed: {
     date ({ mdate }) {
       return createDate(mdate.getFullYear(), mdate.getMonth()+1, mdate.getDate())
-    },
-    resolveMatches ({ matches }) {
-      return ({ date }) => {
-        if (matches.filter === undefined) {
-          return []
-        }
-        else {
-          return matches.filter(m =>
-            m.moment.date() === date.date() &&
-            m.moment.month() === date.month() &&
-            m.moment.year() === date.year())
-        }
-      }
     }
   },
   watch: {
@@ -69,7 +67,6 @@ export default {
         fetchData({
           method: 'get',
           error (reason) {
-            // list.error = reason
             console.error(reason)
           },
           timeout:5000,
