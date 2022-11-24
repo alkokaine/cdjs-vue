@@ -72,7 +72,7 @@ describe('[CD-LIST] Basics', () => {
         collection: empty
       },
       {
-        header: '<div>i am header</div>'
+        header: '<div class="cd-list--header">i am header</div>'
       }
     )
     expect(slot_wrapper.findAll('.cd-list--header').length).toBe(1)
@@ -85,7 +85,7 @@ describe('[CD-LIST] Basics', () => {
         keyField: 'key'
       },
       {
-        footer: '<div>i am footer</div>'
+        footer: '<div class="cd-list--footer">i am footer</div>'
       }
     )
     expect(slot_wrapper.findAll('.cd-list--footer').length).toBe(1)
