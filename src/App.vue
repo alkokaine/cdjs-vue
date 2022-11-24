@@ -7,7 +7,6 @@
 <style lang="scss">
 @import '~bootstrap/scss/bootstrap';
 #app {
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
