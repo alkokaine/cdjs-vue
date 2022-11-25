@@ -1,6 +1,12 @@
 <template>
   <div class="cd-month--wrapper">
-    <cd-grid v-if="ischedule" key-field="week" :collection="weeks" :descriptor="weekdescriptor"></cd-grid>
+    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :date="date">
+      <template slot-scope="{ day }">
+        <cd-day v-if="day" :day="day">
+          <slot :day="day" :events="dayContent(day)"></slot>
+        </cd-day>
+      </template>
+    </cd-day-grid>
     <cd-list v-else class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
         list-class="list-unstyled mx-auto container-sm row"
         :row-class="['col cd-weekday--container px-0 mx-1', { 'mw-mc': compact, 'w-auto': !compact }]">
@@ -39,9 +45,11 @@
 </template>
 
 <script>
-import { createDate, weekdays, prevMonthDays } from '@/common/month-days'
+import { createDate, weekdays, prevMonthDays, weekDescriptor } from '@/common/month-days'
+import fromRange from '@/common/utils'
 import CDList from './cd-list.vue'
 import CdDay from './cd-day.vue'
+import CDDayGrid from '@/components/cd-day-grid.vue'
 import { Checkbox } from 'element-ui'
 import moment from 'moment'
 export default {
@@ -49,6 +57,7 @@ export default {
   components: {
     'cd-list': CDList,
     'cd-day': CdDay,
+    'cd-day-grid': CDDayGrid,
     'el-checkbox': Checkbox
   },
   props: {
@@ -97,12 +106,7 @@ export default {
       isLoading: false,
       selectedWeekdays: [],
       selectedDays: [],
-      weekdescriptor: weekdays
-        .map(wd => ({
-          datafield: wd.weekday.long,
-          text: calendar.compact ? wd.weekday.short : wd.weekday.long
-        })
-        )
+      weekDescriptor: weekDescriptor(calendar.compact)
     }
   },
   methods: {
@@ -143,20 +147,19 @@ export default {
             .map(d => ({ date: createDate(date.year(), date.month() + 1, d + 1)}))
       )
     },
-    weekFactory ( { weekdescriptor } ) {
-      return (week, days) => days.map(d => Object.assign({ week: week }, ...weekdescriptor.map(p => Object.assign({}, p.datafield, { enumerable: true, value: d }))))
+    weekNumbers ({ days }) {
+      return days.map(d => d.date.week())
     },
-    weeks ({ days, weekFactory }) {
-      return []
+    minWeekNumber ({ weekNumbers }) {
+      return Math.min(...weekNumbers)
     },
-    weekdays ({ days }) {
-      return weekdays.map(m => ({
-        days: days.filter(d => d.date.day() === m.day).map(d => ({date: d.date,week: d.date.week() })),
-        info: m.weekday,
-        order: m.order,
-        day: m.day
-      }))
+    maxWeekNumber ({ weekNumbers }) {
+      return Math.max(...weekNumbers)
     },
+    weekRange ({ minWeekNumber, maxWeekNumber }) {
+      return fromRange(minWeekNumber, maxWeekNumber, 1)
+    },
+   
     checkboxid () {
         return ({ day }) => `wd_${day}`
     },

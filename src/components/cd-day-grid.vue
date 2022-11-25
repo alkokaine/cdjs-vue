@@ -5,33 +5,46 @@
         {{ property.text }}
       </template>
       <template v-else>
-        <cd-day :day="row[property.datafield]"></cd-day>
+        <slot :day="row[property.datafield]"></slot>
       </template>
     </template>
   </cd-grid>
 </template>
 <script>
 import CDGrid from '@/components/cd-grid.vue'
-import CDDay from '@/components/cd-day.vue'
-import { weekdays } from '@/common/month-days'
+
+import { weekDescriptor } from '@/common/month-days'
 export default {
   name: 'cd-day-grid',
   components: {
-    'cd-grid': CDGrid,
-    'cd-day': CDDay
+    'cd-grid': CDGrid
   },
   props: {
     compact: { type: Boolean, default: false, description: 'Компактный режим' },
     schedule: { type: Array, required: true, description: 'События месяца' },
-    weeks: { type: Array, required: true, description: 'Список недель месяца' },
+    weekRange: { type: Array, required: true, description: 'Список недель месяца' },
+    days: { type: Array, requierd: true, description: 'Дни месяца'},
     compareDate: { type: Function, required: true, description: 'Функция сравнения объектов с датами' }
   },
   data (grid) {
     return {
-      weekDescriptor: weekdays.map(m => ({ datafield: m.weekday.long, text: grid.compact ? m.weekday.short : m.weekday.long }))
+      weekDescriptor: weekDescriptor(grid.compact)
     }
   },
   computed: {
+    weekFactory ( { weekDescriptor } ) {
+      return (week, days) => {
+        const props = weekDescriptor.map(p => (Object.defineProperty({}, p.datafield, { enumerable: true, value: days.find(d => {
+          const _day = d.date.day()
+          return _day  === p.day  
+        })})))
+        const neweek = Object.assign({ week: week }, ...props)
+        return neweek
+      }
+    },
+    weeks ({ weekRange, days, weekFactory }) {
+      return weekRange.map(w => weekFactory(w, days.filter(d => d.date.week() === w)))
+    },
   }
 }
 </script>
