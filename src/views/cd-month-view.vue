@@ -33,7 +33,7 @@ import CDMonth from '@/components/cd-month.vue'
 import { createDate } from '@/common/month-days'
 import keys from '@/../keys'
 import fetchData from '@/common/fetch-data'
-import { schedule } from '@/assets/match-info'
+import info from '@/assets/match-info'
 import moment from 'moment'
 export default {
   components: {
@@ -49,10 +49,10 @@ export default {
     }
   },
   methods: {
-    compareDate ({ moment }, { row }) {
-      return moment.date() === row.date.date() && 
-        moment.month() === row.date.month() && 
-        moment.year() === row.date.year()
+    compareDate ({ moment }, { date }) {
+      return moment.date() === date.date() && 
+        moment.month() === date.month() && 
+        moment.year() === date.year()
     }
   },
   computed: {
@@ -76,7 +76,7 @@ export default {
             event: m
           }))
         }).catch(reason => {
-          view.matches = schedule.map(m => ({
+          view.matches = info.schedule.map(m => ({
             moment: moment(new Date(m.local_date)),
             event: m
           }))
