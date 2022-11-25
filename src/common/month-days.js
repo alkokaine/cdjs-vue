@@ -29,6 +29,8 @@ const weekdays = (
     })
 ))
 
+const weekDescriptor = compact => weekdays.map(m => ({ datafield: m.weekday.long, text: compact ? m.weekday.short : m.weekday.long, day: m.day  }))
+
 function getMonthDays(moment) {
   const days_in_month_keys = Array(moment.daysInMonth()).keys()
   const array_from_keys = Array.from(days_in_month_keys)
@@ -60,5 +62,6 @@ export {
   prevMonthDays,
   prevMonthWeekLength,
   weekdays,
-  getMonthDays
+  getMonthDays,
+  weekDescriptor
 }
