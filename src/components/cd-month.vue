@@ -1,37 +1,41 @@
 <template>
-  <cd-list class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
-    list-class="list-unstyled mx-auto container-sm row"
-    :row-class="['col cd-weekday--container px-0 mx-1', { 'mw-mc': compact, 'w-auto': !compact }]">
-    <div slot="header">
-      <slot name="month-header"></slot>
-    </div>
-    <cd-list slot-scope="{ row, index }" :collection="row.days"
-      key-field="number" :list-class="['list-unstyled cd-weekdays--wrap justify-content-center', { 'w-100': !compact}, weekdayClass(row, index)]" :row-class="['cd-day--wrap d-block mx-auto', { 'mw-mc': compact }]">
-      <div slot="header" class="fw-bold text-uppercase mx-auto" :class="{ 'mw-mc': compact }">
-        <p v-if="selectWeekdays" class="my-0 px-0">
-          <el-checkbox :id="checkboxid(row.day)" class="el-checkbox" type="checkbox" :value="isChecked(row)" @change="weekdayselect({ $event, row }, onWeekdaySelect)"/>
-        </p>
-        <p class="my-0 px-0">
-          <template v-if="compact">{{ row.info.short }}</template>
-          <template v-else>{{ row.info.long }}</template>
-        </p>
-      </div>
-      <cd-day slot-scope="day" :day="day.row" class="mx-auto mb-2 border-0" :class="[`week-${day.row.week}`, { 'is-selected border-1': isDaySelected(day),  'compact': compact }]"
-        @click.native.capture="onDaySelect({ $event, day: day.row, weekday: row })">
-        <p class="my-0" :class="{ 'fw-bold': !compact }" slot="header">
-          {{ day.row.date.date() }}
-        </p>
-        <template v-if="!compact">
-          <div class="cd-day--content-wrapper px-2">
-            <slot :day="day.row" :events="dayContent(day)"></slot>
+  <div class="cd-month--wrapper">
+    <cd-grid v-if="ischedule" key-field="week" :collection="weeks" :descriptor="weekdescriptor"></cd-grid>
+    <cd-list v-else class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
+        list-class="list-unstyled mx-auto container-sm row"
+        :row-class="['col cd-weekday--container px-0 mx-1', { 'mw-mc': compact, 'w-auto': !compact }]">
+        <div slot="header">
+          <slot name="month-header"></slot>
+        </div>
+        <cd-list slot-scope="{ row, index }" :collection="row.days"
+          key-field="number" :list-class="['list-unstyled cd-weekdays--wrap justify-content-center', { 'w-100': !compact}, weekdayClass(row, index)]" :row-class="['cd-day--wrap d-block mx-auto', { 'mw-mc': compact }]">
+          <div slot="header" class="fw-bold text-uppercase mx-auto" :class="{ 'mw-mc': compact }">
+            <p v-if="selectWeekdays" class="my-0 px-0">
+              <el-checkbox :id="checkboxid(row.day)" class="el-checkbox" type="checkbox" :value="isChecked(row)" @change="weekdayselect({ $event, row }, onWeekdaySelect)"/>
+            </p>
+            <p class="my-0 px-0">
+              <template v-if="compact">{{ row.info.short }}</template>
+              <template v-else>{{ row.info.long }}</template>
+            </p>
           </div>
-        </template>
-      </cd-day>
-    </cd-list>
-    <div slot="footer">
-      <slot name="month-footer"></slot>
-    </div>
-  </cd-list>
+          <cd-day slot-scope="day" :day="day.row" class="mx-auto mb-2 border-0" :class="[`week-${day.row.week}`, { 'is-selected border-1': isDaySelected(day),  'compact': compact }]"
+            @click.native.capture="onDaySelect({ $event, day: day.row, weekday: row })">
+            <p class="my-0" :class="{ 'fw-bold': !compact }" slot="header">
+              {{ day.row.date.date() }}
+            </p>
+            <template v-if="!compact">
+              <div class="cd-day--content-wrapper px-2">
+                <slot :day="day.row" :events="dayContent(day)"></slot>
+              </div>
+            </template>
+          </cd-day>
+        </cd-list>
+        <div slot="footer">
+          <slot name="month-footer"></slot>
+        </div>
+      </cd-list>    
+  </div>
+  
 </template>
 
 <script>
@@ -39,7 +43,7 @@ import { createDate, weekdays, prevMonthDays } from '@/common/month-days'
 import CDList from './cd-list.vue'
 import CdDay from './cd-day.vue'
 import { Checkbox } from 'element-ui'
-
+import moment from 'moment'
 export default {
   name: 'cd-month',
   components: {
@@ -88,10 +92,17 @@ export default {
     }
   },
   data (calendar) {
+    const locale = moment.localeData('ru-RU')
     return {
       isLoading: false,
       selectedWeekdays: [],
       selectedDays: [],
+      weekdescriptor: weekdays
+        .map(wd => ({
+          datafield: wd.weekday.long,
+          text: calendar.compact ? wd.weekday.short : wd.weekday.long
+        })
+        )
     }
   },
   methods: {
@@ -117,6 +128,9 @@ export default {
     }
   },
   computed: {
+    ischedule ({ mode }) {
+      return mode === 'schedule'
+    },
     dayContent ({ schedule, compareDate }) {
       return (day) => {
         return  (schedule.filter(s => compareDate(s, day)))
@@ -128,6 +142,12 @@ export default {
           Array.from(Array(date.daysInMonth()).keys())
             .map(d => ({ date: createDate(date.year(), date.month() + 1, d + 1)}))
       )
+    },
+    weekFactory ( { weekdescriptor } ) {
+      return (week, days) => days.map(d => Object.assign({ week: week }, ...weekdescriptor.map(p => Object.assign({}, p.datafield, { enumerable: true, value: d }))))
+    },
+    weeks ({ days, weekFactory }) {
+      return []
     },
     weekdays ({ days }) {
       return weekdays.map(m => ({
