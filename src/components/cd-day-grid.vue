@@ -2,14 +2,12 @@
   <cd-grid class="cd-days--grid" :collection="weeks" :descriptor="weekDescriptor" key-field="week">
     <template slot-scope="{ header, row, property }">
       <div v-if="header" class="cd-weekday--header">
-        <span>
-          <template v-if="selectWeekdays">
-            <el-checkbox>{{ property.datafield }}</el-checkbox>
-          </template>
-          <template v-else>
-            {{ property.datafield }}
-          </template>
-        </span>
+        <template v-if="selectWeekdays">
+          <el-checkbox>{{ property.datafield }}</el-checkbox>
+        </template>
+        <template v-else>
+          {{ property.datafield }}
+        </template>
       </div>
       <template v-else>
         <slot :day="row[property.datafield]"></slot>

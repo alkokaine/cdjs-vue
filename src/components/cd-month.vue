@@ -1,7 +1,7 @@
 <template>
   <div class="cd-month--wrapper">
     <slot name="month-header"></slot>
-    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :date="date" :select-weekdays="true"> 
+    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :date="date" :select-weekdays="selectWeekdays"> 
       <template slot-scope="{ day }">
         <cd-day v-if="day" :day="day">
           <slot :day="day" :events="dayContent(day)"></slot>
