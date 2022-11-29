@@ -5,6 +5,10 @@ import CDGridView from '../views/cd-grid-view.vue'
 import CdPropsView from '../views/cd-props-view.vue'
 import CDListView from '../views/cd-list-view.vue'
 import CDMonthView from '../views/cd-month-view.vue'
+import CDFormView from '../views/cd-form-view.vue'
+import CDListFilterView from '../views/cd-list-filter-view.vue'
+import CDFormModelView from '../views/cd-form-model-view.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -12,6 +16,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/cd-form',
+    name: 'cd-form',
+    component: CDFormView
   },
   {
     path: '/cd-grid',
@@ -32,7 +41,17 @@ const routes = [
     path: '/cd-month',
     name: 'cd-month',
     component: CDMonthView
-  }
+  },
+  {
+    path: '/cd-list-filter',
+    name: 'cd-list-filter',
+    component: CDListFilterView
+  },
+  {
+    path: '/cd-form-model',
+    name: 'cd-form-v-model',
+    component: CDFormModelView
+  },
 ]
 
 const router = new VueRouter({
