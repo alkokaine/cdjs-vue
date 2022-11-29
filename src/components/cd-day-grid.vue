@@ -1,9 +1,16 @@
 <template>
   <cd-grid class="cd-days--grid" :collection="weeks" :descriptor="weekDescriptor" key-field="week">
     <template slot-scope="{ header, row, property }">
-      <template v-if="header">
-        {{ property.text }}
-      </template>
+      <div v-if="header" class="cd-weekday--header">
+        <span>
+          <template v-if="selectWeekdays">
+            <el-checkbox>{{ property.datafield }}</el-checkbox>
+          </template>
+          <template v-else>
+            {{ property.datafield }}
+          </template>
+        </span>
+      </div>
       <template v-else>
         <slot :day="row[property.datafield]"></slot>
       </template>
@@ -14,17 +21,25 @@
 import CDGrid from '@/components/cd-grid.vue'
 
 import { weekDescriptor } from '@/common/month-days'
+
 export default {
   name: 'cd-day-grid',
   components: {
     'cd-grid': CDGrid
   },
   props: {
+    selectWeekdays: { type: Boolean, default: false, description: 'Показывать ли чекбоксы у дней недели' },
     compact: { type: Boolean, default: false, description: 'Компактный режим' },
-    schedule: { type: Array, required: true, description: 'События месяца' },
-    weekRange: { type: Array, required: true, description: 'Список недель месяца' },
-    days: { type: Array, requierd: true, description: 'Дни месяца'},
-    compareDate: { type: Function, required: true, description: 'Функция сравнения объектов с датами' }
+    schedule: { type: Array, required: true, default: function () {
+      return []
+    }, description: 'События месяца' },
+    days: { type: Array, requierd: true, default: function () {
+      return []
+    }, description: 'Дни месяца'},
+    compareDate: { type: Function, required: true, description: 'Функция сравнения объектов с датами' },
+    weekRange: { type: Array, required: true, default: function () {
+      return [1, 2, 3, 4, 5]
+    }, description: 'Список недель месяца' },
   },
   data (grid) {
     return {
