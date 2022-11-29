@@ -55,7 +55,7 @@
         :disabled="disabled"></textarea>
     </template>
     <template v-else-if="input.checkbox">
-      <el-checkbox class="cd-checkbox" :value="value" :disabled="disabled"></el-checkbox>
+      <el-checkbox class="cd-checkbox" :value="value" :disabled="disabled" v-on:change="onCellChange({ $event, property }, onChange)"></el-checkbox>
     </template>
     <template v-else-if="input.date">
       <el-date-picker class="cd-date" :placeholder="property.placeholder"
@@ -149,7 +149,7 @@
           }
         }
         else if (['checkbox'].indexOf(property.input) != -1) {
-          console.warn('checkbox value change')
+          this.$emit('input', $event)
         }
         else if ([undefined, 'textarea', 'text', 'email', 'tel', 'url'].indexOf(property.input) != -1 && $event instanceof Event) {
           this.$emit('input', $event.target.value)
