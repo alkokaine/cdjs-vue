@@ -1,6 +1,7 @@
 <template>
   <div class="cd-month--wrapper">
-    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :date="date">
+    <slot name="month-header"></slot>
+    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :date="date" :select-weekdays="true"> 
       <template slot-scope="{ day }">
         <cd-day v-if="day" :day="day">
           <slot :day="day" :events="dayContent(day)"></slot>
@@ -17,7 +18,7 @@
           key-field="number" :list-class="['list-unstyled cd-weekdays--wrap justify-content-center', { 'w-100': !compact}, weekdayClass(row, index)]" :row-class="['cd-day--wrap d-block mx-auto', { 'mw-mc': compact }]">
           <div slot="header" class="fw-bold text-uppercase mx-auto" :class="{ 'mw-mc': compact }">
             <p v-if="selectWeekdays" class="my-0 px-0">
-              <el-checkbox :id="checkboxid(row.day)" class="el-checkbox" type="checkbox" :value="isChecked(row)" @change="weekdayselect({ $event, row }, onWeekdaySelect)"/>
+              <el-checkbox :id="checkboxid(row.day)" class="el-checkbox" type="checkbox" :value="isChecked(row)"/>
             </p>
             <p class="my-0 px-0">
               <template v-if="compact">{{ row.info.short }}</template>
@@ -110,26 +111,6 @@ export default {
     }
   },
   methods: {
-
-    weekdayselect({ $event, row }, callback) {
-      const calendar = this
-      const indexOf =calendar.selectedWeekdays.findIndex(w => w === row.day)
-      if (indexOf >= 0) {
-        calendar.selectedDays.sort((d1, d2) => d1.date.day() - d2.date.day())
-        calendar.selectedWeekdays.splice(indexOf, 1)
-        row.days.forEach(day => {
-          const _index = calendar.selectedDays.findIndex(d => d.date.date() === day.date.date())
-          calendar.selectedDays.splice(_index, 1)
-        })
-      } else {
-        calendar.selectedWeekdays.push(row.day)
-        const filtered = row.days.filter(d => d.isprev === undefined)
-        filtered.forEach(day => {
-          const _index = calendar.selectedDays.findIndex(d => d.date.date() === day.date.date())
-          if (_index < 0) calendar.selectedDays.push(day)
-        })
-      }
-    }
   },
   computed: {
     ischedule ({ mode }) {
