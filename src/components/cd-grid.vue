@@ -76,7 +76,6 @@ export default {
   data (grid) {
     return {
       borderclass: resolveborder(grid.borders),
-      columns: (flatterer(grid.descriptor, [])).filter(p => p.datafield !== undefined),
       isBodyClassFunction: typeof grid.bodyClass === 'function',
       isHeadClassFunction: typeof grid.headClass === 'function'
     }
@@ -84,6 +83,9 @@ export default {
   methods: {
   },
   computed: {
+    columns ({ descriptor }) {
+      return (flatterer(descriptor, [])).filter(p => p.datafield !== undefined)
+    },
     rowKeyResolved (vm) {
       return (row, index) => vm.rowKey(row, index)
     },
