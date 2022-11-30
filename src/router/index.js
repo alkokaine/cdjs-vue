@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/home-view.vue'
 import CDGridView from '../views/cd-grid-view.vue'
 import CdPropsView from '../views/cd-props-view.vue'
+import CDTabsView from '../views/cd-tabs-view.vue'
 import CDListView from '../views/cd-list-view.vue'
 import CDMonthView from '../views/cd-month-view.vue'
 import CDFormView from '../views/cd-form-view.vue'
@@ -36,6 +37,11 @@ const routes = [
     path: '/cd-list',
     name: 'cd-list',
     component: CDListView
+  },
+  {
+    path: '/cd-tabs',
+    name: 'tabs',
+    component: CDTabsView
   },
   {
     path: '/cd-month',
