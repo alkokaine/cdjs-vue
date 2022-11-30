@@ -4,8 +4,8 @@
       <cd-form slot="month-header" :payload="settings" :descriptor="descriptor" :sync="true">
         <h3 slot="header">CD-MONTH</h3>
       </cd-form>
-      <cd-list slot-scope="{ events }" :collection="events" key-field="_id" class="py-2" list-class="list-unstyled my-0" row-class="match-short py-2 mx-2">
-        <div v-if="settings.compact && events.length" slot="header">{{ events.length }}</div>
+      <cd-list slot-scope="{ events }" :show-items="!settings.compact" :collection="events" key-field="_id" class="py-2 mw-mc match-list" list-class="list-unstyled my-0" row-class="match-short py-2 mx-2">
+        <div v-if="settings.compact && events.length" slot="header">{{ events.length }} матча</div>
         <div slot-scope="{ row }" class="row justify-content-center">
           <div class="col home-team mw-50">
             <div class="w-auto team-flag border border-1">
@@ -119,5 +119,11 @@ export default {
   img {
     max-width: 95%;
     max-height: auto;
+  }
+  .match-list {
+    max-width: min-content;
+  }
+  .match-short {
+    width: max-content;
   }
 </style>

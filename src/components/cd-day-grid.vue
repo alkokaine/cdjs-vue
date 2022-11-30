@@ -1,5 +1,5 @@
 <template>
-  <cd-grid class="cd-days--grid container" :collection="weeks" :descriptor="descriptor" key-field="week" :class="[{ 'w-auto': compact }]">
+  <cd-grid class="cd-days--grid container" :collection="weeks" :descriptor="descriptor" key-field="week" :class="[{ 'w-auto': compact }]" :small="compact">
     <template slot-scope="{ header, row, property }">
       <div v-if="header" class="cd-weekday--header">
         <template v-if="selectWeekdays">
