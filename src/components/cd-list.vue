@@ -1,7 +1,7 @@
 <template>
   <div class="cd-list">
     <slot name="header" class="cd-list--header"></slot>
-    <ul class="cd-list--internal" :class="listClass" :role="listRole">
+    <ul v-if="showItems" class="cd-list--internal" :class="listClass" :role="listRole">
       <li v-for="(row, index) in filtered" :class="['cd-list--item', isRowClassFunction ? rowClass(row, index) : rowClass]" :role="itemRole" :key="rowKey(row, index)">
         <slot :row="row" :index="index"/>
       </li>
@@ -26,6 +26,7 @@ export default {
     isRowVisible: { type: Function, description: 'Функция, которая по объекту и его индексу в массиве вычисляет, следует ли его рендерить' },
     listRole: { type: String, validator: RoleValidator.validateListRole, description: 'aria-role списка' },
     itemRole: { type: String, validator: RoleValidator.validateItemRole, description: 'aria-role элемента списка' },
+    showItems: { type: Boolean, default: true, description: 'Показывать элементы списка?' },
     rowKey: {
       type: Function,
       default: function(row, index) {
