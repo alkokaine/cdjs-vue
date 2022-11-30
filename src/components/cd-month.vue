@@ -11,7 +11,7 @@
       </cd-day-grid>
     </template>
     <template v-else>
-      <cd-day-tabs :days="days"></cd-day-tabs>
+      <cd-day-tabs :days="keyedDays" :orientation="orientation"></cd-day-tabs>
     </template>
     
     <!-- <cd-list v-else class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
@@ -106,7 +106,8 @@ export default {
         }
       },
       description: 'Функция, которая выполнится при выборе дня'
-    }
+    },
+    orientation: { type: String, description: 'Расположение ярлыков на дни месяца'}
   },
   data (calendar) {
     const locale = moment.localeData('ru-RU')
@@ -137,6 +138,9 @@ export default {
     weekNumbers ({ days }) {
       return days.map(d => d.date.week())
     },
+    keyedDays ({ days }) {
+      return days.map(m => ({ isprev: m.isprev, date: m.date, daykey: m.date.unix() }))
+    },
     minWeekNumber ({ weekNumbers }) {
       return Math.min(...weekNumbers)
     },
@@ -157,7 +161,6 @@ export default {
       }
     },
     weekdayClass ({ selectedWeekdays, sixDays }) {
-
       return (weekday, index) => {
         const isselected = selectedWeekdays.indexOf(weekday.day) >= 0
         if (index === 5 && !sixDays || index === 6) return `holiday`

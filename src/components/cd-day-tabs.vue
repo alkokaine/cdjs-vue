@@ -1,7 +1,7 @@
 <template>
-  <cd-tabs class="cd-day-tabs" :tabs="days">
-    <div slot-scope="{ tab }">{{ tab }}</div>
-    <cd-day slot="content" :day="currentDay"></cd-day>
+  <cd-tabs class="cd-day-tabs" :tabs="days" tab-key="daykey" :orientation="orientation">
+    <div class="cd-day--wrap" slot-scope="{ tab }">{{ tab }}</div>
+    <cd-day v-if="currentDay.date" slot="content" :day="currentDay"></cd-day>
   </cd-tabs>
 </template>
 
@@ -15,7 +15,8 @@ export default {
     'cd-day': CDDay
   },
   props: {
-    days: { type: Array, required: true, description: 'Коллекция дней' }
+    days: { type: Array, required: true, description: 'Коллекция дней' },
+    orientation: { type: String, description: 'Положение и направление дней'}
   },
   data (tabs) {
     return {

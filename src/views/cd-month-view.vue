@@ -1,9 +1,9 @@
 <template>
   <div class="cd-month-view">
-    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode">
-      <cd-form slot="month-header" :payload="settings" :descriptor="descriptor" :sync="true">
+    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation">
+      <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
         <h3 slot="header">CD-MONTH</h3>
-      </cd-form>
+      </cd-prop-editor>
       <cd-list slot-scope="{ events }" :show-items="!settings.compact" :collection="events" key-field="_id" class="py-2 mw-mc match-list" list-class="list-unstyled my-0" row-class="match-short py-2 mx-2">
         <div v-if="settings.compact && events.length" slot="header">{{ events.length }} матча</div>
         <div slot-scope="{ row }" class="row justify-content-center">
@@ -31,7 +31,7 @@
 <script>
 import CDList from '@/components/cd-list.vue'
 import CDMonth from '@/components/cd-month.vue'
-import CDForm from '@/components/cd-form.vue'
+import CDPropEditor from '@/components/cd-prop-editor'
 import { createDate } from '@/common/month-days'
 import keys from '@/../keys'
 import fetchData from '@/common/fetch-data'
@@ -41,7 +41,7 @@ export default {
   components: {
     'cd-month': CDMonth,
     'cd-list': CDList,
-    'cd-form': CDForm
+    'cd-prop-editor': CDPropEditor
   },
   data (view) {
     return {
@@ -50,7 +50,8 @@ export default {
         compact: false,
         selectWeekdays: true,
         mdate: new Date(Date.now()),
-        mode: 'schedule'
+        mode: 'schedule',
+        orientation: 'col-left'
       },
       descriptor: [
         {
@@ -84,6 +85,32 @@ export default {
               label: 'список'
             }
           ]
+        },
+        {
+          datafield: 'orientation',
+          text: 'ориентация',
+          input: 'select',
+          labelkey: 'label',
+          valuekey: 'value',
+          values: [
+            {
+              label: 'row-top',
+              value: 'row-top'
+            },
+            {
+              label: 'row-bottom',
+              value: 'row-bottom'
+            },
+            {
+              label: 'col-left',
+              value: 'col-left'
+            },
+            {
+              label: 'col-right',
+              value: 'col-right'
+            }
+          ],
+          hidden: row => row.mode === 'schedule'
         }
       ]
     }
