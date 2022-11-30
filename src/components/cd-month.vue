@@ -1,7 +1,7 @@
 <template>
   <div class="cd-month--wrapper">
     <slot name="month-header"></slot>
-    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :date="date" :select-weekdays="selectWeekdays"> 
+    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :select-weekdays="selectWeekdays"> 
       <template slot-scope="{ day }">
         <cd-day v-if="day" :day="day">
           <slot :day="day" :events="dayContent(day)"></slot>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { createDate, weekdays, prevMonthDays, weekDescriptor } from '@/common/month-days'
+import { createDate, weekdays, prevMonthDays } from '@/common/month-days'
 import fromRange from '@/common/utils'
 import CDList from './cd-list.vue'
 import CdDay from './cd-day.vue'
@@ -107,7 +107,6 @@ export default {
       isLoading: false,
       selectedWeekdays: [],
       selectedDays: [],
-      weekDescriptor: weekDescriptor(calendar.compact)
     }
   },
   methods: {

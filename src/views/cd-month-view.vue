@@ -1,10 +1,11 @@
 <template>
   <div class="cd-month-view">
-    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compareDate="compareDate">
+    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate">
       <cd-form slot="month-header" :payload="settings" :descriptor="descriptor" :sync="true">
         <h3 slot="header">CD-MONTH</h3>
       </cd-form>
       <cd-list slot-scope="{ events }" :collection="events" key-field="_id" class="py-2" list-class="list-unstyled my-0" row-class="match-short py-2 mx-2">
+        <div v-if="settings.compact && events.length" slot="header">{{ events.length }}</div>
         <div slot-scope="{ row }" class="row justify-content-center">
           <div class="col home-team mw-50">
             <div class="w-auto team-flag border border-1">
@@ -18,7 +19,7 @@
           </div>
         </div>
         <template slot="footer" slot-scope="{ isempty }">
-          <div v-if="isempty" class="empty-day">
+          <div v-if="isempty && !settings.compact" class="empty-day">
             <span>нет событий</span>
           </div>
         </template>

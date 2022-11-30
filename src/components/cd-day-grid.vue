@@ -1,12 +1,12 @@
 <template>
-  <cd-grid class="cd-days--grid" :collection="weeks" :descriptor="weekDescriptor" key-field="week">
+  <cd-grid class="cd-days--grid container" :collection="weeks" :descriptor="descriptor" key-field="week" :class="[{ 'w-auto': compact }]">
     <template slot-scope="{ header, row, property }">
       <div v-if="header" class="cd-weekday--header">
         <template v-if="selectWeekdays">
-          <el-checkbox>{{ property.datafield }}</el-checkbox>
+          <el-checkbox :label="property.text"></el-checkbox>
         </template>
         <template v-else>
-          {{ property.datafield }}
+          {{ property.text }}
         </template>
       </div>
       <template v-else>
@@ -40,14 +40,15 @@ export default {
     }, description: 'Список недель месяца' },
   },
   data (grid) {
-    return {
-      weekDescriptor: weekDescriptor(grid.compact)
-    }
+    return {}
   },
   computed: {
-    weekFactory ( { weekDescriptor } ) {
+    descriptor ({ compact }) {
+      return weekDescriptor(compact)
+    },
+    weekFactory ( { descriptor } ) {
       return (week, days) => {
-        const props = weekDescriptor.map(p => (Object.defineProperty({}, p.datafield, { enumerable: true, value: days.find(d => {
+        const props = descriptor.map(p => (Object.defineProperty({}, p.datafield, { enumerable: true, value: days.find(d => {
           const _day = d.date.day()
           return _day  === p.day  
         })})))
