@@ -3,7 +3,7 @@
     <div v-if="$slots.tuner" class="cd-grid--tuner">
       <slot name="tuner"></slot>
     </div>
-    <table :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm': small }, borderclass]"
+    <table :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm w-auto': small }, borderclass]"
       class="cd-grid--table table border-bottom">
       <caption v-if="$slots.caption" class="cd-grid--caption"><slot name="caption"/></caption>
       <cd-grid-head v-if="showHeader" :columns="columns" :select-rows="selectRows" :head-class="headClass" :cell-class="headCellClass"
