@@ -29,6 +29,11 @@ const routes = [
     component: CDGridView
   },
   {
+    path: '/cd-form',
+    name: 'cd-form',
+    component: CDFormView
+  },
+  {
     path: '/cd-props',
     name: 'props',
     component: CdPropsView
