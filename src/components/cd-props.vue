@@ -23,10 +23,10 @@ export default {
   name: 'cd-props',
   components: { 'cd-props-base': cdPropsBase },
   props: {
-    descriptor: { type: Array, required: true },
-    payload: { type: Object, required: true },
-    owner: { type: Object },
-    propConfig: { type: Function }
+    descriptor: { type: Array, required: true, description: 'Свойства объекта' },
+    payload: { type: Object, required: true, description: 'Объект, свойства которого переданы в descriptor' },
+    owner: { type: Object, description: 'Родительский дескриптор' },
+    propConfig: { type: Function, description: 'Функция, возвращающая объект конфигурации свойства' }
   },
   data (base) {
     return {

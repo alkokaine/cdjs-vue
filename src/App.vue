@@ -25,4 +25,8 @@ nav {
     }
   }
 }
+code {
+  white-space: pre;
+  text-align: start;
+}
 </style>
