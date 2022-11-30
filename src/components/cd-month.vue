@@ -1,14 +1,20 @@
 <template>
   <div class="cd-month--wrapper">
     <slot name="month-header"></slot>
-    <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :select-weekdays="selectWeekdays"> 
-      <template slot-scope="{ day }">
-        <cd-day v-if="day" :day="day">
-          <slot :day="day" :events="dayContent(day)"></slot>
-        </cd-day>
-      </template>
-    </cd-day-grid>
-    <cd-list v-else class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
+    <template v-if="ischedule">
+      <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :select-weekdays="selectWeekdays"> 
+        <template slot-scope="{ day }">
+          <cd-day v-if="day" :day="day">
+            <slot :day="day" :events="dayContent(day)"></slot>
+          </cd-day>
+        </template>
+      </cd-day-grid>
+    </template>
+    <template v-else>
+      <cd-day-tabs :days="days"></cd-day-tabs>
+    </template>
+    
+    <!-- <cd-list v-else class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
         list-class="list-unstyled mx-auto container-sm row"
         :row-class="['col cd-weekday--container px-0 mx-1', { 'mw-mc': compact, 'w-auto': !compact }]">
         <div slot="header">
@@ -40,7 +46,7 @@
         <div slot="footer">
           <slot name="month-footer"></slot>
         </div>
-      </cd-list>    
+      </cd-list>     -->
   </div>
   
 </template>
@@ -48,18 +54,19 @@
 <script>
 import { createDate, weekdays, prevMonthDays } from '@/common/month-days'
 import fromRange from '@/common/utils'
-import CDList from './cd-list.vue'
 import CdDay from './cd-day.vue'
+
 import CDDayGrid from '@/components/cd-day-grid.vue'
-import { Checkbox } from 'element-ui'
+import CDDayTabs from '@/components/cd-day-tabs.vue'
 import moment from 'moment'
 export default {
   name: 'cd-month',
   components: {
-    'cd-list': CDList,
+    // 'cd-list': CDList,
     'cd-day': CdDay,
     'cd-day-grid': CDDayGrid,
-    'el-checkbox': Checkbox
+    'cd-day-tabs': CDDayTabs
+    // 'el-checkbox': Checkbox
   },
   props: {
     mode: { 

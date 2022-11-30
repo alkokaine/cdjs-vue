@@ -1,6 +1,6 @@
 <template>
   <div class="cd-month-view">
-    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate">
+    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode">
       <cd-form slot="month-header" :payload="settings" :descriptor="descriptor" :sync="true">
         <h3 slot="header">CD-MONTH</h3>
       </cd-form>
@@ -49,7 +49,8 @@ export default {
       settings: {
         compact: false,
         selectWeekdays: true,
-        mdate: new Date(Date.now())
+        mdate: new Date(Date.now()),
+        mode: 'schedule'
       },
       descriptor: [
         {
@@ -66,6 +67,23 @@ export default {
           datafield: 'mdate',
           text: 'Дата календаря',
           input: 'date'
+        },
+        {
+          datafield: 'mode',
+          text: 'Режим',
+          input: 'select',
+          valuekey: 'mode',
+          labelkey: 'label',
+          values: [
+            {
+              mode: 'schedule',
+              label: 'таблица'
+            },
+            {
+              mode: 'list',
+              label: 'список'
+            }
+          ]
         }
       ]
     }
