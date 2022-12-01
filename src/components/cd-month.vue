@@ -1,52 +1,25 @@
 <template>
-  <div class="cd-month--wrapper">
+  <div class="cd-month--wrapper container">
     <slot name="month-header"></slot>
     <template v-if="ischedule">
-      <cd-day-grid class="cd-month" v-if="ischedule" key-field="week" :compact="compact" :schedule="schedule" :weekRange="weekRange" :days="days" :compareDate="compareDate" :select-weekdays="selectWeekdays"> 
-        <template slot-scope="{ day }">
-          <cd-day v-if="day" :day="day">
-            <slot :day="day" :events="dayContent(day)"></slot>
-          </cd-day>
-        </template>
+      <cd-day-grid class="cd-month" key-field="week" :compact="compact" :schedule="schedule" 
+        :week-range="weekRange" :days="days" :compare-date="compareDate" 
+        :select-weekdays="selectWeekdays" :multiple="multiple"> 
+        <div slot-scope="{ day, week }">
+          <slot :day="day" :week="week"  :events="dayContent(day)"></slot>
+        </div>
       </cd-day-grid>
     </template>
     <template v-else>
-      <cd-day-tabs :days="keyedDays" :orientation="orientation"></cd-day-tabs>
-    </template>
-    
-    <!-- <cd-list v-else class="cd-month mx-auto container" :class="{ 'compact': compact }" :collection="weekdays" key-field="day"
-        list-class="list-unstyled mx-auto container-sm row"
-        :row-class="['col cd-weekday--container px-0 mx-1', { 'mw-mc': compact, 'w-auto': !compact }]">
-        <div slot="header">
-          <slot name="month-header"></slot>
-        </div>
-        <cd-list slot-scope="{ row, index }" :collection="row.days"
-          key-field="number" :list-class="['list-unstyled cd-weekdays--wrap justify-content-center', { 'w-100': !compact}, weekdayClass(row, index)]" :row-class="['cd-day--wrap d-block mx-auto', { 'mw-mc': compact }]">
-          <div slot="header" class="fw-bold text-uppercase mx-auto" :class="{ 'mw-mc': compact }">
-            <p v-if="selectWeekdays" class="my-0 px-0">
-              <el-checkbox :id="checkboxid(row.day)" class="el-checkbox" type="checkbox" :value="isChecked(row)"/>
-            </p>
-            <p class="my-0 px-0">
-              <template v-if="compact">{{ row.info.short }}</template>
-              <template v-else>{{ row.info.long }}</template>
-            </p>
-          </div>
-          <cd-day slot-scope="day" :day="day.row" class="mx-auto mb-2 border-0" :class="[`week-${day.row.week}`, { 'is-selected border-1': isDaySelected(day),  'compact': compact }]"
-            @click.native.capture="onDaySelect({ $event, day: day.row, weekday: row })">
-            <p class="my-0" :class="{ 'fw-bold': !compact }" slot="header">
-              {{ day.row.date.date() }}
-            </p>
-            <template v-if="!compact">
-              <div class="cd-day--content-wrapper px-2">
-                <slot :day="day.row" :events="dayContent(day)"></slot>
-              </div>
-            </template>
+      <cd-day-tabs class="cd-month" :days="keyedDays" :orientation="orientation" :compare-date="compareDate" 
+        :multiple="multiple">
+        <cd-list slot-scope="{ content }" :collection="content" key-field="daykey">
+          <cd-day slot-scope="{ row }" :day="row">
+            <slot :day="row" :events="dayContent(row)"></slot>
           </cd-day>
         </cd-list>
-        <div slot="footer">
-          <slot name="month-footer"></slot>
-        </div>
-      </cd-list>     -->
+      </cd-day-tabs>
+    </template>
   </div>
   
 </template>
@@ -54,17 +27,15 @@
 <script>
 import { createDate, weekdays, prevMonthDays } from '@/common/month-days'
 import fromRange from '@/common/utils'
-import CdDay from './cd-day.vue'
-
 import CDDayGrid from '@/components/cd-day-grid.vue'
 import CDDayTabs from '@/components/cd-day-tabs.vue'
+import CDList from '@/components/cd-list.vue'
 import moment from 'moment'
 export default {
   name: 'cd-month',
   components: {
-    // 'cd-list': CDList,
-    'cd-day': CdDay,
     'cd-day-grid': CDDayGrid,
+    'cd-list': CDList,
     'cd-day-tabs': CDDayTabs
     // 'el-checkbox': Checkbox
   },
@@ -107,7 +78,8 @@ export default {
       },
       description: 'Функция, которая выполнится при выборе дня'
     },
-    orientation: { type: String, description: 'Расположение ярлыков на дни месяца'}
+    orientation: { type: String, description: 'Расположение ярлыков на дни месяца' },
+    multiple: { type: Boolean, description: 'Можно ли выбрать несколько дней' }
   },
   data (calendar) {
     const locale = moment.localeData('ru-RU')

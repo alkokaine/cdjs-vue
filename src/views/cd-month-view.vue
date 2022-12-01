@@ -1,6 +1,6 @@
 <template>
   <div class="cd-month-view">
-    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation">
+    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation" :multiple="settings.multiple">
       <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
         <h3 slot="header">CD-MONTH</h3>
       </cd-prop-editor>
@@ -62,6 +62,11 @@ export default {
         {
           datafield: 'selectWeekdays',
           text: 'Чекбоксы у дней недели',
+          input: 'checkbox'
+        },
+        {
+          datafield: 'multiple',
+          text: 'Можно ли выбрать несколько дней',
           input: 'checkbox'
         },
         {
