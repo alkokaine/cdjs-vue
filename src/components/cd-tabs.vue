@@ -74,12 +74,9 @@ export default {
     padding: 1em;
   }
   .cd-tab--wrap {
-    max-width: max-content;
+    max-width: min-content;
   }
   .cd-tabs--wrap {
-    max-width: max-content;
-  }
-  .cd-tab {
-    min-width: max-content;
+    max-width: 100%;
   }
 </style>
