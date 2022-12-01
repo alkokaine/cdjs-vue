@@ -1,7 +1,7 @@
 <template>
-  <cd-list class="cd-tabs" :collection="tabs" :key-field="tabKey" :class="[{ 'col': isRow, 'row flex-nowrap': isCol }]" :list-class="['cd-tabs--wrap list-unstyled', { 'row': isRow, 'col': isCol }]" :row-class="['cd-tab--wrap', { 'col': isRow, 'row': isCol } ]" list-role="tablist" item-role="tab">
+  <cd-list class="cd-tabs" :collection="tabs" :key-field="tabKey" :class="[{ 'row flex-nowrap': isCol }]" :list-class="['cd-tabs--wrap list-unstyled', { 'col': isCol, 'row': isRow }]" :row-class="['cd-tab--wrap']" list-role="tablist" item-role="tab">
     <template v-if="inFooter || inRight" slot="header">
-      <div class="cd-tabs-content">
+      <div class="cd-tabs-content" :class="[{ 'col': isCol, 'row': isRow }]">
         <slot name="content"></slot>
       </div>
     </template>
@@ -9,7 +9,7 @@
       <slot :tab="row" :index="index"></slot>
     </div>
     <template v-if="inHeader || inLeft" slot="footer">
-      <div class="cd-tabs--content">
+      <div class="cd-tabs--content" :class="[{ 'col': isCol, 'row': isCol }]">
         <slot name="content"></slot>
       </div>
     </template>
