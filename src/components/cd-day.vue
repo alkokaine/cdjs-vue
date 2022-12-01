@@ -29,6 +29,9 @@ export default {
   .compact {
     width: 2em;
   }
+  .mw-100 {
+    min-width: 100%;
+  }
   .cd-day {
     cursor: pointer;
   }
