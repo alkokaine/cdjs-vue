@@ -9,9 +9,14 @@
           {{ property.text }}
         </template>
       </div>
-      <template v-else>
-        <slot :day="row[property.datafield]"></slot>
-      </template>
+      <div v-else-if="row[property.datafield]" class="cd-day--grid-cell">
+        <cd-day :day="row[property.datafield]">
+          <span slot="header"></span>
+          <div class="cd-day--cell-content">
+            <slot :day="row[property.datafield]" :week="row"></slot>
+          </div>
+        </cd-day>
+      </div>
     </template>
   </cd-grid>
 </template>
@@ -19,11 +24,13 @@
 import CDGrid from '@/components/cd-grid.vue'
 
 import { weekDescriptor } from '@/common/month-days'
+import CdDay from './cd-day.vue'
 
 export default {
   name: 'cd-day-grid',
   components: {
-    'cd-grid': CDGrid
+    'cd-grid': CDGrid,
+    CdDay
   },
   props: {
     selectWeekdays: { type: Boolean, default: false, description: 'Показывать ли чекбоксы у дней недели' },
