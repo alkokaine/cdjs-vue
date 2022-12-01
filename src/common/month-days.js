@@ -38,25 +38,6 @@ function getMonthDays(moment) {
   return result
 }
 
-
- // return new Promise((resolve, reject) => {
-  //   axios({
-  //     url: 'https://isdayoff.ru/api/getdata',
-  //     params: params,
-  //     method: 'get'
-  //   }).then(response => {
-  //     days.push(...Array.from(response.request.response)
-  //       .map((m, index) => (createDay(index, Number(m))))
-  //     )
-  //   }).catch(reason => {
-  //     days.push(...Array.from(Array(daysInMonth(params.year, params.month)).keys())
-  //       .map((m, index) => (createDay(index))))
-  //   }).finally(() => {
-  //     resolve(days)
-  //   })
-  // })
-
-
 export {
   createDate,
   prevMonthDays,
