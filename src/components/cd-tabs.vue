@@ -1,46 +1,26 @@
 <template>
-  <cd-list class="cd-tabs" :class="{ 'row': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
-    :list-class="['cd-tabs--wrap list-unstyled nav nav-tabs border-0', 
+  <cd-list class="cd-tabs" :class="{ 'row px-0': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
+    :list-class="['cd-tabs--wrap list-unstyled nav nav-tabs border-0 px-0', 
       { 
         'flex-column': isCol, 
-        'w-100': isRow,
         'in-footer': inFooter,
+        'ps-0': inRight,
+        'pe-0': inLeft,
         'in-header': inHeader
-      }]" :row-class="['cd-tab--wrap nav-item mx-1',
-      { 
-        'width-maxc py-1' : isCol,
-      } ]" list-role="tablist" item-role="tab">
+      }]" row-class="cd-tab--wrap nav-item" list-role="tablist" item-role="tab">
     <template v-if="isHeaderContent" slot="header">
-      <div class="cd-tabs--content tab-content" :class="[{ 'col': isCol, 'row': isRow }]">
+      <div class="cd-tabs--content tab-content border container-fluid p-2" :class="[{ 'col': isCol }, innerClass.content]">
         <slot name="content"></slot>
       </div>
     </template>
-    <a class="nav-link p-0 cd-tab border-0" data-toggle="tab" slot-scope="{ row, index }" :href="`#${row[tabKey]}`">
-      <div v-on:click.capture="onTabSelect($event, row)" class="cd-tab--header p-2" :class="[row.class, 'border rounded-0',
-      {
-        'rounded-start': inLeft,
-        'rounded-end': inRight,
-        'rounded-bottom': inFooter,
-        'rounded-top': inHeader,
-      },
-      isActive(row) ? {
-        'active': true,
-        'border-top-0': inFooter,
-        'border-end-0': inLeft,
-        'border-start-0': inRight,
-        'border-bottom-0': inHeader
-      } : {
-        'border-top': inFooter,
-        'border-end': inLeft,
-        'border-start': inRight,
-        'border-bottom': inHeader
-      }
-    ]">
+    <a class="nav-link p-0 cd-tab border-0 mb-0" data-toggle="tab" slot-scope="{ row, index }" :href="`#${row[tabKey]}`">
+      <div v-on:click.capture="onTabSelect($event, row)" class="cd-tab--header p-2 border rounded-0" 
+        :class="[row.class, innerClass.rounded, isActive(row) ? ['active', innerClass.activeBorder] : innerClass.border]">
         <slot :tab="row" :index="index"></slot>
       </div>
     </a>
     <template v-if="isFooterContent" slot="footer">
-      <div class="cd-tabs--content tab-content" :class="[{ 'col': isCol, 'row': isRow }]">
+      <div class="cd-tabs--content tab-content border container-fluid p-2" :class="[{ 'col': isCol }, innerClass.content]">
         <slot name="content"></slot>
       </div>
     </template>
@@ -70,6 +50,35 @@ export default {
     }
   },
   computed: {
+    innerClass ({ inLeft, inRight, inHeader, inFooter }) {
+      return {
+        content: {
+          'border-start-0' : inLeft, 
+          'border-top-0': inHeader,
+          'border-bottom-0': inFooter,
+          'border-end-0': inRight
+        },
+        rounded: {
+          'rounded-start': inLeft,
+          'rounded-end': inRight,
+          'rounded-bottom': inFooter,
+          'rounded-top': inHeader,
+        },
+        border: {
+          'border-top': inFooter,
+          'border-end': inLeft,
+          'border-start': inRight,
+          'border-bottom': inHeader
+        },
+        activeBorder: {
+          'border-top-0': inFooter,
+          'border-end-0': inLeft,
+          'border-start-0': inRight,
+          'border-bottom-0': inHeader,
+          'fw-bald': true,
+        }
+      }
+    },
     resolveTabDisabled () {
       const isTabDisabled = this.isTabDisabled
       const isFunction = typeof isTabDisabled === 'function'
@@ -117,19 +126,14 @@ export default {
 
 <style>
   .cd-tabs--content {
-    padding: 1em;
-    margin: 1em;
   }
   .cd-tab--wrap {
     max-width: min-content;
   }
   .cd-tabs--wrap {
-    width: auto;
+    max-width: max-content;
   }
   .width-maxc {
     min-width: max-content;
-  }
-  .nav-tabs.in-footer {
-    border-bottom: 0;
   }
 </style>
