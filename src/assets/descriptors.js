@@ -430,7 +430,7 @@ export default {
     textarea: 4,
     checkbox: false,
     date: new Date(Date.now()),
-    datetime: 7,
+    datetime: new Date(Date.now()),
     email: 'foo@bar.net',
     radio: 'no',
     tel: '+791113121488',
@@ -534,7 +534,8 @@ export default {
     {
       input: 'date',
       datafield: 'date',
-      text: 'date'
+      text: 'date',
+      format: 'dd MMMM yyyy'
     },
     {
       input: 'datetime',
