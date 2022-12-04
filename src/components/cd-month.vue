@@ -3,7 +3,7 @@
     <slot name="month-header"></slot>
     <template v-if="ischedule">
       <cd-day-grid class="cd-month" key-field="week" :compact="compact" :schedule="schedule" 
-        :week-range="weekRange" :days="days" :compare-date="compareDate" 
+        :week-range="weekRange" :days="keyedDays" :compare-date="compareDate" :select-day="onDaySelect"
         :select-weekdays="selectWeekdays" :multiple="multiple"> 
         <div slot-scope="{ day, week }">
           <slot :day="day" :week="week"  :events="dayContent(day)"></slot>
@@ -11,13 +11,11 @@
       </cd-day-grid>
     </template>
     <template v-else>
-      <cd-day-tabs class="cd-month" :days="keyedDays" :orientation="orientation" :compare-date="compareDate" 
-        :multiple="multiple">
-        <cd-list slot-scope="{ content }" :collection="content" key-field="daykey">
-          <cd-day slot-scope="{ row }" :day="row">
-            <slot :day="row" :events="dayContent(row)"></slot>
-          </cd-day>
-        </cd-list>
+      <cd-day-tabs class="cd-month" :days="keyedDays" :select-day="onDaySelect" :orientation="orientation" 
+        :compare-date="compareDate" :multiple="multiple" :selected-days="selectedDays">
+        <div slot-scope="{ day }">
+          <slot :day="day" :events="dayContent(day)"></slot>
+        </div>
       </cd-day-tabs>
     </template>
   </div>
@@ -29,13 +27,11 @@ import { createDate, weekdays, prevMonthDays } from '@/common/month-days'
 import fromRange from '@/common/utils'
 import CDDayGrid from '@/components/cd-day-grid.vue'
 import CDDayTabs from '@/components/cd-day-tabs.vue'
-import CDList from '@/components/cd-list.vue'
-import moment from 'moment'
+
 export default {
   name: 'cd-month',
   components: {
     'cd-day-grid': CDDayGrid,
-    'cd-list': CDList,
     'cd-day-tabs': CDDayTabs
     // 'el-checkbox': Checkbox
   },
@@ -56,33 +52,10 @@ export default {
     compact: { type: Boolean, default: false, description: 'Компактный режим' },
     selectWeekdays: { type: Boolean, default: false, description: 'Режим выбора дня недели (появится чекбокс)' },
     onWeekdaySelect: { type: Function, description: 'Функция, которую выполним по выбору дня недели' },
-    onDaySelect: {
-      type: Function,
-      default: function ({ $event, day, weekday }) {
-        const calendar = this
-        const currentIndex = calendar.selectedDays.findIndex(i => i.date.date() === day.date.date() && i.date.month() === day.date.month())
-        const weekdayIndex = calendar.selectedWeekdays.indexOf(weekday.day)
-        if (weekdayIndex >= 0) {
-          calendar.selectedDays.splice(currentIndex, 1)
-          calendar.selectedWeekdays.splice(weekdayIndex, 1)
-        } else if (currentIndex >= 0) {
-          calendar.selectedDays.splice(currentIndex, 1)
-        } else {
-          calendar.selectedDays.push(day)
-          const filtered = weekday.days.filter(wd => wd.isprev === undefined)
-          const map = filtered.map(wd => calendar.selectedDays.findIndex(d => d.date.date() === wd.date.date()))
-          if (map.every(e => e >= 0)) {
-            calendar.selectedWeekdays.push(weekday.day)
-          }
-        }
-      },
-      description: 'Функция, которая выполнится при выборе дня'
-    },
     orientation: { type: String, description: 'Расположение ярлыков на дни месяца' },
-    multiple: { type: Boolean, description: 'Можно ли выбрать несколько дней' }
+    multiple: { type: Boolean, default: false, description: 'Можно ли выбрать несколько дней' }
   },
   data (calendar) {
-    const locale = moment.localeData('ru-RU')
     return {
       isLoading: false,
       selectedWeekdays: [],
@@ -90,6 +63,18 @@ export default {
     }
   },
   methods: {
+    onDaySelect ($event, day, week) {
+      const findIndex = this.selectedDays.findIndex(d => d.daykey === day.daykey)
+      if (findIndex == -1) {
+        if (this.multiple) {
+          this.selectedDays.push(day)
+        } else {
+          this.selectedDays = [day]
+        }
+      } else {
+        this.selectedDays.splice(findIndex, 1)
+      }
+    }
   },
   computed: {
     ischedule ({ mode }) {
@@ -97,6 +82,7 @@ export default {
     },
     dayContent ({ schedule, compareDate }) {
       return (day) => {
+        if (day === undefined) return []
         return  (schedule.filter(s => compareDate(s, day)))
       }
     },
