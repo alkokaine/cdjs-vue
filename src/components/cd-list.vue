@@ -2,9 +2,11 @@
   <div class="cd-list">
     <slot name="header" class="cd-list--header"></slot>
     <ul v-if="showItems" class="cd-list--internal" :class="listClass" :role="listRole">
+      <slot name="pre"></slot>
       <li v-for="(row, index) in filtered" :class="['cd-list--item', isRowClassFunction ? rowClass(row, index) : rowClass]" :role="itemRole" :key="rowKey(row, index)">
         <slot :row="row" :index="index"/>
       </li>
+      <slot name="post"></slot>
     </ul>
     <slot name="footer" :isempty="isempty" class="cd-list--footer"></slot>
   </div>
