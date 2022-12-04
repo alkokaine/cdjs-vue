@@ -10,7 +10,7 @@
             <div class="col">{{ homeTeam }}</div>
             <div class="col">{{ match.home_score }}</div>
           </div>
-          <div class="row">
+          <div class="row match-scorers">
             <div class="col">{{ match.home_scorers }}</div>
           </div>
         </div>
@@ -22,7 +22,7 @@
               <img :src="match.away_flag"/>
             </div>
           </div>
-          <div class="row">
+          <div class="row match-scorers">
             <div class="col">{{ match.away_scorers }}</div>
           </div>
         </div>
@@ -60,5 +60,10 @@ export default {
 <style>
   .match-info {
     min-width: max-content;
+  }
+
+  .match-scorers {
+    max-width: min-content;
+    word-spacing: normal;
   }
 </style>

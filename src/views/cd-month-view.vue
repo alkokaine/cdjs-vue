@@ -5,7 +5,7 @@
         <h3 slot="header">CD-MONTH</h3>
       </cd-prop-editor>
       <cd-list slot-scope="{ events }" :show-items="!settings.compact" :collection="events" key-field="_id" 
-        class="py-2 mw-mc match-list" list-class="list-unstyled my-0" :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]">
+        class="py-2 match-list" list-class="list-unstyled my-0" :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]">
         <div v-if="settings.compact && events.length" slot="header">{{ events.length }} матча</div>
         <div slot-scope="{ row }" :class="['row', { 'justify-content-center' : isSchedule }]">
           <template v-if="isSchedule">
@@ -194,9 +194,7 @@ export default {
     max-height: auto;
   }
   .match-list {
-    max-width: min-content;
   }
   .match-short {
-    width: max-content;
   }
 </style>

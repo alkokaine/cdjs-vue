@@ -1,5 +1,5 @@
 <template>
-  <div class="cd-day mw-mc mx-auto" :class="{ 'is-prev': day.isprev }" >
+  <div class="cd-day" :class="{ 'is-prev': day.isprev }" >
     <div class="cd-day--header" :class="{ 'is-eve': day.code === 2, 'holiday': day.code === 1 }">
       <slot name="header"></slot>
     </div>

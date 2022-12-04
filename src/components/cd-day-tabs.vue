@@ -5,8 +5,8 @@
     <cd-day class="cd-day--wrap cd-day--tab" :class="[{ 'mw-100': isCol }]" slot-scope="{ tab }" :day="tab">
       <span slot="header">{{ tabCaption(tab) }}</span>
     </cd-day>
-    <div slot="content" class="p-2 m-2 w-auto">
-      <cd-list :collection="selectedDays" key-field="daykey" list-class="list-unstyled" row-class="month-day--details row w-auto">
+    <div slot="content" class="p-2 m-2">
+      <cd-list :collection="selectedDays" key-field="daykey" list-class="list-unstyled" row-class="month-day--details row">
         <cd-day slot-scope="{ row }" :day="row">
           <div class="cd-day--details fw-bold" slot="header">
             {{ tabCaption(row) }}
