@@ -1,7 +1,7 @@
 <template>
-  <cd-prop-editor class="container-sm" :payload="settings" :descriptor="descriptor">
-    <cd-tabs class="container-sm" :tabs="tabs" tab-key="key" :orientation="settings.orientation">
-      <span slot-scope="{ tab }" v-on:click.capture="setcurrent($event, tab)">{{ tab }}</span>
+  <cd-prop-editor class="container" :payload="settings" :descriptor="descriptor">
+    <cd-tabs :tabs="tabs" tab-key="key" tab-caption="tab" :orientation="settings.orientation" :on-tab-select="setcurrent">
+      <!-- <div class="cd-tab--example" slot-scope="{ tab }">{{ tab }}</div> -->
       <div slot="content">
         {{ current }}
       </div>
@@ -62,5 +62,9 @@ export default {
 </script>
 
 <style>
-
+@import '~bootstrap/dist/css/bootstrap.css';
+  @import '~element-ui/lib/theme-chalk/index.css';
+  .cd-tab--example {
+    width: max-content;
+  }
 </style>
