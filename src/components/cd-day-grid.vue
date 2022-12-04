@@ -10,7 +10,7 @@
         </template>
       </div>
       <div v-else-if="row[property.datafield]" class="cd-day--grid-cell">
-        <cd-day :day="row[property.datafield]">
+        <cd-day :day="row[property.datafield]" v-on:click.native="selectDay($event, row[property.datafield], row)">
           <span slot="header"></span>
           <div class="cd-day--cell-content">
             <slot :day="row[property.datafield]" :week="row"></slot>
@@ -45,6 +45,10 @@ export default {
     weekRange: { type: Array, required: true, default: function () {
       return [1, 2, 3, 4, 5]
     }, description: 'Список недель месяца' },
+    selectDay: {
+      type: Function,
+      description: 'Функция, которая выполнится при выборе дня'
+    }
   },
   data (grid) {
     return {}
