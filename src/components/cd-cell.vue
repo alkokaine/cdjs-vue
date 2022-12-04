@@ -58,8 +58,8 @@
       <el-checkbox class="cd-checkbox" :value="value" :disabled="disabled" v-on:change="onCellChange({ $event, property }, onChange)"></el-checkbox>
     </template>
     <template v-else-if="input.date">
-      <el-date-picker class="cd-date" :placeholder="property.placeholder"
-        :value="value" :disabled="disabled" :clearable="property.clearable"></el-date-picker>
+      <el-date-picker class="cd-date" :placeholder="property.placeholder" :format="property.format" :value-format="property.valueformat"
+        :value="value" :disabled="disabled" :clearable="property.clearable" v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
     </template>
     <template v-else-if="input.datetime">
       <el-date-picker class="cd-date-time" :placeholder="property.placeholder"
@@ -149,6 +149,9 @@
           }
         }
         else if (['checkbox'].indexOf(property.input) != -1) {
+          this.$emit('input', $event)
+        }
+        else if (['date', 'datetime'].indexOf(property.input) != -1) {
           this.$emit('input', $event)
         }
         else if ([undefined, 'textarea', 'text', 'email', 'tel', 'url'].indexOf(property.input) != -1 && $event instanceof Event) {
