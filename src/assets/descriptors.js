@@ -1,5 +1,6 @@
 /* eslint-disable */ 
 import Vue from 'vue'
+import adapter from 'axios/lib/adapters/http'
 const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
 }
@@ -51,12 +52,13 @@ export default {
               descriptor: [
                 {
                   datafield: 'IsFew',
-                  text: 'Малочисленная',
+                  text: 'Малочисл.',
                   input: 'checkbox'
                 },
                 {
                   datafield: 'IsDepartment',
-                  text: 'Департамент'
+                  text: 'Департамент',
+                  input: 'checkbox'
                 },
               ],
               propClass: 'row row-cols-2'
@@ -72,7 +74,7 @@ export default {
                   text: 'Код'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end'
             },
             {
               descriptor: [
@@ -85,7 +87,7 @@ export default {
                   text: 'Порядок сортировки'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end'
             },
             {
               descriptor: [
@@ -117,6 +119,9 @@ export default {
               propClass: 'row row-cols-2'
             },
           ],
+          isDisabled (payload) {
+            return payload.ObjectID === 121
+          },
           propClass: generalPropClass
         },
         {
@@ -133,7 +138,7 @@ export default {
                           text: 'Город'
                       },
                   ],
-                  propClass: 'row row-cols-2'
+                  propClass: 'row row-cols-2 align-items-end'
               },
               {
                   descriptor: [
@@ -331,13 +336,15 @@ export default {
                   text: 'Подпись для документов'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end'
             },
             {
               descriptor: [
                 {
                   datafield: 'PostAddress',
-                  text: 'Почтовый адрес'
+                  text: 'Почтовый адрес',
+                  labelClass: 'fs-1',
+                  inputClass: 'p-4 m-4'
                 },
                 {
                   datafield: 'LawAddress',
@@ -345,7 +352,7 @@ export default {
                   input: 'autocomplete'
                 },
               ],
-              propClass: 'row row-cols-2'
+              propClass: 'row row-cols-2 align-items-end border border-1 border-white my-2 py-2'
             }
           ]
         }
@@ -416,5 +423,162 @@ export default {
     "ObjectID":121,
     "UltraShortName":"МАДОУ №123"
   },
-  generalPropClass
+  inputObject: {
+    select: 1,
+    autocomplete: '2',
+    number: 3,
+    textarea: 4,
+    checkbox: false,
+    date: new Date(Date.now()),
+    datetime: 7,
+    email: 'foo@bar.net',
+    radio: 'no',
+    tel: '+791113121488',
+    url: 'bar.net',
+    text: 'aaa',
+    file: null
+  },
+  inputs: [
+    {
+      input: 'select',
+      datafield: 'select',
+      text: 'select',
+      placeholder: 'select....',
+      valuekey: 'key',
+      labelkey: 'label',
+      values: [
+        {
+          key: 1,
+          label: 'first'
+        },
+        {
+          key: 2,
+          label: 'second'
+        }
+      ]
+    },
+    {
+      input: 'select',
+      datafield: 'select2',
+      text: 'select2',
+      placeholder: 'select ...',
+      labelkey: 'name',
+      remote: true,
+      filterable: true,
+      valuekey: 'wikiDataId',
+      keyfield: 'wikiDataId',
+      url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
+      method: 'get',
+      headers: {
+        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
+        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+      },    
+      resolvePayload (query, payload) {
+        return {
+          namePrefix: query,
+          limit: 10
+        }
+      },
+      resolveResult (response, callback) {
+        callback(response.data.data)
+      }
+    },
+    {
+      input: 'autocomplete',
+      datafield: 'autocomplete',
+      clearable: true,
+      text: 'autocomplete',
+      labelkey: 'name',
+      valuekey: 'wikiDataId',
+      triggerOnFocus: true,
+      url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
+      //adapter: adapter,
+      method: 'get',
+      slotdescriptor: [
+        {
+          datafield: 'code'
+        },
+        {
+          datafield: 'name'
+        }
+      ],
+      headers: {
+        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
+        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+      },    
+      resolvePayload (query, payload) {
+        return {
+          limit: 10
+        }
+      },
+      resolveResult (response, callback) {
+        callback(response.data.data)
+      }
+    },
+    {
+      input: 'number',
+      datafield: 'number',
+      text: 'number',
+      clearable: true,
+    },
+    {
+      input: 'textarea',
+      datafield: 'textarea',
+      text: 'textarea'
+    },
+    {
+      input: 'checkbox',
+      datafield: 'checkbox',
+      text: 'checkbox'
+    },
+    {
+      input: 'date',
+      datafield: 'date',
+      text: 'date'
+    },
+    {
+      input: 'datetime',
+      datafield: 'datetime',
+      text: 'datetime'
+    },
+    {
+      input: 'email',
+      datafield: 'email',
+      text: 'email'
+    },
+    {
+      input: 'radio',
+      datafield: 'radio',
+      text: 'radio'
+    },
+    {
+      input: 'range',
+      datafield: 'range',
+      text: 'range',
+      vertical: true,
+      min: 20,
+      max: 120,
+      step: 1,
+    },
+    {
+      input: 'tel',
+      datafield: 'tel',
+      text: 'tel'
+    },
+    {
+      input: 'text',
+      datafield: 'text',
+      text: 'text'
+    },
+    {
+      input: 'url',
+      datafield: 'url',
+      text: 'url'
+    },
+    {
+      input: 'file',
+      datafield: 'file',
+      text: 'file'
+    }
+  ]
 }
