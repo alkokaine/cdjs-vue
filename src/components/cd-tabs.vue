@@ -1,6 +1,6 @@
 <template>
   <cd-list class="cd-tabs container" :class="{ 'row': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
-    :list-class="['cd-tabs--wrap list-unstyled nav nav-tabs border-0 px-0', 
+    :list-class="['cd-tabs--wrap list-unstyled nav nav-tabs border-0 px-0', tabListClass,
       { 
         'flex-column w-auto': isCol, 
         'd-flex w-100' :isRow,
@@ -53,6 +53,7 @@ export default {
     'cd-list': CDList
   },
   props: {
+    tabListClass: { type: [String, Object, Array], description: 'CSS классы для списка вкладок' },
     tabs: { type: Array, required: true, description: 'Вкладки' },
     tabCaption: { type: [Function, String], description: 'Свойство объекта [tab] из массива [tabs], в котором находится заголовок вкладки, или же функция, которая для объекта вкладки возвращает её заголовок' },
     tabKey: { type: String, required: true, default: 'key', description: 'Свойство объекта из массива [tabs], в котором находится идентификатор вкладки' },
