@@ -1,26 +1,44 @@
 <template>
-  <cd-list class="cd-tabs" :class="{ 'row px-0': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
+  <cd-list class="cd-tabs container" :class="{ 'row': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
     :list-class="['cd-tabs--wrap list-unstyled nav nav-tabs border-0 px-0', 
       { 
-        'flex-column': isCol, 
-        'in-footer': inFooter,
+        'flex-column w-auto': isCol, 
+        'd-flex w-100' :isRow,
         'ps-0': inRight,
         'pe-0': inLeft,
-        'in-header': inHeader
-      }]" row-class="cd-tab--wrap nav-item" list-role="tablist" item-role="tab">
+      }]" :row-class="['cd-tab--wrap nav-item', { 'd-flex': isRow }]" list-role="tablist" item-role="tab">
     <template v-if="isHeaderContent" slot="header">
-      <div class="cd-tabs--content tab-content border container-fluid p-2" :class="[{ 'col': isCol }, innerClass.content]">
+      <div class="cd-tabs--content container tab-content border container-fluid px-2" :class="[{ 'col': isCol }, innerClass.content]">
         <slot name="content"></slot>
       </div>
     </template>
+    <div class="sring-start" :class="{
+      'border-end': inLeft,
+      'border-start': inRight,
+      'border-bottom': inHeader,
+      'border-top': inFooter
+    }" slot="pre">
+      <div :class="{ 'w-1': isRow, 'h-1': isCol }"/>
+    </div>
     <a class="nav-link p-0 cd-tab border-0 mb-0" data-toggle="tab" slot-scope="{ row, index }" :href="`#${row[tabKey]}`">
       <div v-on:click.capture="onTabSelect($event, row)" class="cd-tab--header p-2 border rounded-0" 
         :class="[row.class, innerClass.rounded, isActive(row) ? ['active', innerClass.activeBorder] : innerClass.border]">
-        <slot :tab="row" :index="index"></slot>
+        <slot :tab="row" :index="index">
+          <span class="cd-tab--header-default">{{ resolveTabCaption(row) }}</span>
+        </slot>
       </div>
     </a>
+    <div class="spring-end d-flex p-2" slot="post" :class="{
+      'flex-grow-1': isRow,
+      'border-end': inLeft,
+      'border-start': inRight,
+      'border-bottom': inHeader,
+      'border-top': inFooter
+    }">
+      <div :class="{ 'w-1': isRow, 'h-1': isCol }"/>
+    </div>
     <template v-if="isFooterContent" slot="footer">
-      <div class="cd-tabs--content tab-content border container-fluid p-2" :class="[{ 'col': isCol }, innerClass.content]">
+      <div class="cd-tabs--content container tab-content border container-fluid px-2" :class="[{ 'col': isCol }, innerClass.content]">
         <slot name="content"></slot>
       </div>
     </template>
@@ -36,7 +54,7 @@ export default {
   },
   props: {
     tabs: { type: Array, required: true, description: 'Вкладки' },
-    tabCaption: { type: String, description: 'Свойство объекта из массива [tabs], в котором находится текст вкладки' },
+    tabCaption: { type: [Function, String], description: 'Свойство объекта [tab] из массива [tabs], в котором находится заголовок вкладки, или же функция, которая для объекта вкладки возвращает её заголовок' },
     tabKey: { type: String, required: true, default: 'key', description: 'Свойство объекта из массива [tabs], в котором находится идентификатор вкладки' },
     isTabDisabled: { type: Function, description: 'Вычисляем для объекта вкладки и её индекса в массиве [tabs], будет ли вкладка задисаблена' },
     onTabSelect: { type: Function, description: 'Что произойдёт при клике на вкладку' },
@@ -50,6 +68,11 @@ export default {
     }
   },
   computed: {
+    resolveTabCaption ({ tabCaption }) {
+      return (tab, index) => tabCaption === undefined 
+        ? tab 
+        : (typeof tabCaption === 'function' ? tabCaption(tab, index) : tab[tabCaption])
+    },
     innerClass ({ inLeft, inRight, inHeader, inFooter }) {
       return {
         content: {
@@ -75,7 +98,7 @@ export default {
           'border-end-0': inLeft,
           'border-start-0': inRight,
           'border-bottom-0': inHeader,
-          'fw-bald': true,
+          'fw-bold': true,
         }
       }
     },
@@ -130,10 +153,14 @@ export default {
   .cd-tab--wrap {
     max-width: min-content;
   }
-  .cd-tabs--wrap {
-    max-width: max-content;
-  }
+
   .width-maxc {
     min-width: max-content;
+  }
+  .h-1 {
+    height: 1vh;
+  }
+  .w-1 {
+    width: 1vw;
   }
 </style>
