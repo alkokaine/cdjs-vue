@@ -4,19 +4,25 @@
       <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
         <h3 slot="header">CD-MONTH</h3>
       </cd-prop-editor>
-      <cd-list slot-scope="{ events }" :show-items="!settings.compact" :collection="events" key-field="_id" class="py-2 mw-mc match-list" list-class="list-unstyled my-0" row-class="match-short py-2 mx-2">
+      <cd-list slot-scope="{ events }" :show-items="!settings.compact" :collection="events" key-field="_id" 
+        class="py-2 mw-mc match-list" list-class="list-unstyled my-0" :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]">
         <div v-if="settings.compact && events.length" slot="header">{{ events.length }} матча</div>
-        <div slot-scope="{ row }" class="row justify-content-center">
-          <div class="col home-team mw-50">
-            <div class="w-auto team-flag border border-1">
-              <img :src="row.event.home_flag" />
+        <div slot-scope="{ row }" :class="['row', { 'justify-content-center' : isSchedule }]">
+          <template v-if="isSchedule">
+            <div class="col home-team mw-50">
+              <div class="w-auto team-flag border border-1">
+                <img :src="row.event.home_flag" />
+              </div>
             </div>
-          </div>
-          <div class="col away-team mw-50">
-            <div class="w-auto team-flag border border-1">
-              <img :src="row.event.away_flag"/>
+            <div class="col away-team mw-50">
+              <div class="w-auto team-flag border border-1">
+                <img :src="row.event.away_flag"/>
+              </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <match-info :lang="settings.lang" :match="row.event"></match-info>
+          </template>
         </div>
         <template slot="footer" slot-scope="{ isempty }">
           <div v-if="isempty && !settings.compact" class="empty-day">
@@ -31,6 +37,7 @@
 <script>
 import CDList from '@/components/cd-list.vue'
 import CDMonth from '@/components/cd-month.vue'
+import MatchInfo from './match-info.vue'
 import CDPropEditor from '@/components/cd-prop-editor'
 import { createDate } from '@/common/month-days'
 import keys from '@/../keys'
@@ -41,7 +48,8 @@ export default {
   components: {
     'cd-month': CDMonth,
     'cd-list': CDList,
-    'cd-prop-editor': CDPropEditor
+    'cd-prop-editor': CDPropEditor,
+    'match-info': MatchInfo
   },
   data (view) {
     return {
@@ -51,7 +59,8 @@ export default {
         selectWeekdays: true,
         mdate: new Date(Date.now()),
         mode: 'schedule',
-        orientation: 'col-left'
+        orientation: 'col-left',
+        lang: 'en'
       },
       descriptor: [
         {
@@ -116,6 +125,17 @@ export default {
             }
           ],
           hidden: row => row.mode === 'schedule'
+        },
+        {
+          datafield: 'lang',
+          text: 'язык',
+          input: 'select',
+          labelkey: 'text',
+          valuekey: 'lang',
+          values: [
+            { text: 'английский', lang: 'en' },
+            { text: 'фарси', lang: 'fa' }
+          ]
         }
       ]
     }
@@ -130,6 +150,9 @@ export default {
   computed: {
     date ({ settings }) {
       return createDate(settings.mdate.getFullYear(), settings.mdate.getMonth()+1, settings.mdate.getDate())
+    },
+    isSchedule ({ settings }) {
+      return settings.mode === 'schedule'
     }
   },
   watch: {
