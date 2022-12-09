@@ -1,12 +1,11 @@
 <template>
   <div class="cd-month-view">
-    <cd-month :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation" :multiple="settings.multiple">
+    <cd-month v-if="matches.length" :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation" :multiple="settings.multiple">
       <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
         <h3 slot="header">CD-MONTH</h3>
       </cd-prop-editor>
-      <cd-list slot-scope="{ events }" :show-items="!settings.compact" :collection="events" key-field="_id" 
+      <cd-list slot-scope="{ day }" :show-items="!settings.compact" :collection="dayContent(day, matches, compareDate)" key-field="_id" 
         class="py-2 match-list" list-class="list-unstyled my-0" :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]">
-        <div v-if="settings.compact && events.length" slot="header">{{ events.length }} матча</div>
         <div slot-scope="{ row }" :class="['row', { 'justify-content-center' : isSchedule }]">
           <template v-if="isSchedule">
             <div class="col home-team mw-50">
@@ -26,10 +25,16 @@
         </div>
         <template slot="footer" slot-scope="{ isempty }">
           <div v-if="isempty && !settings.compact" class="empty-day">
-            <span>нет событий</span>
+            <div>нет событий</div>
+            <el-button type="text" size="mini" v-on:click.capture.stop="createEvent($event, day)">Добавить</el-button>
           </div>
         </template>
       </cd-list>
+      <el-dialog slot="month-footer" :visible="isDialog">
+        <cd-form v-if="isDialog" :descriptor="eventDescriptor" :payload="newEvent" :on-submit="onSubmit" :on-reset="onReset" :show-controls="true">
+          <div slot="header" slot-scope="{ payload }">{{ payload }}</div>
+        </cd-form>
+      </el-dialog>
     </cd-month>
   </div>
 </template>
@@ -37,6 +42,7 @@
 <script>
 import CDList from '@/components/cd-list.vue'
 import CDMonth from '@/components/cd-month.vue'
+import CDForm from '@/components/cd-form.vue'
 import MatchInfo from './match-info.vue'
 import CDPropEditor from '@/components/cd-prop-editor'
 import { createDate } from '@/common/month-days'
@@ -44,12 +50,14 @@ import keys from '@/../keys'
 import fetchData from '@/common/fetch-data'
 import info from '@/assets/match-info'
 import moment from 'moment'
+import Vue from 'vue'
 export default {
   components: {
     'cd-month': CDMonth,
     'cd-list': CDList,
     'cd-prop-editor': CDPropEditor,
-    'match-info': MatchInfo
+    'match-info': MatchInfo,
+    'cd-form': CDForm
   },
   data (view) {
     return {
@@ -137,23 +145,52 @@ export default {
             { text: 'фарси', lang: 'fa' }
           ]
         }
-      ]
+      ],
+      newEvent: Object,
+      eventDescriptor: info.matchInfoDescriptor
     }
   },
   methods: {
+    onReset () {
+      this.newEvent = Object
+    },
+    onSubmit (payload) {
+      const view = this
+      view.matches.push({ event: payload, moment: createDate(payload.local_date) })
+      view.newEvent = Object
+    },
     compareDate ({ moment }, { date }) {
       return moment.date() === date.date() && 
         moment.month() === date.month() && 
         moment.year() === date.year()
+    },
+    dayContent (day, schedule, compareDate) {
+      return (schedule.filter(f => compareDate(f, day)))
+    },
+    createEvent($event, day) {
+      this.newEvent = {
+        _id: 1,
+        away_score: 0,
+        home_score: 0,
+        local_date: day.date.toDate()
+      }
     }
   },
   computed: {
+    isDialog ({ newEvent }) {
+      return newEvent._id > 0
+    },
     date ({ settings }) {
       return createDate(settings.mdate.getFullYear(), settings.mdate.getMonth()+1, settings.mdate.getDate())
     },
     isSchedule ({ settings }) {
       return settings.mode === 'schedule'
-    }
+    },
+    // dayContent ({ matches, compareDate }) {
+    //   return (day) => {
+    //     return (matches.filter(m => compareDate(m, day)))
+    //   }
+    // }
   },
   watch: {
     date: {

@@ -10,7 +10,8 @@
         </template>
       </div>
       <div v-else-if="row[property.datafield]" class="cd-day--grid-cell">
-        <cd-day class="cd-grid--day" :day="row[property.datafield]" v-on:click.native="selectDay($event, row[property.datafield], row)">
+        <cd-day class="cd-grid--day" :day="row[property.datafield]" 
+          v-on:click.native="selectDay($event, row[property.datafield], row)">
           <span slot="header"></span>
           <div class="cd-day--cell-content text-center">
             <slot :day="row[property.datafield]" :week="row"></slot>
