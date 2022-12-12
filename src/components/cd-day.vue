@@ -3,9 +3,7 @@
     <div class="cd-day--header" :class="{ 'is-eve': day.code === 2, 'holiday': day.code === 1 }">
       <slot name="header"></slot>
     </div>
-    <template v-if="$slots.default">
-      <slot></slot>
-    </template>
+    <slot :day="day"></slot>
   </div>
 </template>
 
@@ -13,7 +11,7 @@
 export default {
   name: 'cd-day',
   props: {
-    day: { type: Object, required: true }
+    day: { type: Date, required: true }
   },
   data (block) {
     return {
