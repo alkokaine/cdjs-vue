@@ -356,7 +356,7 @@ export default {
       onSelect(option, payload) {
         payload.away_team_en = option.name_en
         payload.away_team_fa = option.name_fa
-        payload.away_flag = option.away_flag
+        payload.away_flag = option.flag
       }
     },
     {
