@@ -11,9 +11,9 @@
               :option-disabled="isOptionDisabled" 
               :input="config" :class="[inputClass(property)]"
               :payload="resolvePayload(property)"
-              :on-select="onSelect(property)"
-              :on-change="onChange(property)"
-              :on-input="onInput(property)">
+              :on-select="onSelect"
+              :on-change="onChange"
+              :on-input="onInput">
             </cd-cell>
           </slot>
         </el-form-item>
@@ -71,8 +71,8 @@ export default {
       }
     },
     onSelect ({ formobject }) {
-      return ({ onSelect }) => {
-        if (onSelect !== undefined && typeof onSelect === 'function') onSelect(formobject)
+      return ({ onSelect }, option) => {
+        if (onSelect !== undefined && typeof onSelect === 'function') onSelect(option, formobject)
       }
     },
     onChange ({ formobject }) {

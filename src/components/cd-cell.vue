@@ -170,6 +170,7 @@
         } else {
           this.$emit('input', item[property.valuekey]) 
         }
+        if (callback !== undefined && typeof callback === 'function') callback(property, item)
       },
       resolveOptions (data) {
         this.collection = data
