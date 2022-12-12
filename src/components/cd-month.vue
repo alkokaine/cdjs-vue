@@ -2,11 +2,11 @@
   <div class="cd-month--wrapper container">
     <slot name="month-header"></slot>
     <template v-if="ischedule">
-      <cd-day-grid class="cd-month" key-field="week" :compact="compact" :schedule="schedule" 
+      <cd-day-grid class="cd-month" key-field="week" :compact="compact"
         :week-range="weekRange" :days="keyedDays" :compare-date="compareDate" :select-day="onDaySelect"
         :select-weekdays="selectWeekdays" :multiple="multiple"> 
         <div slot-scope="{ day, week }">
-          <slot :day="day" :week="week"  :events="dayContent(day)"></slot>
+          <slot :day="day" :week="week"></slot>
         </div>
       </cd-day-grid>
     </template>
@@ -14,12 +14,12 @@
       <cd-day-tabs class="cd-month" :days="keyedDays" :select-day="onDaySelect" :orientation="orientation" 
         :compare-date="compareDate" :multiple="multiple" :selected-days="selectedDays">
         <div slot-scope="{ day }">
-          <slot :day="day" :events="dayContent(day)"></slot>
+          <slot :day="day"></slot>
         </div>
       </cd-day-tabs>
     </template>
+    <slot name="month-footer"></slot>
   </div>
-  
 </template>
 
 <script>
@@ -45,7 +45,6 @@ export default {
       description: 'Режим календаря, schedule (по умолчанию) -- месяц разбит по неделям; list -- дни идут списком'
     },
     compareDate: { type: Function, required: true, description: 'функция возвращает true, если даты параметров функции совпадают' },
-    schedule: { type: Array, required: true, description: 'Массив "событий"' },
     date: { type: Object, reqiured: true, description: 'Дата, месяц который отрисовывает календарь' },
     sixDays: { type: Boolean, default: false, description: 'Признак шестидневной рабочей недели' },
     prependDays: { type: Boolean, default: true, description: 'Если месяц начинается не с понедельника и prepend-days = true, то присоединим дни из предыдущего месяца так, чтобы первое число указанного месяца было в своей клетке дня недели' },
@@ -60,6 +59,7 @@ export default {
       isLoading: false,
       selectedWeekdays: [],
       selectedDays: [],
+      editEvent: Object
     }
   },
   methods: {
@@ -79,12 +79,6 @@ export default {
   computed: {
     ischedule ({ mode }) {
       return mode === 'schedule'
-    },
-    dayContent ({ schedule, compareDate }) {
-      return (day) => {
-        if (day === undefined) return []
-        return  (schedule.filter(s => compareDate(s, day)))
-      }
     },
     days ({ date, prependDays }) {
       return (prependDays ? prevMonthDays(date) : [])
