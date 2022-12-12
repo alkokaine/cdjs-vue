@@ -10,11 +10,11 @@
         </template>
       </div>
       <div v-else-if="row[property.datafield]" class="cd-day--grid-cell">
-        <cd-day class="cd-grid--day" :day="row[property.datafield]" 
+        <cd-day class="cd-grid--day" :day="getDay(row[property.datafield])" 
           v-on:click.native="selectDay($event, row[property.datafield], row)">
           <span slot="header"></span>
-          <div class="cd-day--cell-content text-center">
-            <slot :day="row[property.datafield]" :week="row"></slot>
+          <div slot-scope="{ day }" class="cd-day--cell-content text-center">
+            <slot :day="day" :week="row"></slot>
           </div>
         </cd-day>
       </div>
@@ -36,9 +36,6 @@ export default {
   props: {
     selectWeekdays: { type: Boolean, default: false, description: 'Показывать ли чекбоксы у дней недели' },
     compact: { type: Boolean, default: false, description: 'Компактный режим' },
-    schedule: { type: Array, required: true, default: function () {
-      return []
-    }, description: 'События месяца' },
     days: { type: Array, requierd: true, default: function () {
       return []
     }, description: 'Дни месяца'},
@@ -55,14 +52,19 @@ export default {
     return {}
   },
   computed: {
+    getDay () {
+      return ({ date }) => (date.toDate())
+    },
     descriptor ({ compact }) {
       return weekDescriptor(compact)
     },
     weekFactory ( { descriptor } ) {
       return (week, days) => {
-        const props = descriptor.map(p => (Object.defineProperty({}, p.datafield, { enumerable: true, value: days.find(d => {
-          const _day = d.date.day()
-          return _day  === p.day  
+        const props = descriptor.map(p => (Object.defineProperty({}, p.datafield, { 
+          enumerable: true, 
+          value: days.find(d => {
+            const _day = d.date.day()
+            return _day  === p.day  
         })})))
         const neweek = Object.assign({ week: week }, ...props)
         return neweek
