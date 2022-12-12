@@ -2,16 +2,18 @@
   <cd-tabs class="cd-day-tabs container" :tabs="days" tab-key="daykey" 
     :orientation="orientation" :tab-list-class="{ 'align-items-end': inLeft, 'align-items-start': inRight }" 
     :on-tab-select="selectDay">
-    <cd-day class="cd-day--wrap cd-day--tab" :class="[{ 'mw-100': isCol }]" slot-scope="{ tab }" :day="tab">
+    <div class="cd-day--wrap cd-day--tab" :class="[{ 'mw-100': isCol }]" slot-scope="{ tab }">
       <span slot="header">{{ tabCaption(tab) }}</span>
-    </cd-day>
+    </div>
     <div slot="content" class="p-2 m-2">
       <cd-list :collection="selectedDays" key-field="daykey" list-class="list-unstyled" row-class="month-day--details row">
-        <cd-day slot-scope="{ row }" :day="row">
+        <cd-day slot-scope="{ row }" :day="getDay(row)">
           <div class="cd-day--details fw-bold" slot="header">
             {{ tabCaption(row) }}
           </div>
-          <slot :day="row"></slot>
+          <div slot-scope="{ day }" class="cd-day-content--wrap">
+            <slot :day="day"></slot>
+          </div>
         </cd-day>
       </cd-list>
     </div>
@@ -50,6 +52,9 @@ export default {
     }
   },
   computed: {
+    getDay () {
+      return ({ date }) => (date.toDate())
+    },
     isCol ({ orientation }) {
       return ['col-left', 'col-right'].indexOf(orientation) >= 0
     },
