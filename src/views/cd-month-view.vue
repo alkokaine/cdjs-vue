@@ -4,7 +4,7 @@
       <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
         <h3 slot="header">CD-MONTH</h3>
       </cd-prop-editor>
-      <cd-list slot-scope="{ day }" :show-items="!settings.compact" :collection="dayContent(day, matches, compareDate)" key-field="_id" 
+      <cd-list slot-scope="{ day }" :show-items="!settings.compact" :collection="dayContent(day)" key-field="_id" 
         class="py-2 match-list" list-class="list-unstyled my-0" :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]">
         <div slot-scope="{ row }" :class="['row', { 'justify-content-center' : isSchedule }]">
           <template v-if="isSchedule">
@@ -24,8 +24,8 @@
           </template>
         </div>
         <template slot="footer" slot-scope="{ isempty }">
-          <div v-if="isempty && !settings.compact" class="empty-day">
-            <div>нет событий</div>
+          <div v-if="!settings.compact" class="empty-day">
+            <div v-if="isempty">нет событий</div>
             <el-button type="text" size="mini" v-on:click.capture.stop="createEvent($event, day)">Добавить</el-button>
           </div>
         </template>
@@ -156,27 +156,27 @@ export default {
     },
     onSubmit (payload) {
       const view = this
-      view.matches.push({ event: payload, moment: createDate(payload.local_date) })
+      view.matches.push({ event: payload, date: payload.local_date })
       view.newEvent = Object
     },
-    compareDate ({ moment }, { date }) {
-      return moment.date() === date.date() && 
-        moment.month() === date.month() && 
-        moment.year() === date.year()
-    },
-    dayContent (day, schedule, compareDate) {
-      return (schedule.filter(f => compareDate(f, day)))
+    compareDate ({ date }, day) {
+      return date.getDate() === day.getDate() && 
+        date.getMonth() === day.getMonth() && 
+        date.getFullYear() === day.getFullYear()
     },
     createEvent($event, day) {
       this.newEvent = {
         _id: 1,
         away_score: 0,
         home_score: 0,
-        local_date: day.date.toDate()
+        local_date: day,
       }
     }
   },
   computed: {
+    dayContent ({ matches, compareDate }) {
+      return (day) => (matches.filter(f => compareDate(f, day)))
+    },
     isDialog ({ newEvent }) {
       return newEvent._id > 0
     },
@@ -204,12 +204,12 @@ export default {
           headers: keys.qatar2022
         }).then(response => {
           view.matches = response.data.data.map(m => ({
-            moment: moment(new Date(m.local_date)),
+            date: new Date(m.local_date),
             event: m
           }))
         }).catch(reason => {
           view.matches = info.schedule.map(m => ({
-            moment: moment(new Date(m.local_date)),
+            date: new Date(m.local_date),
             event: m
           }))
         })
