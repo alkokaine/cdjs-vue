@@ -464,6 +464,7 @@ export default {
       text: 'team',
       placeholder: 'team',
       valuekey: 'id',
+      collapseTags: true,
       clearable: true,
       filterable: true,
       values: matchInfo.teams,
@@ -503,6 +504,7 @@ export default {
       text: 'autocomplete',
       labelkey: 'name',
       valuekey: 'wikiDataId',
+      triggerOnFocus: false,
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       //adapter: adapter,
       method: 'get',
@@ -547,7 +549,8 @@ export default {
       input: 'date',
       datafield: 'date',
       text: 'date',
-      format: 'dd MMMM yyyy'
+      format: 'dd MMMM yyyy',
+      valueformat: 'timestamp'
     },
     {
       input: 'datetime',
