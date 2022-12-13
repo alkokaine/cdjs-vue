@@ -4,7 +4,7 @@ import adapter from 'axios/lib/adapters/http'
 const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
 }
-
+import matchInfo from '@/assets/match-info'
 export default {
   objectDescriptor: [
     {
@@ -436,7 +436,8 @@ export default {
     tel: '+791113121488',
     url: 'bar.net',
     text: 'aaa',
-    file: null
+    file: null,
+    team: [],
   },
   inputs: [
     {
@@ -456,6 +457,19 @@ export default {
           label: 'second'
         }
       ]
+    },
+    {
+      input: 'select',
+      datafield: 'team',
+      text: 'team',
+      placeholder: 'team',
+      valuekey: 'id',
+      collapseTags: true,
+      clearable: true,
+      filterable: true,
+      values: matchInfo.teams,
+      labelkey: 'name_en',
+      multiple: true,
     },
     {
       input: 'select',
@@ -490,7 +504,7 @@ export default {
       text: 'autocomplete',
       labelkey: 'name',
       valuekey: 'wikiDataId',
-      triggerOnFocus: true,
+      triggerOnFocus: false,
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       //adapter: adapter,
       method: 'get',
@@ -535,7 +549,8 @@ export default {
       input: 'date',
       datafield: 'date',
       text: 'date',
-      format: 'dd MMMM yyyy'
+      format: 'dd MMMM yyyy',
+      valueformat: 'timestamp'
     },
     {
       input: 'datetime',

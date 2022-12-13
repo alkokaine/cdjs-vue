@@ -5,7 +5,6 @@
         class="el-input__inner cd-input__inner" 
         :min="property.min" :max="property.max" 
         :value="value" :disabled="disabled"
-        :clearable="property.clearable"
         @change="onCellChange({ $event, property }, onChange)"/>
     </template>
     <template v-else-if="input.select">
@@ -14,6 +13,8 @@
         :value="value" :disabled="disabled" :clearable="property.clearable"
         :multiple="property.multiple" :collapse-tags="property.collapseTags"
         :value-key="property.valuekey" :label-key="property.labelkey"
+        v-on:remove-tag="onTagRemove({ $event, value, property }, onRemove)" 
+        v-on:clear="onCellClear({ $event, property }, onClear)"
         :remote-method="query => fetch(query, resolveOptions)">
         <cd-list class="cd-select--options" row-class="cd-option" 
           :list-class="['list-unstyled', property.listClass]"
@@ -38,7 +39,9 @@
       <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder"
         :value="value" :fetch-suggestions="fetch" :disabled="disabled"
         :clearable="property.clearable" :value-key="property.valuekey"
-        :trigger-on-focus="property.triggerOnFocus">
+        :trigger-on-focus="property.triggerOnFocus"
+        v-on:clear="onCellClear({ $event, property }, onClear)"
+        v-on:input="onCellChange({ $event, property }, onChange)">
         <div class="cd-autocomplete-item--wrap" slot-scope="{ item }"
           v-on:click.capture="onOptionSelect({ $event, item, property }, onSelect)">
           <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item"
@@ -59,11 +62,15 @@
     </template>
     <template v-else-if="input.date">
       <el-date-picker class="cd-date" :placeholder="property.placeholder" :format="property.format" :value-format="property.valueformat"
-        :value="value" :disabled="disabled" :clearable="property.clearable" v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
+        :value="value" :disabled="disabled" :clearable="property.clearable"
+        v-on:clear="onCellClear({ $event, property }, onClear)"
+        v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
     </template>
     <template v-else-if="input.datetime">
       <el-date-picker class="cd-date-time" :placeholder="property.placeholder"
-        type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"></el-date-picker>
+        type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"
+        v-on:clear="onCellClear({ $event, property }, onClear)"
+        v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
     </template>
     <template v-else-if="input.email">
       <input type="email" class="el-input__inner cd-input__inner" 
@@ -119,6 +126,8 @@
       },
       fetch: { type: Function },
       onSelect: { type: Function },
+      onClear: { type: Function },
+      onRemove: { type: Function },
       onChange: { type: Function },
       onInput: { type: Function }
     },
@@ -138,6 +147,14 @@
       }
     },
     methods: {
+      onCellClear ({ property }, callback) {
+        if (property.multiple) {
+          this.$emit('input', [])
+        } else {
+          this.$emit('input', null)
+        }
+        if (callback !== undefined && typeof callback === 'function') callback(property)
+      },
       onCellChange ({ property, $event }, callback ) {
         if (['range', 'number'].indexOf(property.input) != -1 && $event instanceof Event) {
           try {
@@ -157,7 +174,6 @@
         else if ([undefined, 'textarea', 'text', 'email', 'tel', 'url'].indexOf(property.input) != -1 && $event instanceof Event) {
           this.$emit('input', $event.target.value)
         }
-        // this.$emit('input', $event)
       },
       onCellInput ({ property, $event }, callback) {
       },
@@ -168,9 +184,24 @@
           else 
             this.$emit('input', item[property.labelkey])
         } else {
-          this.$emit('input', item[property.valuekey]) 
+          if (property.multiple) {
+            try {
+              const value = this.value
+              const fi = value.findIndex(i => i === item[property.valuekey])
+              if (fi < 0) this.$emit('input', value.concat([item[property.valuekey]]))
+              else this.$emit('input', value.filter(v => v !== item[property.valuekey]))
+            } catch (err) {
+              this.$emit('input', [item[property.valuekey]])
+            }
+          } else {
+            this.$emit('input', item[property.valuekey]) 
+          }
+          
         }
         if (callback !== undefined && typeof callback === 'function') callback(property, item)
+      },
+      onTagRemove ({ $event, value, property }, callback) {
+        this.$emit('input', value.filter(v => v !== $event))
       },
       resolveOptions (data) {
         this.collection = data
