@@ -18,7 +18,7 @@ export default {
   },
   data (grid) {
     return {
-      properties: vueProps(CDGrid),
+      properties: getprops(CDGrid),
       descriptor: [
         {
           datafield: 'name',

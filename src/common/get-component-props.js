@@ -1,5 +1,5 @@
 export default function (component) {
-  return (Array.from(Object.keys(grid.component.props))
+  return (Array.from(Object.keys(component.props))
     .map(name => ({
       name,
       prop: component.props[name]
