@@ -43,10 +43,7 @@ describe('remote', () => {
         error: m_error,
         after: m_after,
         before: m_before,
-        headers: {
-            'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-          }
+        headers: keys.geo
     }
 
     it ('fetching data', done => {
