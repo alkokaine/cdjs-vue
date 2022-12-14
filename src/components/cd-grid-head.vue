@@ -6,7 +6,7 @@
       </th>
       <th scope="col"></th>
       <th scope="col" v-for="(col, jindex) in columns" class="cd-header--cell"
-        :key="jindex" :class="[col.headerclass, isCellClassFunction ? cellClass(col, jindex) : cellClass]">
+        :key="jindex" :class="[col.headerclass, isCellClassFunction ? cellClass(col) : cellClass]">
         <p class="mb-0">
           <slot :property="col" :propindex="jindex"></slot>
         </p>

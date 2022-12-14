@@ -3,24 +3,35 @@
     <div v-if="$slots.tuner" class="cd-grid--tuner">
       <slot name="tuner"></slot>
     </div>
-    <table :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm w-auto': small }, borderclass]"
+    <table :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm w-auto': small }, borderClass]"
       class="cd-grid--table table border-bottom">
       <caption v-if="$slots.caption" class="cd-grid--caption"><slot name="caption"/></caption>
       <cd-grid-head v-if="showHeader" :columns="columns" :select-rows="selectRows" :head-class="headClass" :cell-class="headCellClass"
         :class="resolveHeadClass">
         <template slot-scope="{ property }">
-          <slot :header="true" :property="property">{{ property.text }}</slot>
+          <slot name="header" :property="property">{{ property.text }}</slot>
         </template>
       </cd-grid-head>
-      <cd-grid-body :collection="collection" :class="resolveBodyClass" :select-rows="selectRows" :columns="columns" :row-key="rowKeyResolved"
-        :key-field="keyField" :row-details="rowDetails" :row-class="rowClass" :cell-class="bodyCellClass">
-        <span slot-scope="{ rowdetails, row, rowindex, property, propindex }" class="cd-cell--content">
+      <cd-grid-body :borders="borders" :collection="collection" :class="resolveBodyClass" :select-rows="selectRows" :columns="columns" :row-key="rowKeyResolved"
+        :key-field="keyField" :row-details="rowDetails" :row-class="rowClass" :cell-class="cellClassResolved">
+        <span slot-scope="{ begin, end, row, property, rowdetails, rowindex, propindex }" class="cd-cell--content">
           <template v-if="property">
-            <slot :property="property" :row="row" :$rowindex="rowindex" :$propindex="propindex"></slot>
+            <slot :property="property" :row="row" :$rowindex="rowindex" :$propindex="propindex">
+              {{ row[property.datafield] }}
+            </slot>
           </template>
           <template v-else-if="rowdetails">
             <slot :rowdetails="rowdetails" :row="row" $rowindex="rowindex"></slot>
           </template>
+          <template v-else-if="begin">
+            <slot :begin="true" :row="row" :rowindex="rowindex"></slot>
+          </template>
+          <template v-else-if="end">
+            <slot :end="true" :row="row" :rowindex="rowindex"></slot>
+          </template>
+        </span>
+        <span slot="empty" class="cd-grid--no-data">
+          <slot name="no-data">Нет данных</slot>
         </span>
       </cd-grid-body>
       <tfoot v-if="$slots.footer" class="cd-grid--footer"><slot name="footer"/></tfoot>
@@ -33,15 +44,6 @@ import flatterer from '@/common/property-flatter'
 import CdGridBody from './cd-grid-body.vue'
 import CdGridHead from './cd-grid-head.vue'
 
-const resolveborder = (borders) => {
-  switch (borders) {
-    case 'all': return 'table-bordered'
-    case 'rows': return ''
-    case 'cols': return ''
-    case 'none': return 'table-borderless'
-  }
-}
-
 export default {
   name: 'cd-grid',
   components: {
@@ -49,6 +51,7 @@ export default {
     'cd-grid-head': CdGridHead
   },
   props: {
+    borders: { type: String, description: 'Границы' },
     showHeader: { type: Boolean, default: true, description: 'Показывать ли заголовок грида' },
     highlightOnHover: { type: Boolean, default: false, description: 'Подсвечивать при перемещении мыши' },
     collection: { type: Array, required: true,description: 'Данные в гриде' },
@@ -64,36 +67,51 @@ export default {
     rowClass: { type: [String, Object, Array, Function], description: 'CSS класс элемента <tr>' },
     headCellClass: { type: [String, Object, Array, Function],description: 'CSS класс элемента <th>' },
     bodyCellClass: { type: [String, Object, Array, Function],description: 'CSS класс элемента <td>' },
-    rowKey: { 
-      type: Function,
-      default: function (row, index) {
-        return row[this.keyField]
-      },
-      description: 'Функция, возвращающая значение ключевого поля '
-    }
+    rowKey: { type: Function, description: 'Функция, возвращающая значение ключевого поля ' }
 
   },
   data (grid) {
     return {
-      borderclass: resolveborder(grid.borders),
-      isBodyClassFunction: typeof grid.bodyClass === 'function',
-      isHeadClassFunction: typeof grid.headClass === 'function'
     }
   },
   methods: {
   },
   computed: {
+    borderClass ({ borders }) {
+      switch (borders) {
+        case 'all': return 'table-bordered'
+        case 'none': return 'table-borderless'
+        default: return ''
+      }
+    },
     columns ({ descriptor }) {
       return (flatterer(descriptor, [])).filter(p => p.datafield !== undefined)
     },
-    rowKeyResolved (vm) {
-      return (row, index) => vm.rowKey(row, index)
+    rowKeyResolved ({ rowKey, keyField }) {
+      return (row) => {
+        if (rowKey !== undefined && typeof rowKey === 'function') return rowKey(row)
+        else return row[keyField]
+      }
     },
-    resolveHeadClass (vm) {
-      return vm.isHeadClassFunction ? vm.headClass() : vm.headClass
+    cellClassResolved ({ bodyCellClass }) {
+      return ({ row }, { prop }) => {
+        if (bodyCellClass !== undefined && typeof bodyCellClass === 'function') return bodyCellClass(row, prop)
+        return bodyCellClass
+      }
     },
-    resolveBodyClass (vm) {
-      return vm.isBodyClassFunction ? vm.bodyClass() : vm.bodyClass
+    rowClassResolved ({ rowClass }) {
+      return (row, index) => {
+        if (rowClass !== undefined && typeof rowClass === 'function') return rowClass(row, index)
+        else return rowClass
+      }
+    },
+    resolveHeadClass ({ headClass }) {
+      if (headClass !== undefined && typeof headClass === 'function') return headClass()
+      return headClass
+    },
+    resolveBodyClass ({ bodyClass }) {
+      if (bodyClass !== undefined && typeof bodyClass === 'function') return bodyClass()
+      return bodyClass
     }
   }
 }

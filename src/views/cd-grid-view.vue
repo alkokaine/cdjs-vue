@@ -8,11 +8,15 @@
       <div class="cd-grid-view--header" slot="header" slot-scope="{ property }">
         <span>{{ property.datafield }}</span>
       </div>
-      <template slot-scope="{ row, property }">
-        <template v-if="property.isflag">
-          <div class="w-auto team-flag border border-1">
-            <img :src="row[property.datafield]" />
-          </div>
+      <template slot-scope="{ row, property, begin, end }">
+        <template v-if="begin"><span class="begin">{{ row }}</span></template>
+        <template v-else-if="end"><span class="end">{{ row }}</span></template>
+        <template v-else-if="property">
+          <template v-if="property.isflag">
+            <div class="w-auto team-flag border border-1">
+              <img :src="row[property.datafield]" />
+            </div>
+          </template>
         </template>
       </template>
     </cd-grid>
