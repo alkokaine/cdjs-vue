@@ -7,39 +7,38 @@
     :class="[{ 'w-auto': compact }]"
     :small="compact"
   >
-    <template slot-scope="{ header, row, property }">
-      <div
-        v-if="header"
-        class="cd-weekday--header"
-      >
-        <template v-if="selectWeekdays">
-          <el-checkbox :label="property.text" />
-        </template>
-        <template v-else>
-          {{ property.text }}
-        </template>
-      </div>
-      <div
-        v-else-if="row[property.datafield]"
-        class="cd-day--grid-cell"
-      >
-        <cd-day
-          class="cd-grid--day"
-          :day="getDay(row[property.datafield])" 
-          @click.native="selectDay($event, row[property.datafield], row)"
+    <div class="cd-weekday--header" slot="header" slot-scope="{ property }">
+      <template v-if="selectWeekdays">
+        <el-checkbox :label="property.text" />
+      </template>
+      <template v-else>
+        {{ property.text }}
+      </template>
+    </div>
+    <template slot-scope="{ row, property }">
+      <template v-if="property">
+        <div
+          v-if="property && row[property.datafield]"
+          class="cd-day--grid-cell"
         >
-          <span slot="header" />
-          <div
-            slot-scope="{ day }"
-            class="cd-day--cell-content text-center"
+          <cd-day
+            class="cd-grid--day"
+            :day="getDay(row[property.datafield])" 
+            @click.native="selectDay($event, row[property.datafield], row)"
           >
-            <slot
-              :day="day"
-              :week="row"
-            />
-          </div>
-        </cd-day>
-      </div>
+            <span slot="header" />
+            <div
+              slot-scope="{ day }"
+              class="cd-day--cell-content text-center"
+            >
+              <slot
+                :day="day"
+                :week="row"
+              />
+            </div>
+          </cd-day>
+        </div>
+      </template>
     </template>
   </cd-grid>
 </template>
