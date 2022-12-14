@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/home-view.vue'
+import CDGridView from '../views/cd-grid-view.vue'
 import CdPropsView from '../views/cd-props-view.vue'
 import CDTabsView from '../views/cd-tabs-view.vue'
 import CDListView from '../views/cd-list-view.vue'
@@ -15,6 +16,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/cd-grid',
+    name: 'cd-grid',
+    component: CDGridView
   },
   {
     path: '/cd-form',
