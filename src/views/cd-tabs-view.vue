@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import CDTabs from '@/components/cd-tabs.vue'
-import CDPropEditor from '@/components/cd-prop-editor'
+import { CDTabs, CDPropEditor } from '@/../dist/cdjs/cdjs.umd'
+
 export default {
   components:{
     'cd-tabs': CDTabs,
