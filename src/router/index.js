@@ -5,6 +5,7 @@ import CDGridView from '../views/cd-grid-view.vue'
 import CdPropsView from '../views/cd-props-view.vue'
 import CDTabsView from '../views/cd-tabs-view.vue'
 import CDListView from '../views/cd-list-view.vue'
+import CDMonthView from '../views/cd-month-view.vue'
 import CDFormView from '../views/cd-form-view.vue'
 import CDListFilterView from '../views/cd-list-filter-view.vue'
 import CDFormModelView from '../views/cd-form-model-view.vue'
@@ -18,14 +19,14 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/cd-grid',
-    name: 'cd-grid',
-    component: CDGridView
-  },
-  {
     path: '/cd-form',
     name: 'cd-form',
     component: CDFormView
+  },
+  {
+    path: '/cd-grid',
+    name: 'cd-grid',
+    component: CDGridView
   },
   {
     path: '/cd-props',
@@ -41,6 +42,11 @@ const routes = [
     path: '/cd-tabs',
     name: 'tabs',
     component: CDTabsView
+  },
+  {
+    path: '/cd-month',
+    name: 'cd-month',
+    component: CDMonthView
   },
   {
     path: '/cd-list-filter',
