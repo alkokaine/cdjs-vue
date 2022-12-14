@@ -4,6 +4,9 @@ import adapter from 'axios/lib/adapters/http'
 const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
 }
+import matchInfo from '@/assets/match-info'
+
+import keys from '@/../keys'
 
 export default {
   objectDescriptor: [
@@ -430,13 +433,14 @@ export default {
     textarea: 4,
     checkbox: false,
     date: new Date(Date.now()),
-    datetime: 7,
+    datetime: new Date(Date.now()),
     email: 'foo@bar.net',
     radio: 'no',
     tel: '+791113121488',
     url: 'bar.net',
     text: 'aaa',
-    file: null
+    file: null,
+    team: [],
   },
   inputs: [
     {
@@ -459,6 +463,19 @@ export default {
     },
     {
       input: 'select',
+      datafield: 'team',
+      text: 'team',
+      placeholder: 'team',
+      valuekey: 'id',
+      collapseTags: true,
+      clearable: true,
+      filterable: true,
+      values: matchInfo.teams,
+      labelkey: 'name_en',
+      multiple: true,
+    },
+    {
+      input: 'select',
       datafield: 'select2',
       text: 'select2',
       placeholder: 'select ...',
@@ -469,10 +486,7 @@ export default {
       keyfield: 'wikiDataId',
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       method: 'get',
-      headers: {
-        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
-        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-      },    
+      headers: keys.geo,    
       resolvePayload (query, payload) {
         return {
           namePrefix: query,
@@ -490,7 +504,7 @@ export default {
       text: 'autocomplete',
       labelkey: 'name',
       valuekey: 'wikiDataId',
-      triggerOnFocus: true,
+      triggerOnFocus: false,
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       //adapter: adapter,
       method: 'get',
@@ -502,10 +516,7 @@ export default {
           datafield: 'name'
         }
       ],
-      headers: {
-        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
-        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-      },    
+      headers: keys.geo,    
       resolvePayload (query, payload) {
         return {
           limit: 10
@@ -534,7 +545,9 @@ export default {
     {
       input: 'date',
       datafield: 'date',
-      text: 'date'
+      text: 'date',
+      format: 'dd MMMM yyyy',
+      valueformat: 'timestamp'
     },
     {
       input: 'datetime',

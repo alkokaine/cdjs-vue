@@ -2,6 +2,7 @@
 import fetchData from '@/common/fetch-data'
 import adapter from 'axios/lib/adapters/http'
 import { toBeArrayOfSize } from 'jest-extended'
+import keys from '@/../keys'
 expect.extend({ toBeArrayOfSize })
 const m_before = jest.fn((beforeconfig) => {
     return beforeconfig
