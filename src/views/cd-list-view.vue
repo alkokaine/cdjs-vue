@@ -34,14 +34,15 @@
 </template>
 
 <script>
-import CDList from '@/components/cd-list.vue'
+import cdjs from '@/../dist/cdjs/cdjs.common'
+
 import fetchData from '@/common/fetch-data'
 import adapter from 'axios/lib/adapters/http'
 import { geo } from '@/../keys'
 import { AxiosError } from 'axios'
 export default {
   components: {
-    'cd-list': CDList
+    'cd-list': cdjs.CDList
   },
   data (view) {
     return {

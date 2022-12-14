@@ -47,15 +47,14 @@
 </template>
 
 <script>
-import cdGrid from '@/components/cd-grid.vue'
-import CDPropEditor from '@/components/cd-prop-editor.vue'
 import descriptor from '@/assets/descriptors'
+import cdjs from '@/../dist/cdjs/cdjs.common'
 import matchInfo from '@/assets/match-info'
 export default {
   name: 'CdGridView',
   components: { 
-    'cd-grid': cdGrid,
-    'cd-prop-editor': CDPropEditor
+    'cd-grid': cdjs.CDGrid,
+    'cd-prop-editor': cdjs.CDPropEditor
   },
   data (view) {
     return {

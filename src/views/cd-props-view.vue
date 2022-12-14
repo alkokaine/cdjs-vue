@@ -16,12 +16,13 @@
 </template>
 ''
 <script>
-import CDProps from '@/components/cd-props.vue'
+import cdjs from '@/../dist/cdjs/cdjs.common'
+
 import assets from '@/assets/descriptors'
 export default {
   name: 'CdPropsView',
   components: {
-    'cd-props': CDProps
+    'cd-props': cdjs.CDProps
   },
   data (props) {
     return {

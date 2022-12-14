@@ -21,12 +21,12 @@
 
 <script>
 
-import { CDTabs, CDPropEditor } from '@/../dist/cdjs/cdjs.common'
+import cdjs from '@/../dist/cdjs/cdjs.common'
 
 export default {
   components:{
-    'cd-tabs': CDTabs,
-    'cd-prop-editor': CDPropEditor
+    'cd-tabs': cdjs.CDTabs,
+    'cd-prop-editor': cdjs.CDPropEditor
   },
   data (tabs) {
     return {

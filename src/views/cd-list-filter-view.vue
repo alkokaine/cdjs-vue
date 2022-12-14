@@ -183,17 +183,16 @@ row-class="city-tile m-2 p-2 border border-1 border-white bg-white rounded-3"
 import keys from '../../keys'
 import adapter from 'axios/lib/adapters/http'
 import fetchData from '@/common/fetch-data'
-import CDForm from '@/components/cd-form'
-import CDList from '@/components/cd-list'
-import CDProps from '@/components/cd-props'
+
 import AxiosError from 'axios/lib/core/AxiosError'
+import cdjs from '@/../dist/cdjs/cdjs.common'
 
 export default {
   name: 'CdListFilter',
   components: {
-    'cd-list': CDList,
-    'cd-form': CDForm,
-    'cd-props': CDProps
+    'cd-list': cdjs.CDList,
+    'cd-form': cdjs.CDForm,
+    'cd-props': cdjs.CDProps
   },
   props: {
     descriptor: { 

@@ -98,24 +98,22 @@
 </template>
 
 <script>
-import CDList from '@/components/cd-list.vue'
-import CDMonth from '@/components/cd-month.vue'
-import CDForm from '@/components/cd-form.vue'
 import MatchInfo from './match-info.vue'
-import CDPropEditor from '@/components/cd-prop-editor'
 import { createDate } from '@/common/month-days'
 import keys from '@/../keys'
+import cdjs from '@/../dist/cdjs/cdjs.common'
+
 import fetchData from '@/common/fetch-data'
 import info from '@/assets/match-info'
 import moment from 'moment'
 import Vue from 'vue'
 export default {
   components: {
-    'cd-month': CDMonth,
-    'cd-list': CDList,
-    'cd-prop-editor': CDPropEditor,
+    'cd-month': cdjs.CDMonth,
+    'cd-list': cdjs.CDList,
+    'cd-prop-editor': cdjs.CDPropEditor,
     'match-info': MatchInfo,
-    'cd-form': CDForm
+    'cd-form': cdjs.CDForm
   },
   data (view) {
     return {

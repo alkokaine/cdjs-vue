@@ -33,17 +33,17 @@
 </template>
 
 <script>
-import CDPropEditor from '@/components/cd-prop-editor.vue'
+import cdjs from '@/../dist/cdjs/cdjs.common'
+
+
 import descriptor from '@/assets/descriptors'
-import CDList from '@/components/cd-list.vue'
-import CDForm from '@/components/cd-form.vue'
-import CDRecList from '@/components/cd-rec-list.vue'
+
 import utils from '@/common/cd-vue-utils'
 export default {
   components: {
-    'cd-prop-editor': CDPropEditor,
-    'cd-rec-list': CDRecList,
-    'cd-list': CDList
+    'cd-prop-editor': cdjs.CDPropEditor,
+    'cd-rec-list': cdjs.CDRecList,
+    'cd-list': cdjs.CDList
   },
   data (view) {
     var props = utils.componentProperties(CDForm)

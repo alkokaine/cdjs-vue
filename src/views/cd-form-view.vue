@@ -25,11 +25,11 @@
 </template>
 
 <script>
-import CDForm from '@/components/cd-form.vue'
+import cdjs from '@/../dist/cdjs/cdjs.common'
 import example from '@/assets/descriptors'
 export default {
   components: {
-    'cd-form': CDForm
+    'cd-form': cdjs.CDForm
   },
   data (view) {
     return {
