@@ -5,25 +5,37 @@
         <div class="col">
           <div class="row">
             <div class="col">
-              <img :src="match.home_flag"/>
+              <img :src="match.home_flag">
             </div>
-            <div class="col">{{ homeTeam }}</div>
-            <div class="col">{{ match.home_score }}</div>
+            <div class="col">
+              {{ homeTeam }}
+            </div>
+            <div class="col">
+              {{ match.home_score }}
+            </div>
           </div>
           <div class="row match-scorers">
-            <div class="col">{{ match.home_scorers }}</div>
+            <div class="col">
+              {{ match.home_scorers }}
+            </div>
           </div>
         </div>
         <div class="col">
           <div class="row">
-            <div class="col">{{ match.away_score }}</div>
-            <div class="col">{{ awayTeam }}</div>
             <div class="col">
-              <img :src="match.away_flag"/>
+              {{ match.away_score }}
+            </div>
+            <div class="col">
+              {{ awayTeam }}
+            </div>
+            <div class="col">
+              <img :src="match.away_flag">
             </div>
           </div>
           <div class="row match-scorers">
-            <div class="col">{{ match.away_scorers }}</div>
+            <div class="col">
+              {{ match.away_scorers }}
+            </div>
           </div>
         </div>
       </div>

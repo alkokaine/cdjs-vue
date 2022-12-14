@@ -1,31 +1,80 @@
 <template>
   <div class="cd-form mt-4">
-    <slot name="header" :payload="formobject"></slot>
-    <el-form :model="formobject" ref="innerform" class="cd-form--content" :class="formClass" :rules="rules" @submit.native.prevent>
-      <cd-fieldset class="cd-fieldset--root container" :descriptor="descriptor" :payload="formobject" :is-disabled="resolveDisabled" :fieldConfig="fieldConfig">
-        <el-form-item class="text-start cd-form-item--wrap mb-0" slot-scope="{ property, config }" :prop="property.datafield" :rules="resolveRules(property)">
-          <slot :model="formobject" :property="property">
-            <span slot="label" class="fw-bold cd-form--label" :class="labelClass(property)">{{ property.text }}</span>
-            <cd-cell :fetch="fetch(property)" :property="property" 
-              v-model="formobject[property.datafield]" 
+    <slot
+      name="header"
+      :payload="formobject"
+    />
+    <el-form
+      ref="innerform"
+      :model="formobject"
+      class="cd-form--content"
+      :class="formClass"
+      :rules="rules"
+      @submit.native.prevent
+    >
+      <cd-fieldset
+        class="cd-fieldset--root container"
+        :descriptor="descriptor"
+        :payload="formobject"
+        :is-disabled="resolveDisabled"
+        :field-config="fieldConfig"
+      >
+        <el-form-item
+          slot-scope="{ property, config }"
+          class="text-start cd-form-item--wrap mb-0"
+          :prop="property.datafield"
+          :rules="resolveRules(property)"
+        >
+          <slot
+            :model="formobject"
+            :property="property"
+          >
+            <span
+              slot="label"
+              class="fw-bold cd-form--label"
+              :class="labelClass(property)"
+            >{{ property.text }}</span>
+            <cd-cell
+              v-model="formobject[property.datafield]"
+              :fetch="fetch(property)" 
+              :property="property" 
               :option-disabled="isOptionDisabled" 
-              :input="config" :class="[inputClass(property)]"
+              :input="config"
+              :class="[inputClass(property)]"
               :payload="resolvePayload(property)"
               :on-select="onSelect"
               :on-remove="onRemove"
               :on-clear="onClear"
               :on-change="onChange"
-              :on-input="onInput">
-            </cd-cell>
+              :on-input="onInput"
+            />
           </slot>
         </el-form-item>
       </cd-fieldset>
     </el-form>
-    <slot name="footer" :payload="formobject"></slot>
-    <div v-if="showControls" class="cd-form--buttons">
+    <slot
+      name="footer"
+      :payload="formobject"
+    />
+    <div
+      v-if="showControls"
+      class="cd-form--buttons"
+    >
       <slot name="controls">
-        <button class="el-button" type="submit" @click="validate(formobject, onSubmit)">Сохранить</button>
-        <button class="el-button" type="reset" @click="onReset">Отменить</button>
+        <button
+          class="el-button"
+          type="submit"
+          @click="validate(formobject, onSubmit)"
+        >
+          Сохранить
+        </button>
+        <button
+          class="el-button"
+          type="reset"
+          @click="onReset"
+        >
+          Отменить
+        </button>
       </slot>
     </div>
   </div>
@@ -38,7 +87,7 @@ import CDCell from './cd-cell.vue'
 import fetchData from '@/common/fetch-data'
 
 export default {
-  name: 'cd-form',
+  name: 'CdForm',
   components: {
     'cd-fieldset': CDFieldset,
     'cd-cell': CDCell
@@ -56,13 +105,6 @@ export default {
   data (form) {
     return {
       formobject: form.sync ? form.payload : structuredClone(form.payload)
-    }
-  },
-  watch: {
-    payload: {
-      handler (newvalue) {
-        this.formobject = this.sync ? newvalue : structuredClone(newvalue)
-      }
     }
   },
   computed: {
@@ -170,6 +212,13 @@ export default {
         url: input === 'url',
         file: input === 'file'
       })
+    }
+  },
+  watch: {
+    payload: {
+      handler (newvalue) {
+        this.formobject = this.sync ? newvalue : structuredClone(newvalue)
+      }
     }
   },
   methods: {

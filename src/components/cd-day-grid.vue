@@ -1,20 +1,42 @@
 <template>
-  <cd-grid class="cd-days--grid container" :collection="weeks" :descriptor="descriptor" key-field="week" :class="[{ 'w-auto': compact }]" :small="compact">
+  <cd-grid
+    class="cd-days--grid container"
+    :collection="weeks"
+    :descriptor="descriptor"
+    key-field="week"
+    :class="[{ 'w-auto': compact }]"
+    :small="compact"
+  >
     <template slot-scope="{ header, row, property }">
-      <div v-if="header" class="cd-weekday--header">
+      <div
+        v-if="header"
+        class="cd-weekday--header"
+      >
         <template v-if="selectWeekdays">
-          <el-checkbox :label="property.text"></el-checkbox>
+          <el-checkbox :label="property.text" />
         </template>
         <template v-else>
           {{ property.text }}
         </template>
       </div>
-      <div v-else-if="row[property.datafield]" class="cd-day--grid-cell">
-        <cd-day class="cd-grid--day" :day="getDay(row[property.datafield])" 
-          v-on:click.native="selectDay($event, row[property.datafield], row)">
-          <span slot="header"></span>
-          <div slot-scope="{ day }" class="cd-day--cell-content text-center">
-            <slot :day="day" :week="row"></slot>
+      <div
+        v-else-if="row[property.datafield]"
+        class="cd-day--grid-cell"
+      >
+        <cd-day
+          class="cd-grid--day"
+          :day="getDay(row[property.datafield])" 
+          @click.native="selectDay($event, row[property.datafield], row)"
+        >
+          <span slot="header" />
+          <div
+            slot-scope="{ day }"
+            class="cd-day--cell-content text-center"
+          >
+            <slot
+              :day="day"
+              :week="row"
+            />
           </div>
         </cd-day>
       </div>
@@ -28,7 +50,7 @@ import { weekDescriptor } from '@/common/month-days'
 import CdDay from './cd-day.vue'
 
 export default {
-  name: 'cd-day-grid',
+  name: 'CdDayGrid',
   components: {
     'cd-grid': CDGrid,
     CdDay

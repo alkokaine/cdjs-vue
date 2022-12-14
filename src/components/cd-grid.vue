@@ -1,40 +1,99 @@
 <template>
   <div class="cd-grid">
-    <div v-if="$slots.tuner" class="cd-grid--tuner">
-      <slot name="tuner"></slot>
+    <div
+      v-if="$slots.tuner"
+      class="cd-grid--tuner"
+    >
+      <slot name="tuner" />
     </div>
-    <table :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm w-auto': small }, borderClass]"
-      class="cd-grid--table table border-bottom">
-      <caption v-if="$slots.caption" class="cd-grid--caption"><slot name="caption"/></caption>
-      <cd-grid-head v-if="showHeader" :columns="columns" :select-rows="selectRows" :head-class="headClass" :cell-class="headCellClass"
-        :class="resolveHeadClass">
+    <table
+      :class="[{ 'table-striped' : zebraRows, 'table-striped-columns': zebraCols, 'table-hover': highlightOnHover, 'table-sm w-auto': small }, borderClass]"
+      class="cd-grid--table table border-bottom"
+    >
+      <caption
+        v-if="$slots.caption"
+        class="cd-grid--caption"
+      >
+        <slot name="caption" />
+      </caption>
+      <cd-grid-head
+        v-if="showHeader"
+        :columns="columns"
+        :select-rows="selectRows"
+        :head-class="headClass"
+        :cell-class="headCellClass"
+        :class="resolveHeadClass"
+      >
         <template slot-scope="{ property }">
-          <slot name="header" :property="property">{{ property.text }}</slot>
+          <slot
+            name="header"
+            :property="property"
+          >
+            {{ property.text }}
+          </slot>
         </template>
       </cd-grid-head>
-      <cd-grid-body :borders="borders" :collection="collection" :class="resolveBodyClass" :select-rows="selectRows" :columns="columns" :row-key="rowKeyResolved"
-        :key-field="keyField" :row-details="rowDetails" :row-class="rowClass" :cell-class="cellClassResolved">
-        <span slot-scope="{ begin, end, row, property, rowdetails, rowindex, propindex }" class="cd-cell--content">
+      <cd-grid-body
+        :borders="borders"
+        :collection="collection"
+        :class="resolveBodyClass"
+        :select-rows="selectRows"
+        :columns="columns"
+        :row-key="rowKeyResolved"
+        :key-field="keyField"
+        :row-details="rowDetails"
+        :row-class="rowClass"
+        :cell-class="cellClassResolved"
+      >
+        <span
+          slot-scope="{ begin, end, row, property, rowdetails, rowindex, propindex }"
+          class="cd-cell--content"
+        >
           <template v-if="property">
-            <slot :property="property" :row="row" :$rowindex="rowindex" :$propindex="propindex">
+            <slot
+              :property="property"
+              :row="row"
+              :$rowindex="rowindex"
+              :$propindex="propindex"
+            >
               {{ row[property.datafield] }}
             </slot>
           </template>
           <template v-else-if="rowdetails">
-            <slot :rowdetails="rowdetails" :row="row" $rowindex="rowindex"></slot>
+            <slot
+              :rowdetails="rowdetails"
+              :row="row"
+              $rowindex="rowindex"
+            />
           </template>
           <template v-else-if="begin">
-            <slot :begin="true" :row="row" :rowindex="rowindex"></slot>
+            <slot
+              :begin="true"
+              :row="row"
+              :rowindex="rowindex"
+            />
           </template>
           <template v-else-if="end">
-            <slot :end="true" :row="row" :rowindex="rowindex"></slot>
+            <slot
+              :end="true"
+              :row="row"
+              :rowindex="rowindex"
+            />
           </template>
         </span>
-        <span slot="empty" class="cd-grid--no-data">
+        <span
+          slot="empty"
+          class="cd-grid--no-data"
+        >
           <slot name="no-data">Нет данных</slot>
         </span>
       </cd-grid-body>
-      <tfoot v-if="$slots.footer" class="cd-grid--footer"><slot name="footer"/></tfoot>
+      <tfoot
+        v-if="$slots.footer"
+        class="cd-grid--footer"
+      >
+        <slot name="footer" />
+      </tfoot>
     </table>
   </div>
 </template>
@@ -45,7 +104,7 @@ import CdGridBody from './cd-grid-body.vue'
 import CdGridHead from './cd-grid-head.vue'
 
 export default {
-  name: 'cd-grid',
+  name: 'CdGrid',
   components: {
     'cd-grid-body': CdGridBody,
     'cd-grid-head': CdGridHead
@@ -73,8 +132,6 @@ export default {
   data (grid) {
     return {
     }
-  },
-  methods: {
   },
   computed: {
     borderClass ({ borders }) {
@@ -113,6 +170,8 @@ export default {
       if (bodyClass !== undefined && typeof bodyClass === 'function') return bodyClass()
       return bodyClass
     }
+  },
+  methods: {
   }
 }
 </script>

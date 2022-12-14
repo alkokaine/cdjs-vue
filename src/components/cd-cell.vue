@@ -1,31 +1,60 @@
 <template>
-  <div class="cd-cell" :class="[{ 'cd-slide--wrap': input.range, 'el-textarea': input.textarea, 'el-input': !(input.select || input.autocomplete || input.checkbox) }, cellClassResolved]">
+  <div
+    class="cd-cell"
+    :class="[{ 'cd-slide--wrap': input.range, 'el-textarea': input.textarea, 'el-input': !(input.select || input.autocomplete || input.checkbox) }, cellClassResolved]"
+  >
     <template v-if="input.number">
-      <input :placeholder="property.placeholder" type="number" 
+      <input
+        :placeholder="property.placeholder"
+        type="number" 
         class="el-input__inner cd-input__inner" 
-        :min="property.min" :max="property.max" 
-        :value="value" :disabled="disabled"
-        @change="onCellChange({ $event, property }, onChange)"/>
+        :min="property.min"
+        :max="property.max" 
+        :value="value"
+        :disabled="disabled"
+        @change="onCellChange({ $event, property }, onChange)"
+      >
     </template>
     <template v-else-if="input.select">
-      <el-select class="cd-select" :placeholder="property.placeholder"
-        :remote="property.remote" :filterable="property.filterable"
-        :value="value" :disabled="disabled" :clearable="property.clearable"
-        :multiple="property.multiple" :collapse-tags="property.collapseTags"
-        :value-key="property.valuekey" :label-key="property.labelkey"
-        v-on:remove-tag="onTagRemove({ $event, value, property }, onRemove)" 
-        v-on:clear="onCellClear({ $event, property }, onClear)"
-        :remote-method="query => fetch(query, resolveOptions)">
-        <cd-list class="cd-select--options" row-class="cd-option" 
+      <el-select
+        class="cd-select"
+        :placeholder="property.placeholder"
+        :remote="property.remote"
+        :filterable="property.filterable"
+        :value="value"
+        :disabled="disabled"
+        :clearable="property.clearable"
+        :multiple="property.multiple"
+        :collapse-tags="property.collapseTags"
+        :value-key="property.valuekey"
+        :label-key="property.labelkey"
+        :remote-method="query => fetch(query, resolveOptions)" 
+        @remove-tag="onTagRemove({ $event, value, property }, onRemove)"
+        @clear="onCellClear({ $event, property }, onClear)"
+      >
+        <cd-list
+          class="cd-select--options"
+          row-class="cd-option" 
           :list-class="['list-unstyled', property.listClass]"
-          :collection="collection" :payload="payload"
-          :key-field="property.valuekey">
-          <el-option slot-scope="{ row }" :value="row[property.valuekey]"
-            :label="row[property.labelkey]" :disabled="optionDisabled(row, property.isdisabled)"
-            v-on:click.native="onOptionSelect({ $event, item: row, property }, onSelect)">
+          :collection="collection"
+          :payload="payload"
+          :key-field="property.valuekey"
+        >
+          <el-option
+            slot-scope="{ row }"
+            :value="row[property.valuekey]"
+            :label="row[property.labelkey]"
+            :disabled="optionDisabled(row, property.isdisabled)"
+            @click.native="onOptionSelect({ $event, item: row, property }, onSelect)"
+          >
             <template v-if="property.slotdescriptor">
-              <cd-props :descriptor="property.slotdescriptor" :payload="row">
-                <div slot-scope="prop">{{ prop }}</div>
+              <cd-props
+                :descriptor="property.slotdescriptor"
+                :payload="row"
+              >
+                <div slot-scope="prop">
+                  {{ prop }}
+                </div>
               </cd-props>
             </template>
             <template v-else>
@@ -36,71 +65,137 @@
       </el-select>
     </template>
     <template v-else-if="input.autocomplete">
-      <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder"
-        :value="value" :fetch-suggestions="fetch" :disabled="disabled"
-        :clearable="property.clearable" :value-key="property.valuekey"
+      <el-autocomplete
+        class="cd-autocomplete"
+        :placeholder="property.placeholder"
+        :value="value"
+        :fetch-suggestions="fetch"
+        :disabled="disabled"
+        :clearable="property.clearable"
+        :value-key="property.valuekey"
         :trigger-on-focus="property.triggerOnFocus"
-        v-on:clear="onCellClear({ $event, property }, onClear)"
-        v-on:input="onCellChange({ $event, property }, onChange)">
-        <div class="cd-autocomplete-item--wrap" slot-scope="{ item }"
-          v-on:click.capture="onOptionSelect({ $event, item, property }, onSelect)">
-          <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item"
-            :descriptor="property.slotdescriptor" :payload="item">
-            <div slot-scope="{ value }">{{ value }}</div>
+        @clear="onCellClear({ $event, property }, onClear)"
+        @input="onCellChange({ $event, property }, onChange)"
+      >
+        <div
+          slot-scope="{ item }"
+          class="cd-autocomplete-item--wrap"
+          @click.capture="onOptionSelect({ $event, item, property }, onSelect)"
+        >
+          <cd-props
+            v-if="property.slotdescriptor"
+            class="cd-autocomplete--item"
+            :descriptor="property.slotdescriptor"
+            :payload="item"
+          >
+            <div slot-scope="{ value }">
+              {{ value }}
+            </div>
           </cd-props>
           <span v-else>{{ item[property.labelkey] }}</span>
         </div>
       </el-autocomplete>
     </template>
     <template v-else-if="input.textarea">
-      <textarea class="el-textarea__inner" :value="value" 
-        @change="onCellChange({ $event, property }, onChange)" 
-        :disabled="disabled"></textarea>
+      <textarea
+        class="el-textarea__inner"
+        :value="value" 
+        :disabled="disabled" 
+        @change="onCellChange({ $event, property }, onChange)"
+      />
     </template>
     <template v-else-if="input.checkbox">
-      <el-checkbox class="cd-checkbox" :value="value" :disabled="disabled" v-on:change="onCellChange({ $event, property }, onChange)"></el-checkbox>
+      <el-checkbox
+        class="cd-checkbox"
+        :value="value"
+        :disabled="disabled"
+        @change="onCellChange({ $event, property }, onChange)"
+      />
     </template>
     <template v-else-if="input.date">
-      <el-date-picker class="cd-date" :placeholder="property.placeholder" :format="property.format" :value-format="property.valueformat"
-        :value="value" :disabled="disabled" :clearable="property.clearable"
-        v-on:clear="onCellClear({ $event, property }, onClear)"
-        v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
+      <el-date-picker
+        class="cd-date"
+        :placeholder="property.placeholder"
+        :format="property.format"
+        :value-format="property.valueformat"
+        :value="value"
+        :disabled="disabled"
+        :clearable="property.clearable"
+        @clear="onCellClear({ $event, property }, onClear)"
+        @input="onCellChange({ $event, property }, onChange)"
+      />
     </template>
     <template v-else-if="input.datetime">
-      <el-date-picker class="cd-date-time" :placeholder="property.placeholder"
-        type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"
-        v-on:clear="onCellClear({ $event, property }, onClear)"
-        v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
+      <el-date-picker
+        class="cd-date-time"
+        :placeholder="property.placeholder"
+        type="datetime"
+        :value="value"
+        :disabled="disabled"
+        :clearable="property.clearable"
+        @clear="onCellClear({ $event, property }, onClear)"
+        @input="onCellChange({ $event, property }, onChange)"
+      />
     </template>
     <template v-else-if="input.email">
-      <input type="email" class="el-input__inner cd-input__inner" 
-        :placeholder="property.placeholder" :value="value" :disabled="disabled"
-        @change="onCellChange({ $event, property }, onChange)"/>
+      <input
+        type="email"
+        class="el-input__inner cd-input__inner" 
+        :placeholder="property.placeholder"
+        :value="value"
+        :disabled="disabled"
+        @change="onCellChange({ $event, property }, onChange)"
+      >
     </template>
-    <template v-else-if="input.radio"></template>
+    <template v-else-if="input.radio" />
     <template v-else-if="input.range">
-      <input type="range" class="cd-slider align-middle" 
-        :min="property.min" :max="property.max" :value="value" :step="property.step"
-        @change="onCellChange({ $event, property}, onChange)"/> 
+      <input
+        type="range"
+        class="cd-slider align-middle" 
+        :min="property.min"
+        :max="property.max"
+        :value="value"
+        :step="property.step"
+        @change="onCellChange({ $event, property}, onChange)"
+      > 
     </template>
     <template v-else-if="input.tel">
-      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder"
-        type="tel" :value="value" :disabled="disabled"
-        @change="onCellChange({ $event, property}, onChange)"/>
+      <input
+        class="el-input__inner cd-input__inner"
+        :placeholder="property.placeholder"
+        type="tel"
+        :value="value"
+        :disabled="disabled"
+        @change="onCellChange({ $event, property}, onChange)"
+      >
     </template>
     <template v-else-if="input.url">
-      <input class="el-input__inner cd-input__inner" :placeholder="property.placeholder"
-        type="url" :value="value" :disabled="disabled"
-        @change="onCellChange({ $event, property}, onChange)"/>
+      <input
+        class="el-input__inner cd-input__inner"
+        :placeholder="property.placeholder"
+        type="url"
+        :value="value"
+        :disabled="disabled"
+        @change="onCellChange({ $event, property}, onChange)"
+      >
     </template>
     <template v-else-if="input.file">
-      <input class="el-input__inner cd-input__inner" type="file" :value="value" 
-        :disabled="disabled"/>
+      <input
+        class="el-input__inner cd-input__inner"
+        type="file"
+        :value="value" 
+        :disabled="disabled"
+      >
     </template>
     <template v-else>
-      <input type="text" class="el-input__inner cd-input__inner" :placeholder="property.placeholder" 
-        :value="value" :disabled="disabled"
-        @change="onCellChange({ $event, property }, onChange)"/>
+      <input
+        type="text"
+        class="el-input__inner cd-input__inner"
+        :placeholder="property.placeholder" 
+        :value="value"
+        :disabled="disabled"
+        @change="onCellChange({ $event, property }, onChange)"
+      >
     </template>
   </div>
 </template>
@@ -108,7 +203,11 @@
   import CDList from './cd-list.vue'
   import CDProps from './cd-props.vue'
   export default {
-    name: 'cd-cell',
+    name: 'CdCell',
+    components: {
+      'cd-list': CDList,
+      'cd-props': CDProps
+    },
     props: {
       input: { type: Object },
       cellClass: { type: [Array, Object, String, Function] },
@@ -130,10 +229,6 @@
       onRemove: { type: Function },
       onChange: { type: Function },
       onInput: { type: Function }
-    },
-    components: {
-      'cd-list': CDList,
-      'cd-props': CDProps
     },
     data (cell) {
       return {

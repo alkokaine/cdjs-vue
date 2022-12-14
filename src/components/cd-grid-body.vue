@@ -1,44 +1,100 @@
 <template>
-  <tbody v-loading="isLoading" class="cd-grid--body">
+  <tbody
+    v-loading="isLoading"
+    class="cd-grid--body"
+  >
     <template v-for="(row, rindex) in collection">
-      <cd-row :row-key="rowKey(row, rindex)" :key="rowKey(row,rindex)" class="cd-body-row" 
-        :class="[ isRowClassFunction ? rowClass(row, rindex) : rowClass]">
-        <td v-if="selectRows" slot="select" class="cd-checkbox--cell">
-          <input type="checkbox" class="cd-grid--checkbox"/>
+      <cd-row
+        :key="rowKey(row,rindex)"
+        :row-key="rowKey(row, rindex)"
+        class="cd-body-row" 
+        :class="[ isRowClassFunction ? rowClass(row, rindex) : rowClass]"
+      >
+        <td
+          v-if="selectRows"
+          slot="select"
+          class="cd-checkbox--cell"
+        >
+          <input
+            type="checkbox"
+            class="cd-grid--checkbox"
+          >
         </td>
-        <td class="cd-cell--placeholder" slot="begin">
-          <slot :begin="true" :row="row" :rowindex="rindex"></slot>
+        <td
+          slot="begin"
+          class="cd-cell--placeholder"
+        >
+          <slot
+            :begin="true"
+            :row="row"
+            :rowindex="rindex"
+          />
         </td>
         <template v-if="columns.length">
-          <td v-for="(prop, cindex) in columns" :ref="propCellKey(prop, cindex)"
-          :id="propCellKey(prop, rindex, cindex)" :key="propCellKey(prop, rindex, cindex)"
-          class="cd-grid--cell" :class="[prop.cellClass, isCellClassFunction ? cellClass({ row, rindex }, { prop, cindex }) : cellClass]">
-            <slot :row="row" :rowindex="rindex" :property="prop" :propindex="cindex">
+          <td
+            v-for="(prop, cindex) in columns"
+            :id="propCellKey(prop, rindex, cindex)"
+            :ref="propCellKey(prop, cindex)"
+            :key="propCellKey(prop, rindex, cindex)"
+            class="cd-grid--cell"
+            :class="[prop.cellClass, isCellClassFunction ? cellClass({ row, rindex }, { prop, cindex }) : cellClass]"
+          >
+            <slot
+              :row="row"
+              :rowindex="rindex"
+              :property="prop"
+              :propindex="cindex"
+            >
               {{ row[prop.datafield] }}
             </slot>
           </td>
         </template>
         <template v-else>
           <td class="cd-grid--cell">
-            <slot :row="row" :rowindex="rindex" :empty="true">
+            <slot
+              :row="row"
+              :rowindex="rindex"
+              :empty="true"
+            >
               {{ row }}
             </slot>
           </td>
         </template>
-        <td class="cd-cell--placeholder" slot="end">
-          <slot :end="true" :row="row" :rowindex="rindex"></slot>
+        <td
+          slot="end"
+          class="cd-cell--placeholder"
+        >
+          <slot
+            :end="true"
+            :row="row"
+            :rowindex="rindex"
+          />
         </td>
       </cd-row>
-      <tr v-if="rowDetails" :key="appendix(rowKey(row))" class="cd-row--details">
-        <td class="cd-grid-row--expanded" :colspan="columnstotal">
-          <slot :rowdetails="true" :row="row" :rowindex="rindex"/>
+      <tr
+        v-if="rowDetails"
+        :key="appendix(rowKey(row))"
+        class="cd-row--details"
+      >
+        <td
+          class="cd-grid-row--expanded"
+          :colspan="columnstotal"
+        >
+          <slot
+            :rowdetails="true"
+            :row="row"
+            :rowindex="rindex"
+          />
         </td>
       </tr>
     </template>
     <template v-if="empty">
       <tr class="empty-row">
-        <td :colspan="columnstotal" class="empty-cell">
-          <slot name="empty"></slot>
+        <td
+          :colspan="columnstotal"
+          class="empty-cell"
+        >
+          <slot name="empty" />
         </td>
       </tr>
     </template>
@@ -50,7 +106,7 @@
   import { Loading } from 'element-ui'
   Vue.use(Loading)
   export default {
-    name: 'cd-grid-body',
+    name: 'CdGridBody',
     components: {
       'cd-row': CDRow
     },
@@ -75,11 +131,6 @@
         isCellClassFunction: typeof body.cellClass === 'function'
       }
     },
-    methods: {
-      appendix (key) {
-        return `${key}_apx`
-      },
-    },
     computed: {
       propCellKey () {
         return (prop, ri, pi) => `cell_${ri}_${pi}`
@@ -90,6 +141,11 @@
       empty ({ length }) {
         return length === undefined || length === 0
       }
+    },
+    methods: {
+      appendix (key) {
+        return `${key}_apx`
+      },
     }
   }
 </script>

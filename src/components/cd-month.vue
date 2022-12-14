@@ -1,24 +1,42 @@
 <template>
   <div class="cd-month--wrapper container">
-    <slot name="month-header"></slot>
+    <slot name="month-header" />
     <template v-if="ischedule">
-      <cd-day-grid class="cd-month" key-field="week" :compact="compact"
-        :week-range="weekRange" :days="keyedDays" :compare-date="compareDate" :select-day="onDaySelect"
-        :select-weekdays="selectWeekdays" :multiple="multiple"> 
+      <cd-day-grid
+        class="cd-month"
+        key-field="week"
+        :compact="compact"
+        :week-range="weekRange"
+        :days="keyedDays"
+        :compare-date="compareDate"
+        :select-day="onDaySelect"
+        :select-weekdays="selectWeekdays"
+        :multiple="multiple"
+      > 
         <div slot-scope="{ day, week }">
-          <slot :day="day" :week="week"></slot>
+          <slot
+            :day="day"
+            :week="week"
+          />
         </div>
       </cd-day-grid>
     </template>
     <template v-else>
-      <cd-day-tabs class="cd-month" :days="keyedDays" :select-day="onDaySelect" :orientation="orientation" 
-        :compare-date="compareDate" :multiple="multiple" :selected-days="selectedDays">
+      <cd-day-tabs
+        class="cd-month"
+        :days="keyedDays"
+        :select-day="onDaySelect"
+        :orientation="orientation" 
+        :compare-date="compareDate"
+        :multiple="multiple"
+        :selected-days="selectedDays"
+      >
         <div slot-scope="{ day }">
-          <slot :day="day"></slot>
+          <slot :day="day" />
         </div>
       </cd-day-tabs>
     </template>
-    <slot name="month-footer"></slot>
+    <slot name="month-footer" />
   </div>
 </template>
 
@@ -29,7 +47,7 @@ import CDDayGrid from '@/components/cd-day-grid.vue'
 import CDDayTabs from '@/components/cd-day-tabs.vue'
 
 export default {
-  name: 'cd-month',
+  name: 'CdMonth',
   components: {
     'cd-day-grid': CDDayGrid,
     'cd-day-tabs': CDDayTabs
@@ -60,20 +78,6 @@ export default {
       selectedWeekdays: [],
       selectedDays: [],
       editEvent: Object
-    }
-  },
-  methods: {
-    onDaySelect ($event, day, week) {
-      const findIndex = this.selectedDays.findIndex(d => d.daykey === day.daykey)
-      if (findIndex == -1) {
-        if (this.multiple) {
-          this.selectedDays.push(day)
-        } else {
-          this.selectedDays = [day]
-        }
-      } else {
-        this.selectedDays.splice(findIndex, 1)
-      }
     }
   },
   computed: {
@@ -126,6 +130,20 @@ export default {
       const calendar = this
       return ({ row }) => {
         return calendar.selectedDays.findIndex(d => d.date.date() === row.date.date() && d.date.month() === row.date.month()) >= 0
+      }
+    }
+  },
+  methods: {
+    onDaySelect ($event, day, week) {
+      const findIndex = this.selectedDays.findIndex(d => d.daykey === day.daykey)
+      if (findIndex == -1) {
+        if (this.multiple) {
+          this.selectedDays.push(day)
+        } else {
+          this.selectedDays = [day]
+        }
+      } else {
+        this.selectedDays.splice(findIndex, 1)
       }
     }
   }

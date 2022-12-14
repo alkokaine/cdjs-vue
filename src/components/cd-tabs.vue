@@ -1,45 +1,84 @@
 <template>
-  <cd-list class="cd-tabs container" :class="{ 'row': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
+  <cd-list
+    class="cd-tabs container"
+    :class="{ 'row': isCol, 'col': isRow}"
+    :collection="tabs"
+    :key-field="tabKey" 
     :list-class="['cd-tabs--wrap list-unstyled nav nav-tabs border-0 px-0', tabListClass,
-      { 
-        'flex-column w-auto': isCol, 
-        'd-flex w-100' :isRow,
-        'ps-0': inRight,
-        'pe-0': inLeft,
-      }]" :row-class="['cd-tab--wrap nav-item', { 'd-flex': isRow }]" list-role="tablist" item-role="tab">
-    <template v-if="isHeaderContent" slot="header">
-      <div class="cd-tabs--content container tab-content border container-fluid px-2" :class="[{ 'col': isCol }, innerClass.content]">
-        <slot name="content"></slot>
+                  { 
+                    'flex-column w-auto': isCol, 
+                    'd-flex w-100' :isRow,
+                    'ps-0': inRight,
+                    'pe-0': inLeft,
+                  }]"
+    :row-class="['cd-tab--wrap nav-item', { 'd-flex': isRow }]"
+    list-role="tablist"
+    item-role="tab"
+  >
+    <template
+      v-if="isHeaderContent"
+      slot="header"
+    >
+      <div
+        class="cd-tabs--content container tab-content border container-fluid px-2"
+        :class="[{ 'col': isCol }, innerClass.content]"
+      >
+        <slot name="content" />
       </div>
     </template>
-    <div class="sring-start" :class="{
-      'border-end': inLeft,
-      'border-start': inRight,
-      'border-bottom': inHeader,
-      'border-top': inFooter
-    }" slot="pre">
-      <div :class="{ 'w-1': isRow, 'h-1': isCol }"/>
+    <div
+      slot="pre"
+      class="sring-start"
+      :class="{
+        'border-end': inLeft,
+        'border-start': inRight,
+        'border-bottom': inHeader,
+        'border-top': inFooter
+      }"
+    >
+      <div :class="{ 'w-1': isRow, 'h-1': isCol }" />
     </div>
-    <a class="nav-link p-0 cd-tab border-0 mb-0" data-toggle="tab" slot-scope="{ row, index }" :href="`#${row[tabKey]}`">
-      <div v-on:click.capture="onTabSelect($event, row)" class="cd-tab--header p-2 border rounded-0" 
-        :class="[row.class, innerClass.rounded, isActive(row) ? ['active', innerClass.activeBorder] : innerClass.border]">
-        <slot :tab="row" :index="index">
+    <a
+      slot-scope="{ row, index }"
+      class="nav-link p-0 cd-tab border-0 mb-0"
+      data-toggle="tab"
+      :href="`#${row[tabKey]}`"
+    >
+      <div
+        class="cd-tab--header p-2 border rounded-0"
+        :class="[row.class, innerClass.rounded, isActive(row) ? ['active', innerClass.activeBorder] : innerClass.border]" 
+        @click.capture="onTabSelect($event, row)"
+      >
+        <slot
+          :tab="row"
+          :index="index"
+        >
           <span class="cd-tab--header-default">{{ resolveTabCaption(row) }}</span>
         </slot>
       </div>
     </a>
-    <div class="spring-end d-flex p-2" slot="post" :class="{
-      'flex-grow-1': isRow,
-      'border-end': inLeft,
-      'border-start': inRight,
-      'border-bottom': inHeader,
-      'border-top': inFooter
-    }">
-      <div :class="{ 'w-1': isRow, 'h-1': isCol }"/>
+    <div
+      slot="post"
+      class="spring-end d-flex p-2"
+      :class="{
+        'flex-grow-1': isRow,
+        'border-end': inLeft,
+        'border-start': inRight,
+        'border-bottom': inHeader,
+        'border-top': inFooter
+      }"
+    >
+      <div :class="{ 'w-1': isRow, 'h-1': isCol }" />
     </div>
-    <template v-if="isFooterContent" slot="footer">
-      <div class="cd-tabs--content container tab-content border container-fluid px-2" :class="[{ 'col': isCol }, innerClass.content]">
-        <slot name="content"></slot>
+    <template
+      v-if="isFooterContent"
+      slot="footer"
+    >
+      <div
+        class="cd-tabs--content container tab-content border container-fluid px-2"
+        :class="[{ 'col': isCol }, innerClass.content]"
+      >
+        <slot name="content" />
       </div>
     </template>
   </cd-list>
@@ -48,7 +87,7 @@
 <script>
 import CDList from './cd-list.vue'
 export default {
-  name: 'cd-tabs',
+  name: 'CdTabs',
   components: {
     'cd-list': CDList
   },

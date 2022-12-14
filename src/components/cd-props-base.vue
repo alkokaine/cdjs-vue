@@ -1,12 +1,27 @@
 <template>
-  <cd-list class="cd-properties" :collection="descriptor" key-field="datafield" row-class="cd-property--descriptor" :is-row-visible="isPropertyVisible"
-    :list-class="['list-unstyled cd-properties--list', propClass ]">
+  <cd-list
+    class="cd-properties"
+    :collection="descriptor"
+    key-field="datafield"
+    row-class="cd-property--descriptor"
+    :is-row-visible="isPropertyVisible"
+    :list-class="['list-unstyled cd-properties--list', propClass ]"
+  >
     <template slot="header">
-      <slot name="text"></slot>
+      <slot name="text" />
     </template>
-    <slot slot-scope="{ row, index }" :property="row" :parent="owner" :config="config(row)" :index="index"/>
-    <div v-if="$slots.content" slot="footer">
-      <slot name="content"></slot>
+    <slot
+      slot-scope="{ row, index }"
+      :property="row"
+      :parent="owner"
+      :config="config(row)"
+      :index="index"
+    />
+    <div
+      v-if="$slots.content"
+      slot="footer"
+    >
+      <slot name="content" />
     </div>
   </cd-list>
 </template>
@@ -15,7 +30,7 @@
 import CDList from './cd-list.vue'
 import decorator from '@/common/property-decorator'
 export default {
-  name: 'cd-props-base',
+  name: 'CdPropsBase',
   components: {
     'cd-list': CDList
   },

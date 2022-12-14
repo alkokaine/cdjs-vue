@@ -1,18 +1,44 @@
 <template>
-  <cd-tabs class="cd-day-tabs container" :tabs="days" tab-key="daykey" 
-    :orientation="orientation" :tab-list-class="{ 'align-items-end': inLeft, 'align-items-start': inRight }" 
-    :on-tab-select="selectDay">
-    <div class="cd-day--wrap cd-day--tab" :class="[{ 'mw-100': isCol }]" slot-scope="{ tab }">
+  <cd-tabs
+    class="cd-day-tabs container"
+    :tabs="days"
+    tab-key="daykey" 
+    :orientation="orientation"
+    :tab-list-class="{ 'align-items-end': inLeft, 'align-items-start': inRight }" 
+    :on-tab-select="selectDay"
+  >
+    <div
+      slot-scope="{ tab }"
+      class="cd-day--wrap cd-day--tab"
+      :class="[{ 'mw-100': isCol }]"
+    >
       <span slot="header">{{ tabCaption(tab) }}</span>
     </div>
-    <div slot="content" class="p-2 m-2">
-      <cd-list :collection="selectedDays" key-field="daykey" list-class="list-unstyled" row-class="month-day--details row">
-        <cd-day slot-scope="{ row }" :day="getDay(row)">
-          <div class="cd-day--details fw-bold" slot="header">
+    <div
+      slot="content"
+      class="p-2 m-2"
+    >
+      <cd-list
+        :collection="selectedDays"
+        key-field="daykey"
+        list-class="list-unstyled"
+        row-class="month-day--details row"
+      >
+        <cd-day
+          slot-scope="{ row }"
+          :day="getDay(row)"
+        >
+          <div
+            slot="header"
+            class="cd-day--details fw-bold"
+          >
             {{ tabCaption(row) }}
           </div>
-          <div slot-scope="{ day }" class="cd-day-content--wrap">
-            <slot :day="day"></slot>
+          <div
+            slot-scope="{ day }"
+            class="cd-day-content--wrap"
+          >
+            <slot :day="day" />
           </div>
         </cd-day>
       </cd-list>
@@ -26,7 +52,7 @@ import CDDay from '@/components/cd-day.vue'
 import CDList from '@/components/cd-list.vue'
 const formatter = Intl.DateTimeFormat('ru-RU')
 export default {
-  name: 'cd-day-tabs',
+  name: 'CdDayTabs',
   components: {
     'cd-tabs': CDTabs,
     'cd-day': CDDay,

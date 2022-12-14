@@ -1,8 +1,16 @@
 <template>
-  <cd-grid :collection="properties" key-field="name" :descriptor="descriptor">
-    <h3 slot="caption">{{ component.name }}</h3>
+  <cd-grid
+    :collection="properties"
+    key-field="name"
+    :descriptor="descriptor"
+  >
+    <h3 slot="caption">
+      {{ component.name }}
+    </h3>
     <template slot-scope="{ header, row, property }">
-      <div v-if="!header">{{ row[property.datafield] }}</div>
+      <div v-if="!header">
+        {{ row[property.datafield] }}
+      </div>
     </template>
   </cd-grid>
 </template>

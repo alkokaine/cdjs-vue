@@ -1,16 +1,29 @@
 <template>
-  <cd-list :collection="collection" :key-field="keyField" list-class="list-unstyled row" row-class="col">
-    <div v-if="$slots.header" slot="header">
-      <slot name="header"></slot>
+  <cd-list
+    :collection="collection"
+    :key-field="keyField"
+    list-class="list-unstyled row"
+    row-class="col"
+  >
+    <div
+      v-if="$slots.header"
+      slot="header"
+    >
+      <slot name="header" />
     </div>
     <template slot-scope="{ row }">
-      <cd-rec-list v-if="row[recursive]" :collection="row[recursive]" :key-field="keyField" :recursive="recursive">
+      <cd-rec-list
+        v-if="row[recursive]"
+        :collection="row[recursive]"
+        :key-field="keyField"
+        :recursive="recursive"
+      >
         <template slot-scope="{ li }">
-          <slot :li="li"></slot>
+          <slot :li="li" />
         </template>
       </cd-rec-list>
       <template v-else>
-        <slot :li="row"></slot>
+        <slot :li="row" />
       </template>
     </template>
   </cd-list>
@@ -19,7 +32,7 @@
 <script>
 import CDList from '@/components/cd-list.vue'
 export default {
-  name: 'cd-rec-list',
+  name: 'CdRecList',
   components: {
     'cd-list': CDList
   },

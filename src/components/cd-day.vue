@@ -1,15 +1,21 @@
 <template>
-  <div class="cd-day" :class="{ 'is-prev': day.isprev }" >
-    <div class="cd-day--header" :class="{ 'is-eve': day.code === 2, 'holiday': day.code === 1 }">
-      <slot name="header"></slot>
+  <div
+    class="cd-day"
+    :class="{ 'is-prev': day.isprev }"
+  >
+    <div
+      class="cd-day--header"
+      :class="{ 'is-eve': day.code === 2, 'holiday': day.code === 1 }"
+    >
+      <slot name="header" />
     </div>
-    <slot :day="day"></slot>
+    <slot :day="day" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'cd-day',
+  name: 'CdDay',
   props: {
     day: { type: Date, required: true }
   },
