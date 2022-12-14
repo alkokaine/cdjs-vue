@@ -5,6 +5,7 @@ const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
 }
 import matchInfo from '@/assets/match-info'
+import keys from '@/../keys'
 export default {
   objectDescriptor: [
     {
@@ -483,10 +484,7 @@ export default {
       keyfield: 'wikiDataId',
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       method: 'get',
-      headers: {
-        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
-        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-      },    
+      headers: keys.geo,    
       resolvePayload (query, payload) {
         return {
           namePrefix: query,
@@ -516,10 +514,7 @@ export default {
           datafield: 'name'
         }
       ],
-      headers: {
-        'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
-        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-      },    
+      headers: keys.geo,    
       resolvePayload (query, payload) {
         return {
           limit: 10
