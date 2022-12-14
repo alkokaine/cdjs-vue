@@ -3,7 +3,7 @@
     <cd-grid class="container" :collection="collection" :select-rows="config.selectRows" :descriptor="columns" key-field="id"
       :show-header="config.showHeader" :zebra-cols="config.zebraCols"
       :zebra-rows="config.zebraRows" :highlight-on-hover="config.highlight" :small="config.small"
-      :row-class="rowClass" :body-cell-class="cellClass" :body-class="config.bodyClass"
+      :row-class="rowClass" :body-cell-class="cellClass" :body-class="config.bodyClass" :head-cell-class="headCellClass"
       :borders="config.borders">
       <div class="cd-grid-view--header" slot="header" slot-scope="{ property }">
         <span>{{ property.datafield }}</span>
@@ -144,6 +144,9 @@ export default {
       return ({ _id }, { datafield }) => {
         return `${_id}_${datafield}`
       }
+    },
+    headCellClass () {
+      return ({ datafield }) => (datafield)
     }
   }
 }
