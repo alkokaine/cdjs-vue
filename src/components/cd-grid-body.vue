@@ -12,13 +12,17 @@
         <template v-if="columns.length">
           <td v-for="(prop, cindex) in columns" :ref="propCellKey(prop, cindex)"
           :id="propCellKey(prop, rindex, cindex)" :key="propCellKey(prop, rindex, cindex)"
-          class="cd-grid--cell" :class="[prop.cellclass, isCellClassFunction ? cellClass({ row, rindex }, { prop, cindex }) : cellClass ]">
-            <slot :row="row" :rowindex="rindex" :property="prop" :propindex="cindex"></slot>
+          class="cd-grid--cell" :class="[prop.cellClass, isCellClassFunction ? cellClass({ row, rindex }, { prop, cindex }) : cellClass]">
+            <slot :row="row" :rowindex="rindex" :property="prop" :propindex="cindex">
+              {{ row[prop.datafield] }}
+            </slot>
           </td>
         </template>
         <template v-else>
           <td class="cd-grid--cell">
-            <slot :row="row" :rowindex="rindex" :empty="true"></slot>
+            <slot :row="row" :rowindex="rindex" :empty="true">
+              {{ row }}
+            </slot>
           </td>
         </template>
         <td class="cd-cell--placeholder" slot="end">
@@ -28,6 +32,13 @@
       <tr v-if="rowDetails" :key="appendix(rowKey(row))" class="cd-row--details">
         <td class="cd-grid-row--expanded" :colspan="columnstotal">
           <slot :rowdetails="true" :row="row" :rowindex="rindex"/>
+        </td>
+      </tr>
+    </template>
+    <template v-if="empty">
+      <tr class="empty-row">
+        <td :colspan="columnstotal" class="empty-cell">
+          <slot name="empty"></slot>
         </td>
       </tr>
     </template>
@@ -54,7 +65,6 @@
       keyField: { type: String, required: true },
       selectRows: { type: Boolean },
       isLoading: { type: Boolean, default: false },
-      onCellClick: { type: Function },
       rowClass: { type: [String, Object, Array, Function], default: 'cd-body-row--base' },
       cellClass: { type: [String, Object, Array, Function], default: 'cd-grid-body--cell-base' }
     },
@@ -73,6 +83,12 @@
     computed: {
       propCellKey () {
         return (prop, ri, pi) => `cell_${ri}_${pi}`
+      },
+      length ({ collection }) {
+        return collection.length
+      },
+      empty ({ length }) {
+        return length === undefined || length === 0
       }
     }
   }

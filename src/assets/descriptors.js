@@ -5,7 +5,9 @@ const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
 }
 import matchInfo from '@/assets/match-info'
+
 import keys from '@/../keys'
+
 export default {
   objectDescriptor: [
     {
