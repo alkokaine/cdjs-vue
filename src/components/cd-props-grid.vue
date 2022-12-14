@@ -7,10 +7,10 @@
     <h3 slot="caption">
       {{ component.name }}
     </h3>
-    <template slot-scope="{ header, row, property }">
-      <div v-if="!header">
+    <template slot-scope="{ row, property }">
+      <span class="component-property">
         {{ row[property.datafield] }}
-      </div>
+      </span>
     </template>
   </cd-grid>
 </template>
@@ -26,7 +26,7 @@ export default {
   },
   data (grid) {
     return {
-      properties: getprops(CDGrid),
+      properties: getprops(grid.component),
       descriptor: [
         {
           datafield: 'name',
