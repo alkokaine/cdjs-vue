@@ -1,12 +1,33 @@
 <template>
   <cd-prop-editor :payload="current">
-    <cd-rec-list class="container" :collection="descriptor" key-field="datafield" recursive="descriptor">
-      <cd-prop-editor slot="header" :payload="formSetting" :descriptor="formProps">
-        <cd-list class="container" :collection="formProps" key-field="datafield" list-class="list-unstyled">
-          <div slot-scope="{ row }">{{ row }}</div>
+    <cd-rec-list
+      class="container"
+      :collection="descriptor"
+      key-field="datafield"
+      recursive="descriptor"
+    >
+      <cd-prop-editor
+        slot="header"
+        :payload="formSetting"
+        :descriptor="formProps"
+      >
+        <cd-list
+          class="container"
+          :collection="formProps"
+          key-field="datafield"
+          list-class="list-unstyled"
+        >
+          <div slot-scope="{ row }">
+            {{ row }}
+          </div>
         </cd-list>
       </cd-prop-editor>
-      <div slot-scope="{ li }" v-on:click.capture="setCurrent($event, li)">{{ li.datafield }}</div>
+      <div
+        slot-scope="{ li }"
+        @click.capture="setCurrent($event, li)"
+      >
+        {{ li.datafield }}
+      </div>
     </cd-rec-list>
   </cd-prop-editor>
 </template>

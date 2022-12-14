@@ -1,20 +1,43 @@
 <template>
-  <cd-prop-editor :payload="config" :descriptor="configDescriptor">
-    <cd-grid class="container" :collection="collection" :select-rows="config.selectRows" :descriptor="columns" key-field="id"
-      :show-header="config.showHeader" :zebra-cols="config.zebraCols"
-      :zebra-rows="config.zebraRows" :highlight-on-hover="config.highlight" :small="config.small"
-      :row-class="rowClass" :body-cell-class="cellClass" :body-class="config.bodyClass" :head-cell-class="headCellClass"
-      :borders="config.borders">
-      <div class="cd-grid-view--header" slot="header" slot-scope="{ property }">
+  <cd-prop-editor
+    :payload="config"
+    :descriptor="configDescriptor"
+  >
+    <cd-grid
+      class="container"
+      :collection="collection"
+      :select-rows="config.selectRows"
+      :descriptor="columns"
+      key-field="id"
+      :show-header="config.showHeader"
+      :zebra-cols="config.zebraCols"
+      :zebra-rows="config.zebraRows"
+      :highlight-on-hover="config.highlight"
+      :small="config.small"
+      :row-class="rowClass"
+      :body-cell-class="cellClass"
+      :body-class="config.bodyClass"
+      :head-cell-class="headCellClass"
+      :borders="config.borders"
+    >
+      <div
+        slot="header"
+        slot-scope="{ property }"
+        class="cd-grid-view--header"
+      >
         <span>{{ property.datafield }}</span>
       </div>
       <template slot-scope="{ row, property, begin, end }">
-        <template v-if="begin"><span class="begin">{{ row }}</span></template>
-        <template v-else-if="end"><span class="end">{{ row }}</span></template>
+        <template v-if="begin">
+          <span class="begin">{{ row }}</span>
+        </template>
+        <template v-else-if="end">
+          <span class="end">{{ row }}</span>
+        </template>
         <template v-else-if="property">
           <template v-if="property.isflag">
             <div class="w-auto team-flag border border-1">
-              <img :src="row[property.datafield]" />
+              <img :src="row[property.datafield]">
             </div>
           </template>
         </template>
@@ -29,7 +52,7 @@ import CDPropEditor from '@/components/cd-prop-editor.vue'
 import descriptor from '@/assets/descriptors'
 import matchInfo from '@/assets/match-info'
 export default {
-  name: 'cd-grid-view',
+  name: 'CdGridView',
   components: { 
     'cd-grid': cdGrid,
     'cd-prop-editor': CDPropEditor

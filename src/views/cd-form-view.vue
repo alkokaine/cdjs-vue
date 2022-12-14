@@ -1,11 +1,26 @@
 <template>
   <div class="cd-form--view">
-    <cd-form class="row" :descriptor="descriptor" :payload="io" :show-controls="true" :on-submit="onSubmit" :on-reset="onReset" form-class="col" :sync="true">
-      <code slot="footer" class="col">
+    <cd-form
+      class="row"
+      :descriptor="descriptor"
+      :payload="io"
+      :show-controls="true"
+      :on-submit="onSubmit"
+      :on-reset="onReset"
+      form-class="col"
+      :sync="true"
+    >
+      <code
+        slot="footer"
+        class="col"
+      >
         <p>{{ io }}</p>
       </code>
     </cd-form>
-    <cd-form :descriptor="objectDescriptor" :payload="object"></cd-form>
+    <cd-form
+      :descriptor="objectDescriptor"
+      :payload="object"
+    />
   </div>
 </template>
 

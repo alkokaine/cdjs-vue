@@ -1,6 +1,16 @@
 <template>
-  <cd-prop-editor class="container" :payload="settings" :descriptor="descriptor">
-    <cd-tabs :tabs="tabs" tab-key="key" tab-caption="tab" :orientation="settings.orientation" :on-tab-select="setcurrent">
+  <cd-prop-editor
+    class="container"
+    :payload="settings"
+    :descriptor="descriptor"
+  >
+    <cd-tabs
+      :tabs="tabs"
+      tab-key="key"
+      tab-caption="tab"
+      :orientation="settings.orientation"
+      :on-tab-select="setcurrent"
+    >
       <!-- <div class="cd-tab--example" slot-scope="{ tab }">{{ tab }}</div> -->
       <div slot="content">
         {{ current }}
@@ -10,7 +20,8 @@
 </template>
 
 <script>
-import { CDTabs, CDPropEditor } from '@/../dist/cdjs/cdjs.umd'
+
+import { CDTabs, CDPropEditor } from '@/../dist/cdjs/cdjs.common'
 
 export default {
   components:{

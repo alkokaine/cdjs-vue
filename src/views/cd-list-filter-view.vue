@@ -1,14 +1,43 @@
 <template>
   <div class="cd-list-filter">
-    <cd-list name="countries" :collection="collection" :payload="payload" key-field="code" :resolve-result="resolveResult" :remote-method="getData">
-      <cd-form slot="header" :payload="payload" :descriptor="descriptor" :sync="true"></cd-form>
-      <div class="country" slot-scope="{ row }">
-        <span>{{ row }}</span><el-button type="text" @click="showCountryDetails(row)">Дополнительно</el-button>
-        <cd-props v-if="isdetails(row)" :payload="country" :descriptor="countrydetails">
+    <cd-list
+      name="countries"
+      :collection="collection"
+      :payload="payload"
+      key-field="code"
+      :resolve-result="resolveResult"
+      :remote-method="getData"
+    >
+      <cd-form
+        slot="header"
+        :payload="payload"
+        :descriptor="descriptor"
+        :sync="true"
+      />
+      <div
+        slot-scope="{ row }"
+        class="country"
+      >
+        <span>{{ row }}</span><el-button
+          type="text"
+          @click="showCountryDetails(row)"
+        >
+          Дополнительно
+        </el-button>
+        <cd-props
+          v-if="isdetails(row)"
+          :payload="country"
+          :descriptor="countrydetails"
+        >
           <div slot-scope="{ property, value }">
             <label>{{ property.text }}: </label>
             <template v-if="isregions(property)">
-              <el-button type="text" v-on:click="showRegions">{{ value }}</el-button>
+              <el-button
+                type="text"
+                @click="showRegions"
+              >
+                {{ value }}
+              </el-button>
             </template>
             <template v-else>
               <span>{{ value }}</span>
@@ -17,36 +46,115 @@
         </cd-props>
       </div>
       <div slot="footer">
-        <el-pagination :current-page="countryPage" :total="total" :page-size="payload.limit" v-on:current-change="onPageChange($event, payload)" :layout="layout"></el-pagination>
-        <el-dialog width="80%" :visible.sync="showDialog" :close-on-click-modal="false" @close="ondialogclose">
-          <div slot="title" class="h3">
+        <el-pagination
+          :current-page="countryPage"
+          :total="total"
+          :page-size="payload.limit"
+          :layout="layout"
+          @current-change="onPageChange($event, payload)"
+        />
+        <el-dialog
+          width="80%"
+          :visible.sync="showDialog"
+          :close-on-click-modal="false"
+          @close="ondialogclose"
+        >
+          <div
+            slot="title"
+            class="h3"
+          >
             <p>Всего регионов {{ country.numRegions }}</p>
           </div>
-          <cd-form name="regions-filter" :payload="regionPayload" :descriptor="descriptor" :sync="true">
-            <cd-list slot="footer" v-if="showDialog" name="regions" :collection="regions" key-field="wikiDataId" :payload="regionPayload" :resolve-result="resolveRegions" :remote-method="getRegions" list-class="row list-unstyled" :row-class="resolveRegionClass">
+          <cd-form
+            name="regions-filter"
+            :payload="regionPayload"
+            :descriptor="descriptor"
+            :sync="true"
+          >
+            <cd-list
+              v-if="showDialog"
+              slot="footer"
+              name="regions"
+              :collection="regions"
+              key-field="wikiDataId"
+              :payload="regionPayload"
+              :resolve-result="resolveRegions"
+              :remote-method="getRegions"
+              list-class="row list-unstyled"
+:row-class="resolveRegionClass"
+            >
               <div slot-scope="{ row }">
-                <div @click="getRegionDetails($event, row)">{{ row.name }}</div>
-                <cd-props v-if="isregiondetails(row)" class="container-sm text-start border region-details" :payload="region" :descriptor="regiondetails">
+                <div @click="getRegionDetails($event, row)">
+                  {{ row.name }}
+                </div>
+                <cd-props
+                  v-if="isregiondetails(row)"
+                  class="container-sm text-start border region-details"
+                  :payload="region"
+                  :descriptor="regiondetails"
+                >
                   <div slot-scope="{ property, value }">
                     <label class="cd-form--label">{{ property.datafield }}:</label> 
                     <template v-if="isCities(property)">
-                      <el-button type="text" @click="showCities($event, row)">{{ value }}</el-button>
+                      <el-button
+                        type="text"
+                        @click="showCities($event, row)"
+                      >
+                        {{ value }}
+                      </el-button>
                     </template>
                     <template v-else>
                       <span>{{ value }}</span>
                     </template>
                   </div>
-                  <cd-list v-if="showCityList" class="region-cities mx-3" slot="content" key-field="id" name="cities" :remote-method="getCities" :payload="cityPayload" :resolve-result="resolveCities" :collection="cities" list-class="list-unstyled row mx-auto" row-class="city-tile m-2 p-2 border border-1 border-white bg-white rounded-3">
-                    <cd-form slot="header" :payload="cityPayload" :descriptor="descriptor" :sync="true">
-                      <el-pagination slot="footer" :current-page="cityPage" :total="totalcities" :layout="layout" :page-size="cityPayload.limit" v-on:current-change="onPageChange($event, cityPayload)"></el-pagination>
+                  <cd-list
+                    v-if="showCityList"
+                    slot="content"
+                    class="region-cities mx-3"
+                    key-field="id"
+                    name="cities"
+                    :remote-method="getCities"
+                    :payload="cityPayload"
+                    :resolve-result="resolveCities"
+                    :collection="cities"
+                    list-class="list-unstyled row mx-auto"
+row-class="city-tile m-2 p-2 border border-1 border-white bg-white rounded-3"
+                  >
+                    <cd-form
+                      slot="header"
+                      :payload="cityPayload"
+                      :descriptor="descriptor"
+                      :sync="true"
+                    >
+                      <el-pagination
+                        slot="footer"
+                        :current-page="cityPage"
+                        :total="totalcities"
+                        :layout="layout"
+                        :page-size="cityPayload.limit"
+                        @current-change="onPageChange($event, cityPayload)"
+                      />
                     </cd-form>
-                    <cd-props slot-scope="{ row }" :payload="row" :descriptor="cityDescriptor">
-                      <div slot-scope="{ property, value }" v-on:click="getCity($event, row)">
+                    <cd-props
+                      slot-scope="{ row }"
+                      :payload="row"
+                      :descriptor="cityDescriptor"
+                    >
+                      <div
+                        slot-scope="{ property, value }"
+                        @click="getCity($event, row)"
+                      >
                         <label class="fw-bold cd-form--label">{{ property.datafield }}:</label>
                         <span class="city-property">{{ value }}</span>
                       </div>
-                      <div v-if="city.id" slot="content">
-                        <cd-props :payload="city" :descriptor="citydetails">
+                      <div
+                        v-if="city.id"
+                        slot="content"
+                      >
+                        <cd-props
+                          :payload="city"
+                          :descriptor="citydetails"
+                        >
                           <span slot="content">{{ city }}</span>
                         </cd-props>
                       </div>
@@ -55,7 +163,13 @@
                 </cd-props>
               </div>
               <div slot="footer">
-                <el-pagination :current-page="currentPage" :total="country.numRegions" :layout="layout" :page-size="regionPayload.limit" v-on:current-change="onPageChange($event, regionPayload)"></el-pagination>
+                <el-pagination
+                  :current-page="currentPage"
+                  :total="country.numRegions"
+                  :layout="layout"
+                  :page-size="regionPayload.limit"
+                  @current-change="onPageChange($event, regionPayload)"
+                />
               </div>
             </cd-list>
           </cd-form>
@@ -75,7 +189,7 @@ import CDProps from '@/components/cd-props'
 import AxiosError from 'axios/lib/core/AxiosError'
 
 export default {
-  name: 'cd-list-filter',
+  name: 'CdListFilter',
   components: {
     'cd-list': CDList,
     'cd-form': CDForm,

@@ -1,6 +1,16 @@
 <template>
-  <cd-form class="row" form-class="col" :payload="formModel" :descriptor="inputs" :sync="true">
-    <code class="col" slot="footer" slot-scope="{ payload }">
+  <cd-form
+    class="row"
+    form-class="col"
+    :payload="formModel"
+    :descriptor="inputs"
+    :sync="true"
+  >
+    <code
+      slot="footer"
+      slot-scope="{ payload }"
+      class="col"
+    >
       {{ payload }}
     </code>
   </cd-form>
@@ -10,7 +20,7 @@
 import CDForm from '@/components/cd-form.vue'
 import descriptors from '@/assets/descriptors'
 export default {
-  name: 'cd-form-v-model',
+  name: 'CdFormVModel',
   components: {
     'cd-form': CDForm
   },

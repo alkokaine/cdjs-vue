@@ -1,38 +1,96 @@
 <template>
   <div class="cd-month-view">
-    <cd-month v-if="matches.length" :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation" :multiple="settings.multiple">
-      <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
-        <h3 slot="header">CD-MONTH</h3>
+    <cd-month
+      v-if="matches.length"
+      :select-weekdays="settings.selectWeekdays"
+      :date="date"
+      :schedule="matches"
+      :compact="settings.compact"
+      :compare-date="compareDate"
+      :mode="settings.mode"
+      :orientation="settings.orientation"
+      :multiple="settings.multiple"
+    >
+      <cd-prop-editor
+        slot="month-header"
+        :payload="settings"
+        :descriptor="descriptor"
+      >
+        <h3 slot="header">
+          CD-MONTH
+        </h3>
       </cd-prop-editor>
-      <cd-list slot-scope="{ day }" :show-items="!settings.compact" :collection="dayContent(day)" key-field="_id" 
-        class="py-2 match-list" list-class="list-unstyled my-0" :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]">
-        <div slot-scope="{ row }" :class="['row', { 'justify-content-center' : isSchedule }]">
+      <cd-list
+        slot-scope="{ day }"
+        :show-items="!settings.compact"
+        :collection="dayContent(day)"
+        key-field="_id" 
+        class="py-2 match-list"
+        list-class="list-unstyled my-0"
+        :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]"
+      >
+        <div
+          slot-scope="{ row }"
+          :class="['row', { 'justify-content-center' : isSchedule }]"
+        >
           <template v-if="isSchedule">
             <div class="col home-team mw-50">
               <div class="w-auto team-flag border border-1">
-                <img :src="row.event.home_flag" />
+                <img :src="row.event.home_flag">
               </div>
             </div>
             <div class="col away-team mw-50">
               <div class="w-auto team-flag border border-1">
-                <img :src="row.event.away_flag"/>
+                <img :src="row.event.away_flag">
               </div>
             </div>
           </template>
           <template v-else>
-            <match-info :lang="settings.lang" :match="row.event"></match-info>
+            <match-info
+              :lang="settings.lang"
+              :match="row.event"
+            />
           </template>
         </div>
-        <template slot="footer" slot-scope="{ isempty }">
-          <div v-if="!settings.compact" class="empty-day">
-            <div v-if="isempty">нет событий</div>
-            <el-button type="text" size="mini" v-on:click.capture.stop="createEvent($event, day)">Добавить</el-button>
+        <template
+          slot="footer"
+          slot-scope="{ isempty }"
+        >
+          <div
+            v-if="!settings.compact"
+            class="empty-day"
+          >
+            <div v-if="isempty">
+              нет событий
+            </div>
+            <el-button
+              type="text"
+              size="mini"
+              @click.capture.stop="createEvent($event, day)"
+            >
+              Добавить
+            </el-button>
           </div>
         </template>
       </cd-list>
-      <el-dialog slot="month-footer" :visible="isDialog">
-        <cd-form v-if="isDialog" :descriptor="eventDescriptor" :payload="newEvent" :on-submit="onSubmit" :on-reset="onReset" :show-controls="true">
-          <div slot="header" slot-scope="{ payload }">{{ payload }}</div>
+      <el-dialog
+        slot="month-footer"
+        :visible="isDialog"
+      >
+        <cd-form
+          v-if="isDialog"
+          :descriptor="eventDescriptor"
+          :payload="newEvent"
+          :on-submit="onSubmit"
+          :on-reset="onReset"
+          :show-controls="true"
+        >
+          <div
+            slot="header"
+            slot-scope="{ payload }"
+          >
+            {{ payload }}
+          </div>
         </cd-form>
       </el-dialog>
     </cd-month>
@@ -150,29 +208,6 @@ export default {
       eventDescriptor: info.matchInfoDescriptor
     }
   },
-  methods: {
-    onReset () {
-      this.newEvent = Object
-    },
-    onSubmit (payload) {
-      const view = this
-      view.matches.push({ event: payload, date: payload.local_date })
-      view.newEvent = Object
-    },
-    compareDate ({ date }, day) {
-      return date.getDate() === day.getDate() && 
-        date.getMonth() === day.getMonth() && 
-        date.getFullYear() === day.getFullYear()
-    },
-    createEvent($event, day) {
-      this.newEvent = {
-        _id: 1,
-        away_score: 0,
-        home_score: 0,
-        local_date: day,
-      }
-    }
-  },
   computed: {
     dayContent ({ matches, compareDate }) {
       return (day) => (matches.filter(f => compareDate(f, day)))
@@ -213,6 +248,29 @@ export default {
             event: m
           }))
         })
+      }
+    }
+  },
+  methods: {
+    onReset () {
+      this.newEvent = Object
+    },
+    onSubmit (payload) {
+      const view = this
+      view.matches.push({ event: payload, date: payload.local_date })
+      view.newEvent = Object
+    },
+    compareDate ({ date }, day) {
+      return date.getDate() === day.getDate() && 
+        date.getMonth() === day.getMonth() && 
+        date.getFullYear() === day.getFullYear()
+    },
+    createEvent($event, day) {
+      this.newEvent = {
+        _id: 1,
+        away_score: 0,
+        home_score: 0,
+        local_date: day,
       }
     }
   }
