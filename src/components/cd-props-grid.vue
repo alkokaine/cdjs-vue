@@ -8,7 +8,7 @@
       {{ component.name }}
     </h3>
     <template slot-scope="{ row, property }">
-      <span class="component-property">
+      <span v-if="property" class="component-property">
         {{ row[property.datafield] }}
       </span>
     </template>
