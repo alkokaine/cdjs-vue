@@ -5,6 +5,7 @@ import CDGridView from '../views/cd-grid-view.vue'
 import CdPropsView from '../views/cd-props-view.vue'
 import CDTabsView from '../views/cd-tabs-view.vue'
 import CDListView from '../views/cd-list-view.vue'
+import CDMenuView from '../views/cd-menu-view.vue'
 import CDPropsGridView from '../views/cd-props-grid-view.vue'
 import CDFormView from '../views/cd-form-view.vue'
 
@@ -40,6 +41,11 @@ const routes = [
     path: '/cd-list',
     name: 'cd-list',
     component: CDListView
+  },
+  {
+    path: '/cd-menu',
+    name: 'cd-menu',
+    component: CDMenuView
   },
   {
     path: '/cd-props-grid',
