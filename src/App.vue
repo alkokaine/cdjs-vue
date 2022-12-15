@@ -1,13 +1,12 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <style lang="scss">
 @import '~bootstrap/scss/bootstrap';
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -25,5 +24,9 @@ nav {
       color: #42b983;
     }
   }
+}
+code {
+  white-space: pre;
+  text-align: start;
 }
 </style>

@@ -1,0 +1,105 @@
+<template>
+  <fieldset
+    class="cd-fieldset d-block position-relative"
+    :class="[{ 'border border-1 has-legend' : hasLegend(owner), 'disabled': disabled }]"
+    :disabled="disabled"
+  >
+    <cd-props-base
+      :class="[{ 'mt-2': hasLegend(owner) }]"
+      :descriptor="descriptor"
+      :owner="owner"
+      :payload="payload"
+      :config="propConfig"
+    >
+      <legend
+        v-if="hasLegend(owner)"
+        slot="text"
+        class="cd-legend position-absolute top-25 start-0 translate-middle-y ms-4"
+      >
+        <p class="cd-legend--text bg-secondary text-white px-2 user-select-none">
+          {{ owner.text }}
+        </p>
+      </legend>
+      <template slot-scope="{ property, config }">
+        <cd-fieldset
+          v-if="config.hasDescriptor"
+          :descriptor="property.descriptor"
+          :owner="property"
+          :payload="payload"
+          :is-disabled="isDisabled"
+          :field-config="fieldConfig"
+        >
+          <slot
+            slot-scope="row"
+            :property="row.property"
+            :parent="property"
+            :value="payload[row.property.datafield]"
+            :config="fieldConfig(row.property)"
+          />
+        </cd-fieldset>
+        <div
+          v-else
+          class="cd-field pt-2"
+          :class="resolvePropertyClass(property)"
+        >
+          <slot
+            :property="property"
+            :parent="owner"
+            :value="payload[property.datafield]"
+            :config="fieldConfig(property)"
+          />
+        </div>
+      </template>
+    </cd-props-base>
+  </fieldset>
+</template>
+
+<script>
+
+import decorator from '@/common/property-decorator'
+import CdPropsBase from './cd-props-base.vue'
+export default {
+  name: 'CdFieldset',
+  components: {
+    'cd-props-base': CdPropsBase
+  },
+  props: {
+    descriptor: { type: Array, required: true, description: 'Массив полей компонента fieldset' },
+    payload: { type: Object, required: true, description: 'Объект на компоненте fieldset' },
+    owner: { type: Object, default: Object, description: 'Родительский дескриптор' },
+    isDisabled: { type: Function, description: 'Функция, возвращающая для дескриптора true или false, определающие будет ли задисаблен элемент fieldset' },
+    fieldConfig: { type: Function, required: true, default: (prop) => ({}), description: 'Функция, возвращающая настройки для дескриптора' }
+  },
+  data (fieldset) {
+
+    return {
+      disabled: typeof fieldset.isDisabled === 'function' ? fieldset.isDisabled(fieldset.owner) :fieldset.isDisabled
+    }
+  },
+  computed: {
+    hasLegend () {
+      return (property) => decorator.hasLegend(property)
+    },
+    propConfig () {
+      return (property) => ({
+        hasDescriptor: decorator.hasDescriptor(property)
+      })
+    },
+    resolvePropertyClass ({ payload }) {
+      return (property) => decorator.resolvePropertyClass(property, payload)
+    }
+  }
+}
+</script>
+
+<style>
+  .cd-legend {
+    font-weight: bold;
+    width: auto;
+    font-size: 1.2em;
+  }
+  .cd-fieldset.has-legend {
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+  }
+</style>

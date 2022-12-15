@@ -1,14 +1,34 @@
 <template>
   <div class="cd-list">
-    <slot name="header" class="cd-list--header"></slot>
-    <ul v-if="showItems" class="cd-list--internal" :class="listClass" :role="listRole">
-      <slot name="pre"></slot>
-      <li v-for="(row, index) in filtered" :class="['cd-list--item', isRowClassFunction ? rowClass(row, index) : rowClass]" :role="itemRole" :key="rowKey(row, index)">
-        <slot :row="row" :index="index"/>
+    <slot
+      name="header"
+      class="cd-list--header"
+    />
+    <ul
+      v-if="showItems"
+      class="cd-list--internal"
+      :class="listClass"
+      :role="listRole"
+    >
+      <slot name="pre" />
+      <li
+        v-for="(row, index) in filtered"
+        :key="rowKey(row, index)"
+        :class="['cd-list--item', isRowClassFunction ? rowClass(row, index) : rowClass]"
+        :role="itemRole"
+      >
+        <slot
+          :row="row"
+          :index="index"
+        />
       </li>
-      <slot name="post"></slot>
+      <slot name="post" />
     </ul>
-    <slot name="footer" :isempty="isempty" class="cd-list--footer"></slot>
+    <slot
+      name="footer"
+      :isempty="isempty"
+      class="cd-list--footer"
+    />
   </div>
 </template>
 
@@ -16,7 +36,7 @@
 import RoleValidator from '@/common/list-aria-role'
 const collection = []
 export default {
-  name: 'cd-list',
+  name: 'CdList',
   props: {
     payload: { type: [Array, Object, Number, String, Date, Function], description: 'Параметры загрузки данных в список' },
     remoteMethod: { type: Function, description: 'Метод получения данных для списка' },
@@ -43,14 +63,6 @@ export default {
       isRowClassFunction: typeof list.rowClass === 'function'
     }
   },
-  watch: {
-    payload: {
-      deep: true,
-      handler (newvalue, oldvalue) {
-        if (this.remoteMethod !== undefined && typeof this.remoteMethod === 'function') this.remoteMethod(newvalue, this.resolveResult)
-      }
-    }
-  },
   computed: {
     isempty ({ filtered }) {
       return filtered.length === 0
@@ -60,6 +72,14 @@ export default {
         return isRowVisible !== undefined && typeof isRowVisible === 'function' ? collection.filter(isRowVisible) : collection
       }
       return []
+    }
+  },
+  watch: {
+    payload: {
+      deep: true,
+      handler (newvalue, oldvalue) {
+        if (this.remoteMethod !== undefined && typeof this.remoteMethod === 'function') this.remoteMethod(newvalue, this.resolveResult)
+      }
     }
   }
 }
