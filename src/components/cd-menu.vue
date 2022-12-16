@@ -9,11 +9,11 @@
     </div>
     <!-- для каждого элемента списка нарисуем такое -->
     <cd-menu-item slot-scope="{ row, index }" :inner="inner" :path="row[path]" :icon="row[icon]" :text="row[text]"
-      :is-collapsed="isCollapsed" :is-active="index === selected"
+      :is-collapsed="isCollapsed" :is-active="index === selected" v-on:click.native="selectItem($event, index)"
       :class="[{ 'is-active': index === selected, 'inner': inner }]">
       <!-- <i slot="icon" :class="row[icon]"/> -->
       <!-- <span slot="text">{{ row[text] }}</span> -->
-      <cd-menu v-if="row[property] && index == selected" class="cd-menu--inner"
+      <cd-menu v-if="row[property] && index == selected" class="cd-menu--inner" :show-items="index == selected"
         :name="row[itemKey]" :inner="true" :is-collapsed="isCollapsed" :menu="row[property]"
         :item-key="itemKey" :icon="icon" :property="property" :text="text" :path="path"/>
     </cd-menu-item>
@@ -89,6 +89,15 @@ export default {
       }
     }
   },
+  methods: {
+    selectItem ($event, index) {
+      if (this.selected === index) {
+        this.selected = -1
+      } else {
+        this.selected = index
+      }
+    }
+  },
   computed: {
     /**
      * возврашает true для элемента, ключ которого равен значению menu.selected
@@ -101,17 +110,6 @@ export default {
       return (row, index) => {
         if (index === selected) return 'cd-menu--item is-active'
         else return 'cd-menu--item'
-      }
-    },
-    onmenuclicked ({ selected }) {
-      const menu = this
-      return (scope) => (event) => {
-        if (menu.selected === scope.index) {
-          menu.selected = -1
-        } else {
-          menu.selected = scope.index
-        }
-        if (scope.row[menu.path] && (event.sender === 'text' || !menu.iscollapsed)) menu.$router.push(scope.row[menu.path])
       }
     }
   }
