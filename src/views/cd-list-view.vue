@@ -1,6 +1,6 @@
 <template>
   <div class="cd-list-view">
-    <cd-list get="https://wft-geo-db.p.rapidapi.com/v1/geo/countries" :payload="payload" :on-error="onError"
+    <cd-list class="cd-list-example" get="https://wft-geo-db.p.rapidapi.com/v1/geo/countries" list-class="country-list" row-class="country-row" :payload="payload" :on-error="onError"
       :resolve-result="resolveCollection" key-field="'wikiDataId'" :collection="collection" :headers="headers"
       :resolve-payload="resolvePayload">
       <div slot="header">
