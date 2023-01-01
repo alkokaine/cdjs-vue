@@ -5,6 +5,7 @@ logs
 nightwatch/examples
 coverage
 /dist
+tests/e2e/reports
 keys.js
 
 /tests/e2e/videos/
