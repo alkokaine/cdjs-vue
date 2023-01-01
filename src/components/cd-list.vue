@@ -14,9 +14,11 @@
 
 <script>
 import RoleValidator from '@/common/list-aria-role'
+import collectionMixin from '@/common/collection'
 const collection = []
 export default {
   name: 'cd-list',
+  mixins: [collectionMixin],
   props: {
     payload: { type: [Array, Object, Number, String, Date, Function], description: 'Параметры загрузки данных в список' },
     remoteMethod: { type: Function, description: 'Метод получения данных для списка' },
@@ -36,19 +38,11 @@ export default {
         return row[keyfield] 
       },
       description: 'Функция, возвращающая значение первичного ключа объекта в списке'
-    } 
+    }
   },
   data (list) {
     return {
       isRowClassFunction: typeof list.rowClass === 'function'
-    }
-  },
-  watch: {
-    payload: {
-      deep: true,
-      handler (newvalue, oldvalue) {
-        if (this.remoteMethod !== undefined && typeof this.remoteMethod === 'function') this.remoteMethod(newvalue, this.resolveResult)
-      }
     }
   },
   computed: {

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const cbfactory = (func) => (args) => {
-  if (func !== undefined && typeof func === 'function') return func(args)
+const cbfactory = (func, config) => (args) => {
+  if (func !== undefined && typeof func === 'function') return func(args, config)
   return args
 }
 
@@ -15,15 +15,15 @@ export default function (config) {
   const _config = {
     method: config.method,
     adapter: config.adapter,
-    responseType: (config.responseType ?? 'json'),
+    responseType: (config.responseType === undefined ? 'json' : config.responseType),
     params: config.payload,
     headers: config.headers,
-    timeout: (config.timeout ?? 0),
+    timeout: (isNaN(config.timeout) ? 0 : (+config.timeout)),
     transformResponse: _transform
   }
   const instance = axios.create()  
   const cberror = cbfactory(config.error)
-  instance.interceptors.request.use(cbfactory(config.before), cberror)
-  instance.interceptors.response.use(cbfactory(config.after), cberror)
+  instance.interceptors.request.use(cbfactory(config.before, _config), cberror)
+  instance.interceptors.response.use(cbfactory(config.after, _config), cberror)
   return instance(config.url, _config)
 }
