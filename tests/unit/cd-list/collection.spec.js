@@ -99,7 +99,6 @@ describe('[cd-list] remote collection #2', () => {
     collection, payload, remoteMethod, resolveResult, keyField, isRowVisible
   })
   it (`[cd-list] has ${length} <li> elements`, done => {
-    Vue.nextTick().then(())
     expect(wrapper.findAll('li').wrappers.length).toBe(length)
     done()
   }, 10000)
