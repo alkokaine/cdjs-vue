@@ -4,31 +4,58 @@ import AxiosError from 'axios/lib/core/AxiosError'
 export default {
   name: 'collection-mixin',
   props: {
-    total: { type: Number },
-    pageSize: { type: Number },
-    onPageChange: { type: Function },
-    method: { type: String, default: 'get' },
-    headers: { type: Object },
-    payload: { type: [Array, Object, Number, String, Date, Function], description: 'Параметры загрузки данных в список' },
-    get: { type: String },
-    remoteMethod: { type: Function },
-    resolveResult: { type: Function },
+    method: { 
+      type: String,
+      default: 'get',
+      description: 'HTTP-метод (get, post, ...)' 
+    },
+    headers: { 
+      type: Object,
+      description: 'Объект заголовков запроса'
+    },
+    payload: {
+      type: [Array, Object, Number, String, Date, Function], 
+      description: 'Параметры загрузки данных' 
+    },
+    get: {
+      type: String,
+      description: 'URL получения данных'
+    },
+    remoteMethod: {
+      type: Function,
+      params: '({ method, url, payload, headers, before, after }) => Promise',
+      default: fetchData
+    },
+    resolveResult: { type: Function, params: '(response) => void' },
     error: { type: [Function, Object], description: 'Последняя полученная ошибка' },
-    resolvePayload: { type: Function, default: (payload) => (payload) },
-    onError: {
+    resolvePayload: { 
       type: Function, 
+      description: 'Функция трансформации объекта payload в объект, пригодный для отправки с запросом',
+      params: '(payload) => Object',
+      default: (payload) => (payload) 
+    },
+    onError: {
+      type: Function,
       params: '(response, config) => void', 
       default: (response, config) => {
         console.error(config)
         console.error(response)
       }
     },
-    onBefore: { type: Function, default: function (request, config) {
-      return request
-    }},
-    onAfter: { type: Function, default: function (response, config) {
-      return response
-    }}
+    onBefore: {
+      type: Function,
+      params: '(request, config) => request',
+      default: function (request, config) {
+        return request
+      }
+    },
+    onAfter: {
+      type: Function,
+      params: '(response, config) => response',
+      default: function (response, config) {
+        return response
+      }
+    }
   },
   data (collection) {
     return {
@@ -54,22 +81,19 @@ export default {
       immediate: true,
       handler (newvalue) {
         const { remoteMethod, resolveResult, onError } = this
-        const get = remoteMethod === undefined ? fetchData : remoteMethod
-        if (get !== undefined && typeof get === 'function') {
-          get(newvalue)
+        remoteMethod(newvalue)
           .then((response) => { 
             if (response instanceof AxiosError) {
               throw response
-            } else {
-              if (resolveResult !== undefined && typeof resolveResult === 'function') {
-                resolveResult(response) 
-              }
+            } else if (resolveResult !== undefined && typeof resolveResult === 'function') {
+              resolveResult(response) 
             }
           })
-          .catch(reason => { 
-            if (onError !== undefined && typeof onError === 'function')
-              onError(newvalue, reason) })
-        } 
+        .catch(reason => { 
+          if (onError !== undefined && typeof onError === 'function')
+            onError(newvalue, reason) 
+          }
+        )
       }
     }
   }
