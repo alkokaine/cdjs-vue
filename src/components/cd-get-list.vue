@@ -1,12 +1,20 @@
 <template>
-  <cd-list-base :is-loading="isLoading" :collection="collection" :key-field="keyField" :on-before="onBeforeGet" :on-after="onAfterGet">
+  <cd-list-base :is-loading="isLoading" 
+    :collection="collection" :key-field="keyField"
+    :list-class="['position-relative w-auto', listClass]" 
+    :row-class="[ { 'text-muted': hasError }, rowClass]">
     <template v-if="$slots.header" slot="header">
       <slot name="header"></slot>
     </template>
     <template slot-scope="{ row, index }">
       <slot :row="row" :index="index"></slot>
     </template>
-    <template v-if="$slots.footer" slot="footer">
+    <li v-if="error.code" slot="pre" class="error-content position-absolute mx-auto">
+      <div class="error-info position-relative mx-auto p-3">
+        <slot name="error" :error="error"></slot>
+      </div>
+    </li>
+    <template slot="footer">
       <slot name="footer"></slot>
     </template>
   </cd-list-base>
@@ -19,6 +27,7 @@ import collectionBase from '@/common/collection-base'
 import collectionDecorator from '@/common/collection-decorator'
 import collection from '@/common/collection'
 export default {
+  name: 'cd-get-list',
   mixins: [collectionBase, collectionDecorator, collection],
   components: {
     'cd-list-base': CDListBase
@@ -26,23 +35,30 @@ export default {
   props: {
   },
   methods: {
-    onBeforeGet (request, config) {
-      this.inProgress = true
-      return request
-    },
-    onAfterGet (response, config) {
-      this.inProgress = false
-      return response
-    }
   },
   data (list) {
     return {
-      inProgress: list.isLoading
     }
   }
 }
 </script>
 
 <style>
-
+  .error-content {
+    position: absolute;
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
+    transform: translateY(-20%)
+  }
+  .error-info {
+    top: 50%;
+    background-color: white!important;;
+    color: black;
+    max-width: min-content;
+    box-shadow: 0 0 30px 10px black;
+  }
+  .error-content > * {
+    color: inherit;
+    background-color: inherit;
+  }
 </style>
