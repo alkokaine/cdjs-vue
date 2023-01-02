@@ -13,11 +13,9 @@ export default {
     },
     filtered ({ collection, isRowVisible }) {
       if (!Array.isArray(collection)) {
-        console.warn('[CDJS]: [collection] property is not array')
         return []
       }
       if (isRowVisible === undefined || typeof isRowVisible !== 'function') {
-        console.warn('[CDJS]: [isRowVisible] property is not function')
         return collection
       }
       if (collection.length === 0) return []
