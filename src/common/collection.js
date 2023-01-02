@@ -13,11 +13,16 @@ export default {
     get: { type: String },
     remoteMethod: { type: Function },
     resolveResult: { type: Function },
+    error: { type: [Function, Object], description: 'Последняя полученная ошибка' },
     resolvePayload: { type: Function, default: (payload) => (payload) },
-    onError: { type: Function, default: (config, response) => {
-      console.error(config)
-      console.error(response)
-    }},
+    onError: {
+      type: Function, 
+      params: '(response, config) => void', 
+      default: (response, config) => {
+        console.error(config)
+        console.error(response)
+      }
+    },
     onBefore: { type: Function, default: function (request, config) {
       return request
     }},
@@ -27,7 +32,6 @@ export default {
   },
   data (collection) {
     return {
-      isLoading: Boolean
     }
   },
   computed: {
@@ -41,6 +45,9 @@ export default {
         after: onAfter
       }
     },
+    hasError ({ error }) {
+      return error !== undefined && error.code !== undefined
+    }
   },
   watch: {
     config: {
