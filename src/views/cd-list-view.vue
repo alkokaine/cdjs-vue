@@ -1,31 +1,39 @@
 <template>
   <div class="cd-list-view">
-    <cd-list class="cd-list-example" get="https://wft-geo-db.p.rapidapi.com/v1/geo/countries" list-class="country-list" row-class="country-row" :payload="payload" :on-error="onError"
-      :resolve-result="resolveCollection" key-field="'wikiDataId'" :collection="collection" :headers="headers"
-      :resolve-payload="resolvePayload">
+    <cd-get-list class="cd-list-example" key-field="wikiDataId" :collection="collection"
+      get="https://wft-geo-db.p.rapidapi.com/v1/geo/countries" :headers="headers" :is-loading="isLoading"
+      list-class="country-list list-unstyled" row-class="country-row mx-auto p-2" :payload="payload" :error="error"
+      :on-error="onError" :on-before="onBefore" :on-after="onAfter"
+      :resolve-result="resolveCollection" :resolve-payload="resolvePayload">
       <div slot="header">
-        <input type="range" :min="1" :max="10" v-model.lazy="limit"/>
-        <input type="text" v-model.lazy="namePrefix"/>
+        <input id="limit" type="range" :min="1" :max="10" v-on:change="onChange($event)"/>
+        <input id="prefix" type="text" v-model.lazy="namePrefix"/>
       </div>
-      <span slot-scope="{ row }">{{ row }}</span>
+      <div slot-scope="{ row }" class="country-row--wrap">
+        <div class="country-header" v-on:click="selectRow(row)">{{ row }}</div>
+        <div v-if="isDetailsOpen(row)" class="country-details">A</div>
+      </div>
+      <template v-if="error.code" slot="error" slot-scope="{ error }">
+          <a href="#">{{ error.code }} {{ error.message }}</a>
+      </template>
       <div slot="footer">
-        <a v-if="error.code" href="#">{{ error.code }} {{ error.message }}</a>
-        <el-pagination :current-page="currentPage" v-on:current-change="onPageChange($event)" :total="total"></el-pagination>
+        <el-pagination :current-page="currentPage" :page-size="limit" v-on:current-change="onPageChange($event)" :total="total"></el-pagination>
       </div>
-    </cd-list>
+    </cd-get-list>
   </div>
 </template>
 
 <script>
-import CDList from '@/components/cd-list.vue'
+import CDGetList from '@/components/cd-get-list.vue'
 import keys from '@/../keys'
 import { AxiosError } from 'axios'
 export default {
   components: {
-    'cd-list': CDList
+    'cd-get-list': CDGetList
   },
   data (view) {
     return {
+      isLoading: false,
       currentPage: 1,
       collection: [],
       limit: 10,
@@ -33,9 +41,13 @@ export default {
       headers: keys.geo,
       error: AxiosError,
       total: 0,
+      selectedCountry: Object
     }
   },
   computed: {
+    isDetailsOpen ({ selectedCountry }) {
+      return ({ wikiDataId }) => wikiDataId === selectedCountry.wikiDataId
+    },
     resolvePayload ({ currentPage, limit }) {
       return (newpayload) => ({
         namePrefix: newpayload.namePrefix,
@@ -50,6 +62,22 @@ export default {
     }
   },
   methods: {
+    onBefore (request, config) {
+      this.isLoading = true
+      this.error = AxiosError
+      return request
+    },
+    onAfter (response, config) {
+      this.isLoading = false
+      return response
+    },
+    selectRow ( country ) {
+      if (this.selectedCountry.wikiDataId === country.wikiDataId) {
+        this.selectedCountry = Object
+      } else {
+        this.selectedCountry = country
+      }
+    },
     resolveCollection (result) {
       try {
         this.collection = result.data.data
@@ -66,9 +94,11 @@ export default {
     // onInput(event) {
     //   this.currentPage = 1
     // },
+    onChange (event, limit) {
+      this.limit = event.target.valueAsNumber
+    },
     onError (params, error) {
-      console.error(params)
-      console.error(error)
+      this.isLoading = false
       this.error = error
     }
   }
@@ -76,5 +106,7 @@ export default {
 </script>
 
 <style>
-
+  .country-row {
+    max-width: max-content;
+  }
 </style>
