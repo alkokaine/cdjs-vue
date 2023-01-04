@@ -13,9 +13,9 @@
         <div class="country-header" v-on:click="selectRow(row)">{{ row }}</div>
         <div v-if="isDetailsOpen(row)" class="country-details">A</div>
       </div>
-      <template v-if="error.code" slot="error" slot-scope="{ error }">
+      <!-- <template v-if="error.code" slot="error" slot-scope="{ error }">
           <a href="#">{{ error.code }} {{ error.message }}</a>
-      </template>
+      </template> -->
       <div slot="footer">
         <el-pagination :current-page="currentPage" :page-size="limit" v-on:current-change="onPageChange($event)" :total="total"></el-pagination>
       </div>
