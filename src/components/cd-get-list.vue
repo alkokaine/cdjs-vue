@@ -11,7 +11,13 @@
     </template>
     <li v-if="error.code" slot="pre" class="error-content position-absolute mx-auto">
       <div class="error-info position-relative mx-auto p-3">
-        <slot name="error" :error="error"></slot>
+        <a href="#">
+          <slot name="error" :error="error">
+            <cd-props :payload="error" :descriptor="errorDescriptor">
+              <span slot-scope="{ value }">{{ value }}</span>
+            </cd-props>
+          </slot>
+        </a>
       </div>
     </li>
     <template slot="footer">
@@ -23,6 +29,7 @@
 <script>
 
 import CDListBase from '@/components/cd-list-base.vue'
+import CDProps from '@/components/cd-props.vue'
 import collectionBase from '@/common/collection-base'
 import collectionDecorator from '@/common/collection-decorator'
 import collection from '@/common/collection'
@@ -30,7 +37,8 @@ export default {
   name: 'cd-get-list',
   mixins: [collectionBase, collectionDecorator, collection],
   components: {
-    'cd-list-base': CDListBase
+    'cd-list-base': CDListBase,
+    'cd-props': CDProps
   },
   props: {
   },

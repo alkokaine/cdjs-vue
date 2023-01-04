@@ -1,5 +1,6 @@
 import fetchData from '@/common/fetch-data'
 import AxiosError from 'axios/lib/core/AxiosError'
+import axiosErrorDescriptor from './axios-error-descriptor'
 
 export default {
   name: 'collection-mixin',
@@ -28,6 +29,7 @@ export default {
     },
     resolveResult: { type: Function, params: '(response) => void' },
     error: { type: [Function, Object], description: 'Последняя полученная ошибка' },
+    errorDescriptor: { type: Array, description: 'Дескриптор ошибки', default: () => (axiosErrorDescriptor) },
     resolvePayload: { 
       type: Function, 
       description: 'Функция трансформации объекта payload в объект, пригодный для отправки с запросом',
