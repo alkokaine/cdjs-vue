@@ -2,6 +2,24 @@ import fetchData from '@/common/fetch-data'
 import AxiosError from 'axios/lib/core/AxiosError'
 import axiosErrorDescriptor from './axios-error-descriptor'
 
+const loadData = function (_config) {
+  const { remoteMethod, resolveResult, onError, config } = this
+  const fetchConfig = _config === undefined ? config : _config
+  remoteMethod(fetchConfig)
+    .then((response) => { 
+      if (response instanceof AxiosError) {
+        throw response
+      } else if (resolveResult !== undefined && typeof resolveResult === 'function') {
+        resolveResult(response, config) 
+      }
+    })
+    .catch(reason => { 
+      if (onError !== undefined && typeof onError === 'function')
+        onError(reason, config) 
+      }
+    )
+}
+
 export default {
   name: 'collection-mixin',
   props: {
@@ -80,23 +98,11 @@ export default {
   },
   watch: {
     config: {
-      immediate: true,
-      handler (newvalue) {
-        const { remoteMethod, resolveResult, onError } = this
-        remoteMethod(newvalue)
-          .then((response) => { 
-            if (response instanceof AxiosError) {
-              throw response
-            } else if (resolveResult !== undefined && typeof resolveResult === 'function') {
-              resolveResult(response) 
-            }
-          })
-        .catch(reason => { 
-          if (onError !== undefined && typeof onError === 'function')
-            onError(newvalue, reason) 
-          }
-        )
-      }
+      handler: loadData
     }
-  }
+  },
+  methods: {
+    loadData
+  },
+  mounted: loadData
 }
