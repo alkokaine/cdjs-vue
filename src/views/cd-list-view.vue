@@ -9,13 +9,23 @@
         <input id="limit" type="range" :min="1" :max="10" v-on:change="onChange($event)"/>
         <input id="prefix" type="text" v-model.lazy="namePrefix"/>
       </div>
-      <div slot-scope="{ row }" class="country-row--wrap">
-        <div class="country-header" v-on:click="selectRow(row)">{{ row }}</div>
-        <div v-if="isDetailsOpen(row)" class="country-details">A</div>
-      </div>
-      <!-- <template v-if="error.code" slot="error" slot-scope="{ error }">
-          <a href="#">{{ error.code }} {{ error.message }}</a>
-      </template> -->
+      <country-row slot-scope="{ row }" :country="row" class="country-row--wrap" v-on:click.native="selectRow(row)">
+        <cd-props v-if="isDetailsOpen(row) && countryDetails.wikiDataId" :descriptor="countryDescriptor" :payload="countryDetails" class="country-details mx-auto text-start">
+          <template slot-scope="{ property, value }">
+            <template v-if="property.image"></template>
+            <div v-if="property.image" class="country-flag--wrap">
+              <img :sync="true" :class="property.class" :src="value"/>
+            </div>
+            <currency-row v-else-if="property.currencies" :currencies="value">
+              <label>{{ property.text }}:</label>
+            </currency-row>
+            <div v-else class="country-detail">
+              <label class="country-property--name">{{ property.text }}:</label>
+              <span class="country-property--value ps-2">{{ value }}</span>
+            </div>
+          </template>
+        </cd-props>
+      </country-row>
       <div slot="footer">
         <el-pagination :current-page="currentPage" :page-size="limit" v-on:current-change="onPageChange($event)" :total="total"></el-pagination>
       </div>
@@ -24,12 +34,21 @@
 </template>
 
 <script>
+
 import CDGetList from '@/components/cd-get-list.vue'
+import CDProps from '@/components/cd-props.vue'
+import CurrencyRow from './currency-row.vue'
+import CountryRow from './country-row.vue'
 import keys from '@/../keys'
 import { AxiosError } from 'axios'
+import fetchData from '@/common/fetch-data'
+import curcode from 'currency-codes'
 export default {
   components: {
-    'cd-get-list': CDGetList
+    'cd-get-list': CDGetList,
+    'currency-row': CurrencyRow,
+    'country-row': CountryRow,
+    'cd-props': CDProps
   },
   data (view) {
     return {
@@ -41,7 +60,72 @@ export default {
       headers: keys.geo,
       error: AxiosError,
       total: 0,
-      selectedCountry: Object
+      selectedCountry: Object,
+      countryDetails: Object,
+      isDetailsLoading: false,
+      countryDescriptor: [
+        {
+          descriptor: [
+            {
+              datafield: 'name',
+              text: 'name'
+            },
+            {
+              datafield: 'code',
+              text: 'code'
+            },
+            {
+              datafield: 'capital',
+              text: 'capital'
+            },
+            {
+              datafield: 'callingCode',
+              text: 'phone code'
+            },
+            {
+              datafield: 'currencyCodes',
+              text: 'currencies',
+              currencies: true
+            },
+            {
+              datafield: 'numRegions',
+              text: 'regions amount'
+            }            
+          ],
+          propClass: 'row row-cols-4'
+        },
+        {
+          datafield: 'flagImageUri',
+          image: true,
+          propClass: 'country-flag',
+          class: 'country-flag--image'
+        },
+      ]
+    }
+  },
+  watch: {
+    'selectedCountry.wikiDataId': {
+      handler (newvalue) {
+        if (newvalue !== undefined)
+        {
+          const view = this
+          fetchData({
+            url: `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${newvalue}`,
+            method: 'get',
+            headers: keys.geo,
+            before: (request) => {
+              view.isDetailsLoading = true
+              return request
+            }
+          }).then(response => {
+            view.countryDetails = response.data.data
+          }).catch(error => {
+            console.error(error)
+          }).then(() => {
+            view.isDetailsLoading = false
+          })
+        }
+      }
     }
   },
   computed: {
@@ -58,6 +142,17 @@ export default {
     payload ({ namePrefix, limit }) {
       return {
         namePrefix, limit
+      }
+    },
+    codes ({ countryDetails }) {
+      const { currencyCodes } = countryDetails
+      if (currencyCodes != undefined) {
+        return currencyCodes.map(c => ({ code: c, currency: curcode.code(c)})).map(c => ({
+          code: c.code,
+          name: c.currency.currency
+        }))
+      } else {
+        return []
       }
     }
   },
@@ -97,9 +192,9 @@ export default {
     onChange (event, limit) {
       this.limit = event.target.valueAsNumber
     },
-    onError (params, error) {
+    onError (reason, config) {
       this.isLoading = false
-      this.error = error
+      this.error = reason
     }
   }
 }
@@ -108,5 +203,12 @@ export default {
 <style>
   .country-row {
     max-width: max-content;
+  }
+  .country-flag--image {
+    max-width: 150px;
+  }
+  .country-details {
+    max-width: 80%;
+
   }
 </style>
