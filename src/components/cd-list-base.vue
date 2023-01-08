@@ -24,7 +24,7 @@ export default {
     listClass: { type: [Array, Object, String], description: 'Класс CSS элемента <ul>' },
     listRole: { type: String, validator: RoleValidator.validateListRole, description: 'aria-role списка' },
     itemRole: { type: String, validator: RoleValidator.validateItemRole, description: 'aria-role элемента списка' },
-    showItems: { type: Boolean, default: true, description: 'Показывать элементы списка?' },
+    showItems: { type: [Boolean, Number], default: true, description: 'Показывать элементы списка?' },
     rowKey: {
       type: Function,
       default: function(row, index) {
