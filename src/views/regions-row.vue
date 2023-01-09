@@ -1,11 +1,14 @@
 <template>
   <cd-get-list :collection="regions" key-field="wikiDataId" list-class="list-unstyled row" :get="get" :headers="headers" :payload="payload"
-        :resolve-result="resolveRegions" :on-error="onError" :on-before="onBefore" :error="error">
+        :resolve-result="resolveRegions" :on-error="onError" :on-before="onBefore">
     <span slot-scope="{ row }">
-      {{ row }}
+      {{ row.name }}
     </span>
     <template v-if="error.code" slot="error" slot-scope="{ config, fetch }">
       <button v-on:click="fetch(config)">Получить</button> 
+    </template>
+    <template v-if="more && !error.code" slot="footer">
+      <button v-on:click="newPayload($event, page)">Получить</button> 
     </template>
   </cd-get-list>
 </template>
@@ -19,7 +22,8 @@ export default {
   props: {
     regions: { type: Array, default: () => (regions) },
     resolveRegions: { type: Function, params: 'response => void'},
-    country: { type: String, required: true }
+    country: { type: String, required: true },
+    total: { type: Number, required: true }
   },
   components: {
     'cd-get-list': CDGetList
@@ -45,10 +49,15 @@ export default {
         offset: (page - 1) * limit,
         limit
       }
+    },
+    more ({ regions, total }) {
+      if (regions === undefined) return true
+      else if (regions.length < total) return true
+      else return false
     }
   },
   methods: {
-    newPayload (event, { page, config }) {
+    newPayload (event, page) {
       this.page = page + 1
     },
     onError (reason, config) {
@@ -57,6 +66,7 @@ export default {
     },
     onBefore (request) {
       this.config = null
+      this.error = AxiosError
       return request
     }
   }
