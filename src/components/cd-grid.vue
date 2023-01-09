@@ -43,9 +43,11 @@
 import flatterer from '@/common/property-flatter'
 import CdGridBody from './cd-grid-body.vue'
 import CdGridHead from './cd-grid-head.vue'
-
+import collectionBase from '@/common/collection-base'
+import collection from '@/common/collection'
 export default {
   name: 'cd-grid',
+  mixins: [collectionBase, collection],
   components: {
     'cd-grid-body': CdGridBody,
     'cd-grid-head': CdGridHead
@@ -54,8 +56,8 @@ export default {
     borders: { type: String, description: 'Границы' },
     showHeader: { type: Boolean, default: true, description: 'Показывать ли заголовок грида' },
     highlightOnHover: { type: Boolean, default: false, description: 'Подсвечивать при перемещении мыши' },
-    collection: { type: Array, required: true,description: 'Данные в гриде' },
-    keyField: { type: String, required: true, description: 'Ключевое свойство строки грида' },
+    // collection: { type: Array, required: true,description: 'Данные в гриде' },
+    // keyField: { type: String, required: true, description: 'Ключевое свойство строки грида' },
     rowDetails: { type: Boolean, defailt: false, description: 'Подготовительная работа к слоту с деталями строки грида' },
     descriptor: { type: Array, description: 'Массив дескрипторов, по которым будут отрисованы колонки грида' },
     selectRows: { type: Boolean, default: false, description: 'Показывать ли чекбоксы для выделения строк грида' },
@@ -64,11 +66,10 @@ export default {
     zebraCols: { type: Boolean, default: false, description: 'Полосатые колонки' },
     bodyClass: { type: [String, Object, Array, Function], default: 'cd-grid--body-base', description: 'CSS класс элемента <tbody>' },
     headClass: { type: [String, Object, Array, Function], default: 'cd-grid--head-base', description: 'CSS класс элемента <thead>' },
-    rowClass: { type: [String, Object, Array, Function], description: 'CSS класс элемента <tr>' },
+    // rowClass: { type: [String, Object, Array, Function], description: 'CSS класс элемента <tr>' },
     headCellClass: { type: [String, Object, Array, Function],description: 'CSS класс элемента <th>' },
     bodyCellClass: { type: [String, Object, Array, Function],description: 'CSS класс элемента <td>' },
     rowKey: { type: Function, description: 'Функция, возвращающая значение ключевого поля ' }
-
   },
   data (grid) {
     return {
