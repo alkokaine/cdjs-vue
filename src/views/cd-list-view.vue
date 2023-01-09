@@ -1,76 +1,162 @@
 <template>
   <div class="cd-list-view">
-    <cd-list :remote-method="getdata" :payload="payload" :resolve-result="resolveCollection" key-field="'wikiDataId'" :collection="collection" :row-class="rowClass">
+    <cd-get-list class="cd-list-example" key-field="wikiDataId" :collection="collection"
+      get="https://wft-geo-db.p.rapidapi.com/v1/geo/countries" :headers="headers" :is-loading="isLoading"
+      list-class="country-list list-unstyled" row-class="country-row mx-auto p-2" :payload="payload" :error="error"
+      :on-error="onError" :on-before="onBefore" :on-after="onAfter"
+      :resolve-result="resolveCollection" :resolve-payload="resolvePayload">
       <div slot="header">
-        <input type="range" :max="10" v-model="payload.limit"/>
-        <input type="text" v-model="payload.namePrefix"/>
+        <input id="limit" type="range" :min="1" :max="10" v-on:change="onChange($event)"/>
+        <input id="prefix" type="text" v-model.lazy="namePrefix"/>
       </div>
-      <span slot-scope="{ row }">{{ row }}</span>
-      <div v-if="error.code" slot="footer">
-        <a href="#" @click="getdata(payload, resolveCollection)">{{ error.code }} {{ error.message }}</a>
+      <country-row slot-scope="{ row }" :country="row" class="country-row--wrap" :on-click="selectRow">
+        <template v-if="isDetailsOpen(row) && countryDetails.code">
+          <country-details :country="countryDetails"></country-details>
+        </template>
+      </country-row>
+      <div slot="footer">
+        <el-pagination :current-page="currentPage" :page-size="limit" v-on:current-change="onPageChange($event)" :total="total"></el-pagination>
       </div>
-    </cd-list>
+    </cd-get-list>
   </div>
 </template>
 
 <script>
-import CDList from '@/components/cd-list.vue'
-import fetchData from '@/common/fetch-data'
-import adapter from 'axios/lib/adapters/http'
-import { geo } from '@/../keys'
+
+import CDGetList from '@/components/cd-get-list.vue'
+import CountryRow from './country-row.vue'
+import CountryDetails from './country-details.vue'
+import keys from '@/../keys'
 import { AxiosError } from 'axios'
+import fetchData from '@/common/fetch-data'
+import curcode from 'currency-codes'
 export default {
   components: {
-    'cd-list': CDList
+    'cd-get-list': CDGetList,
+    'country-row': CountryRow,
+    'country-details': CountryDetails,
   },
   data (view) {
     return {
+      isLoading: false,
+      currentPage: 1,
       collection: [],
+      limit: 10,
+      namePrefix: '',
+      headers: keys.geo,
       error: AxiosError,
       total: 0,
-      payload: {
-        limit: 10
-      },
-      
+      selectedCountry: Object,
+      countryDetails: Object,
+      isDetailsLoading: false,
     }
   },
-  methods: {
-    resolveCollection (result) {
-      this.collection = result
-    },
-    getdata(payload, resolve) {
-      const list = this
-      fetchData({
-        adapter,
-        payload,
-        before (config) {
-          list.error = AxiosError
-          return config
-        },
-        method: 'get',
-        error (reason) {
-          list.error = reason
-        },
-        timeout:5000,
-        url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
-        headers: geo
-      }).then(response => { 
-        list.total = response.data.metadata.totalCount
-        list.resolveCollection(response.data.data)
-      })
+  watch: {
+    'selectedCountry.wikiDataId': {
+      handler (newvalue) {
+        if (newvalue !== undefined)
+        {
+          const view = this
+          fetchData({
+            url: `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${newvalue}`,
+            method: 'get',
+            headers: keys.geo,
+            before: (request) => {
+              view.isDetailsLoading = true
+              return request
+            }
+          }).then(response => {
+            view.countryDetails = response.data.data
+          }).catch(error => {
+            console.error(error)
+          }).then(() => {
+            view.isDetailsLoading = false
+          })
+        }
+      }
     }
   },
   computed: {
-    rowClass (vm) {
-      return (row, index) => (`cd-list-view--index-${index}-row-${row.wikiDataId}-payload-${vm.payload.offset}`)
+    isDetailsOpen ({ selectedCountry }) {
+      return ({ wikiDataId }) => wikiDataId === selectedCountry.wikiDataId
     },
-    isRowVisible (vm) {
-      return (row, index) => index % 3 === 0
+    resolvePayload ({ currentPage, limit }) {
+      return (newpayload) => ({
+        namePrefix: newpayload.namePrefix,
+        limit: limit,
+        offset: (currentPage - 1) * newpayload.limit
+      })
+    },
+    payload ({ namePrefix, limit }) {
+      return {
+        namePrefix, limit
+      }
+    },
+    codes ({ countryDetails }) {
+      const { currencyCodes } = countryDetails
+      if (currencyCodes != undefined) {
+        return currencyCodes.map(c => ({ code: c, currency: curcode.code(c)})).map(c => ({
+          code: c.code,
+          name: c.currency.currency
+        }))
+      } else {
+        return []
+      }
+    }
+  },
+  methods: {
+    onBefore (request, config) {
+      this.isLoading = true
+      this.error = AxiosError
+      return request
+    },
+    onAfter (response, config) {
+      this.isLoading = false
+      return response
+    },
+    selectRow (event, country) {
+      if (this.selectedCountry.wikiDataId === country.wikiDataId) {
+        this.selectedCountry = Object
+      } else {
+        this.selectedCountry = country
+      }
+    },
+    resolveCollection (result) {
+      try {
+        this.collection = result.data.data
+        this.total = result.data.metadata.totalCount
+      } catch (err) {
+        console.error(err)
+        throw err
+      }
+      
+    },
+    onPageChange(page) {
+      this.currentPage = page
+    },
+    // onInput(event) {
+    //   this.currentPage = 1
+    // },
+    onChange (event, limit) {
+      this.limit = event.target.valueAsNumber
+    },
+    onError (reason, config) {
+      this.isLoading = false
+      this.error = reason
     }
   }
 }
 </script>
 
 <style>
+  .country-row {
+    max-width: max-content;
+  }
+  .country-flag--image {
+    max-width: 150px;
+  }
+  .country-details {
+    max-width: 80%;
 
+  }
 </style>

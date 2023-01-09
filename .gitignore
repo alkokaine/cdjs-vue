@@ -1,7 +1,11 @@
 .DS_Store
 node_modules
+tests_output
+logs
+nightwatch/examples
 coverage
 /dist
+tests/e2e/reports
 keys.js
 
 /tests/e2e/videos/
