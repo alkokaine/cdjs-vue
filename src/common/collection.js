@@ -46,7 +46,7 @@ export default {
       default: fetchData
     },
     resolveResult: { type: Function, params: '(response) => void' },
-    error: { type: [Function, Object], description: 'Последняя полученная ошибка' },
+    error: { type: [Function, Object], default: AxiosError, description: 'Последняя полученная ошибка' },
     errorDescriptor: { type: Array, description: 'Дескриптор ошибки', default: () => (axiosErrorDescriptor) },
     resolvePayload: { 
       type: Function, 
