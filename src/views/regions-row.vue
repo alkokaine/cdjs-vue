@@ -1,30 +1,24 @@
 <template>
-  <div class="regions-row--wrap">
-    <template v-if="isNotReady">
-      <button>Получить</button>
+  <cd-get-list :collection="regions" key-field="wikiDataId" :get="get" :headers="headers" :payload="payload"
+        :resolve-result="resolveRegions" :on-error="onError" :on-before="onBefore" :error="error">
+    <span slot-scope="{ row }">
+      {{ row }}
+    </span>
+    <template v-if="error.code" slot="error" slot-scope="{ config, fetch }">
+      <button v-on:click="fetch(config)">Получить</button> 
     </template>
-    <template v-else>
-      <cd-get-list :collection="regions" key-field="wikiDataId" :get="get" :headers="headers" 
-        :resolve-result="resolveRegions">
-        <span slot="header">
-          <slot></slot>
-        </span>
-        <span slot-scope="{ row }">
-          {{ row }}
-        </span>
-        <button slot="footer">Получить</button>
-      </cd-get-list>
-    </template>
-  </div>
+  </cd-get-list>
 </template>
 
 <script>
 import CDGetList from '@/components/cd-get-list.vue'
 import keys from '@/../keys'
+import { AxiosError } from 'axios'
 const regions = []
 export default {
   props: {
     regions: { type: Array, default: () => (regions) },
+    resolveRegions: { type: Function, params: 'response => void'},
     country: { type: String, required: true }
   },
   components: {
@@ -33,7 +27,10 @@ export default {
   data (row) {
     return {
       headers: keys.geo,
-      list: row.regions,
+      page: 1,
+      limit: 10,
+      error: AxiosError,
+      config: null
     }
   },
   computed: {
@@ -42,11 +39,25 @@ export default {
     },
     isNotReady ({ regions, country }) {
       return country === undefined || !Array.isArray(regions)
+    },
+    payload ({ page, limit }) {
+      return {
+        offset: (page - 1) * limit,
+        limit
+      }
     }
   },
   methods: {
-    resolveRegions (response) {
-      console.log(response)
+    newPayload (event, { page, config }) {
+      this.page = page + 1
+    },
+    onError (reason, config) {
+      this.error = reason
+      this.config = config
+    },
+    onBefore (request) {
+      this.config = null
+      return request
     }
   }
   

@@ -9,11 +9,10 @@
         <input id="limit" type="range" :min="1" :max="10" v-on:change="onChange($event)"/>
         <input id="prefix" type="text" v-model.lazy="namePrefix"/>
       </div>
-      <country-row slot-scope="{ row }" :country="row" class="country-row--wrap" v-on:click.native="selectRow(row)">
-        <country-details v-if="isDetailsOpen(row) && countryDetails.wikiDataId" :country="countryDetails" :total="countryDetails.numRegions"></country-details>
-        <!-- <cd-props v-if="isDetailsOpen(row) && countryDetails.wikiDataId" :descriptor="countryDescriptor" :payload="countryDetails" class="country-details mx-auto text-start">
-          
-        </cd-props> -->
+      <country-row slot-scope="{ row }" :country="row" class="country-row--wrap" :on-click="selectRow">
+        <template v-if="isDetailsOpen(row) && countryDetails.code">
+          <country-details :country="countryDetails"></country-details>
+        </template>
       </country-row>
       <div slot="footer">
         <el-pagination :current-page="currentPage" :page-size="limit" v-on:current-change="onPageChange($event)" :total="total"></el-pagination>
@@ -115,7 +114,7 @@ export default {
       this.isLoading = false
       return response
     },
-    selectRow ( country ) {
+    selectRow (event, country) {
       if (this.selectedCountry.wikiDataId === country.wikiDataId) {
         this.selectedCountry = Object
       } else {

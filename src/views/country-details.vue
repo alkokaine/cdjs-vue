@@ -1,6 +1,6 @@
 <template>
-  <cd-props :payload="country" :descriptor="descriptor">
-    <template slot-scope="{ property, value }">
+  <cd-props v-loading="isLoading" :payload="country" :descriptor="descriptor">
+    <div slot-scope="{ property, value }">
       <template v-if="property.image"></template>
       <div v-if="property.image" class="country-flag--wrap">
         <img :sync="true" :class="property.class" :src="value"/>
@@ -8,18 +8,21 @@
       <currency-row v-else-if="property.currencies" :currencies="value">
         <label class="country-property--name">{{ property.text }}:</label>
       </currency-row>
-      <regions-row v-else-if="property.regions && value" :regions="value" :country="country.code">
-        <label class="country-property-name">{{ property.text }}:</label>
-      </regions-row>
+      <template v-else-if="property.regions && !isLoading" >
+        <regions-row :regions="value" :country="country.code" :total="country.numRegions" :resolve-regions="resolveRegions">
+          <label class="country-property-name">{{ property.text }}:</label>
+        </regions-row>
+      </template>
       <div v-else class="country-detail">
         <label class="country-property--name">{{ property.text }}:</label>
         <span class="country-property--value ps-2">{{ value }}</span>
       </div>
-    </template>
+    </div>
   </cd-props>
 </template>
 
 <script>
+import Vue from 'vue'
 import CDProps from '@/components/cd-props.vue'
 import CurrencyRow from './currency-row.vue'
 import RegionsRow from './regions-row.vue'
@@ -79,7 +82,21 @@ export default {
         },
       ]
     }
-  }
+  },
+  computed: {
+    isLoading ({ country }) {
+      return country === undefined 
+    },
+    resolveRegions ({ country }) {
+      return (response) => {
+        if (country.regions !== undefined && Array.isArray(country.regions)) {
+          country.regions.push(response.data.data)
+        } else {
+          Vue.set(country, 'regions', response.data.data)
+        }
+      }
+    }
+  },
 }
 </script>
 

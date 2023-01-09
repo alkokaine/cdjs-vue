@@ -1,6 +1,6 @@
 <template>
   <div class="country-row">
-    <span>{{ country }}</span>
+    <span v-on:click="onClick($event, country)">{{ country }}</span>
     <slot></slot>
   </div>
 </template>
@@ -10,6 +10,7 @@ export default {
   name: 'country-row',
   props: {
     country: { type: Object, required: true },
+    onClick: { type: Function, params: '(event, country) => void' }
   }
 }
 </script>
