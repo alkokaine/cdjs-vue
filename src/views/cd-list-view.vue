@@ -10,21 +10,10 @@
         <input id="prefix" type="text" v-model.lazy="namePrefix"/>
       </div>
       <country-row slot-scope="{ row }" :country="row" class="country-row--wrap" v-on:click.native="selectRow(row)">
-        <cd-props v-if="isDetailsOpen(row) && countryDetails.wikiDataId" :descriptor="countryDescriptor" :payload="countryDetails" class="country-details mx-auto text-start">
-          <template slot-scope="{ property, value }">
-            <template v-if="property.image"></template>
-            <div v-if="property.image" class="country-flag--wrap">
-              <img :sync="true" :class="property.class" :src="value"/>
-            </div>
-            <currency-row v-else-if="property.currencies" :currencies="value">
-              <label>{{ property.text }}:</label>
-            </currency-row>
-            <div v-else class="country-detail">
-              <label class="country-property--name">{{ property.text }}:</label>
-              <span class="country-property--value ps-2">{{ value }}</span>
-            </div>
-          </template>
-        </cd-props>
+        <country-details v-if="isDetailsOpen(row) && countryDetails.wikiDataId" :country="countryDetails" :total="countryDetails.numRegions"></country-details>
+        <!-- <cd-props v-if="isDetailsOpen(row) && countryDetails.wikiDataId" :descriptor="countryDescriptor" :payload="countryDetails" class="country-details mx-auto text-start">
+          
+        </cd-props> -->
       </country-row>
       <div slot="footer">
         <el-pagination :current-page="currentPage" :page-size="limit" v-on:current-change="onPageChange($event)" :total="total"></el-pagination>
@@ -36,9 +25,8 @@
 <script>
 
 import CDGetList from '@/components/cd-get-list.vue'
-import CDProps from '@/components/cd-props.vue'
-import CurrencyRow from './currency-row.vue'
 import CountryRow from './country-row.vue'
+import CountryDetails from './country-details.vue'
 import keys from '@/../keys'
 import { AxiosError } from 'axios'
 import fetchData from '@/common/fetch-data'
@@ -46,9 +34,8 @@ import curcode from 'currency-codes'
 export default {
   components: {
     'cd-get-list': CDGetList,
-    'currency-row': CurrencyRow,
     'country-row': CountryRow,
-    'cd-props': CDProps
+    'country-details': CountryDetails,
   },
   data (view) {
     return {
@@ -63,44 +50,6 @@ export default {
       selectedCountry: Object,
       countryDetails: Object,
       isDetailsLoading: false,
-      countryDescriptor: [
-        {
-          descriptor: [
-            {
-              datafield: 'name',
-              text: 'name'
-            },
-            {
-              datafield: 'code',
-              text: 'code'
-            },
-            {
-              datafield: 'capital',
-              text: 'capital'
-            },
-            {
-              datafield: 'callingCode',
-              text: 'phone code'
-            },
-            {
-              datafield: 'currencyCodes',
-              text: 'currencies',
-              currencies: true
-            },
-            {
-              datafield: 'numRegions',
-              text: 'regions amount'
-            }            
-          ],
-          propClass: 'row row-cols-4'
-        },
-        {
-          datafield: 'flagImageUri',
-          image: true,
-          propClass: 'country-flag',
-          class: 'country-flag--image'
-        },
-      ]
     }
   },
   watch: {
