@@ -8,11 +8,9 @@
       <currency-row v-else-if="property.currencies" :currencies="value">
         <label class="country-property--name">{{ property.text }}:</label>
       </currency-row>
-      <template v-else-if="property.regions && !isLoading" >
-        <regions-row :regions="value" :country="country.code" :total="country.numRegions" :resolve-regions="resolveRegions">
+      <regions-row v-else-if="property.regions" :regions="value" :country="country.code" :total="country.numRegions" :resolve-regions="resolveRegions">
           <label class="country-property-name">{{ property.text }}:</label>
-        </regions-row>
-      </template>
+      </regions-row>
       <div v-else class="country-detail">
         <label class="country-property--name">{{ property.text }}:</label>
         <span class="country-property--value ps-2">{{ value }}</span>

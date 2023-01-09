@@ -1,5 +1,5 @@
 <template>
-  <cd-get-list :collection="regions" key-field="wikiDataId" :get="get" :headers="headers" :payload="payload"
+  <cd-get-list :collection="regions" key-field="wikiDataId" list-class="list-unstyled row" :get="get" :headers="headers" :payload="payload"
         :resolve-result="resolveRegions" :on-error="onError" :on-before="onBefore" :error="error">
     <span slot-scope="{ row }">
       {{ row }}
