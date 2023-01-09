@@ -1,5 +1,5 @@
 <template>
-  <cd-list class="cd-properties" :collection="descriptor" key-field="datafield" row-class="cd-property--descriptor" :is-row-visible="isPropertyVisible"
+  <cd-list-base class="cd-properties" :collection="descriptor" key-field="datafield" row-class="cd-property--descriptor" :is-row-visible="isPropertyVisible"
     :list-class="['list-unstyled cd-properties--list', propClass ]">
     <template slot="header">
       <slot name="text"></slot>
@@ -8,16 +8,16 @@
     <div v-if="$slots.content" slot="footer">
       <slot name="content"></slot>
     </div>
-  </cd-list>
+  </cd-list-base>
 </template>
 
 <script>
-import CDList from './cd-list.vue'
+import CDListBase from './cd-list-base.vue'
 import decorator from '@/common/property-decorator'
 export default {
   name: 'cd-props-base',
   components: {
-    'cd-list': CDList
+    'cd-list-base': CDListBase
   },
   props: {
     config: { type: Function, required: true },

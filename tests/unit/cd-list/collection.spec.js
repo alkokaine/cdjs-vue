@@ -37,6 +37,7 @@ const sample2 = [
   }
 ]
 
+
 const isRowVisibleImpl = (row, index) => (index + 1) % 2 === 0
 
 describe ('[CD-LIST] Collection', () => {
@@ -73,27 +74,53 @@ describe ('[CD-LIST] Collection', () => {
   })
 })
 
-describe ('[CD-LIST] Remote Collection', () => {
+const payload = 10
+  
+const keyField = 'key'
+
+describe('[cd-list] remote collection #2', () => {
   const collection = []
-  const remoteMethod = jest.fn((payload, resolve) => {
-    resolve(Array.from(Array(payload).keys()))
-  })
+  const remoteMethodFactory = () => {
+    return jest.fn(({ payload }) => (new Promise((resolve, reject) => { 
+      resolve(Array.from(Array(payload).keys()))
+    })))
+  }
+  var length = 0
+  const remoteMethod = remoteMethodFactory()
   const resolveResult = jest.fn(result => {
     collection.splice(0, collection.length)
     collection.push(...result.map(d => ({
       key: d + 1
     })))
+    length = collection.filter(isRowVisibleImpl).length
   })
-
-  const payload = 12
-  
-  const keyField = 'key'
-
+  const isRowVisible = jest.fn(isRowVisibleImpl)
   const wrapper = listFactory({
-    collection,
-    keyField
+    collection, payload, remoteMethod, resolveResult, keyField, isRowVisible
   })
+  it (`[cd-list] has ${length} <li> elements`, done => {
+    expect(wrapper.findAll('li').wrappers.length).toBe(length)
+    done()
+  }, 10000)
+})
+
+describe ('[CD-LIST] Remote Collection', () => {
+  const collection = []
+  
+  const remoteMethodFactory = () => {
+    return jest.fn(({ payload }) => (new Promise((resolve, reject) => { 
+      resolve(Array.from(Array(payload).keys()))
+    })))
+  }
+
+
+  
+
   it ('remote config properties [remoteMethod], [resolveResult] and [payload] are not defined. set them', done => {
+    const wrapper = listFactory({
+      collection,
+      keyField
+    })
     expect(wrapper.vm.remoteMethod).toBeUndefined()
     expect(wrapper.vm.resolveResult).toBeUndefined()
     expect(wrapper.vm.payload).toBeUndefined()
@@ -101,45 +128,104 @@ describe ('[CD-LIST] Remote Collection', () => {
   })
 
   it ('has defined [remoteMethod], [resolveResult] and [payload]', done => {
-    wrapper.setProps({
-      remoteMethod,
-      resolveResult,
-      payload
-    }).then(() => {
-      expect(wrapper.vm.remoteMethod).toBe(remoteMethod)
-      expect(wrapper.vm.resolveResult).toBe(resolveResult)
-      expect(wrapper.vm.payload).toBe(payload)
-      done()
+    const resolveResult = jest.fn(result => {
+      collection.splice(0, collection.length)
+      collection.push(...result.map(d => ({
+        key: d + 1
+      })))
     })
-  })
-  it ('renders resolved collection', done => {
-    expect(remoteMethod).toBeCalled()
-    expect(resolveResult).toBeCalled()
-    expect(wrapper.vm.collection.length).toBe(12)
-    expect(wrapper.findAll('li').length).toBe(12)
+    const remoteMethod = remoteMethodFactory()
+    const wrapper = listFactory({
+      remoteMethod,
+      collection,
+      keyField,
+      payload,
+      resolveResult
+    })
+    expect(wrapper.vm.remoteMethod).toBe(remoteMethod)
+    expect(wrapper.vm.resolveResult).toBe(resolveResult)
+    expect(wrapper.vm.payload).toBe(payload)
     done()
   })
-  
-  it ('[isRowVisible] with resolved [collection]', done => {
-    const isRowVisible = jest.fn(isRowVisibleImpl)
-    wrapper.setProps({ isRowVisible }).then(() => {
-      expect(wrapper.vm.isRowVisible).toBe(isRowVisible)
-      expect(isRowVisible).toBeCalledTimes(wrapper.vm.collection.length)
-      expect(wrapper.findAll('li').length).not.toBe(wrapper.vm.collection.length)
+  it ('renders resolved collection', done => {
+    var collection2 = []
+    const resolveResult2 = jest.fn(result => {
+      collection2.splice(0, collection2.length)
+      collection2.push(...result.map(d => ({
+        key: d + 1
+      })))
+    })
+    const remoteMethod = remoteMethodFactory()
+    const wrapper = listFactory({
+      remoteMethod,
+      collection: collection2,
+      keyField,
+      payload,
+      resolveResult: resolveResult2
+    })
+    Vue.nextTick().then(() => {
+      expect(remoteMethod).toBeCalled()
+      expect(resolveResult2).toBeCalled()
+      expect(wrapper.vm.collection.length).toBe(10)
+      expect(wrapper.findAll('li').length).toBe(10)
       done()
     })
+  
+  }, 20000)
+  
+  it ('[isRowVisible] with resolved [collection]', done => {
+    const resolveResult = jest.fn(result => {
+      collection.splice(0, collection.length)
+      collection.push(...result.map(d => ({
+        key: d + 1
+      })))
+    })
+    const remoteMethod = remoteMethodFactory()
+    const isRowVisible = jest.fn(isRowVisibleImpl)
+    const wrapper = listFactory({
+      remoteMethod,
+      collection,
+      keyField,
+      payload,
+      resolveResult,
+      isRowVisible
+    })
+    expect(wrapper.vm.isRowVisible).toBe(isRowVisible)
+    expect(isRowVisible).toBeCalledTimes(wrapper.vm.collection.length)
+    expect(wrapper.findAll('li').length).not.toBe(wrapper.vm.collection.length)
+    done()
   })
 
   it ('change [payload], rerender with new collection', done => {
+    const collection2 = []
+    const resolveResult = jest.fn(result => {
+      collection2.splice(0, collection2.length)
+      collection2.push(...result.map(d => ({
+        key: d + 1
+      })))
+    })
+    const newpayload = 35
+    const remoteMethod = remoteMethodFactory()
     const isRowVisible = jest.fn(isRowVisibleImpl)
-    wrapper.setProps({ payload: 20, isRowVisible: isRowVisible }).then(() => {
-      expect(wrapper.vm.payload).toBe(20)
-      expect(wrapper.vm.isRowVisible).toBeDefined()
-      expect(wrapper.vm.collection.length).toBe(wrapper.vm.payload)
-      expect(wrapper.vm.isRowVisible).toBeDefined()
-      expect(wrapper.vm.isRowVisible).toBeCalledTimes(20)
-      expect(wrapper.findAll('li').length).toBe(collection.filter(isRowVisible).length)
-      done()
+    const wrapper = listFactory({
+      remoteMethod,
+      collection2,
+      keyField,
+      payload,
+      resolveResult,
+      isRowVisible
+    })
+    Vue.nextTick().then(() => {
+      const filtered = wrapper.vm.filtered.length
+      expect(wrapper.findAll('li').length).toBe(filtered)
+      expect(wrapper.vm.collection.length).not.toBe(wrapper.vm.filtered.length)
+      wrapper.setProps({ payload: newpayload })
+      Vue.nextTick().then(() => {
+        expect(isRowVisible).toBeCalledTimes(payload + newpayload)
+        expect(filtered).not.toBe(wrapper.vm.filtered.length)
+        expect(wrapper.findAll('li').length).toBe(wrapper.vm.filtered.length)
+        done()
+      })
     })
   })
 })
@@ -157,25 +243,28 @@ describe ('[CD-LIST] Collection Manipulation', () => {
     })))
   })
   const keyField = 'key'
-  const wrapper = listFactory({ collection, payload, remoteMethod, resolveResult, keyField })
   
-  it ('check if retrieved [collection] has 12 items', (done) => {
-    wrapper.setProps({ payload: 12 }).then(() => {
-      expect(collection.length).toBe(12)
-      expect(wrapper.findAll('li').length).toBe(12)
+  
+  it (`check if retrieved [collection] has [${payload}] items`, (done) => {
+    const wrapper = listFactory({ collection, payload, remoteMethod, resolveResult, keyField })
+    wrapper.setProps({ payload }).then(() => {
+      expect(collection.length).toBe(payload)
+      expect(wrapper.findAll('li').length).toBe(payload)
       done()
     })
   })
   it ('add new element, [collection] has 13 items', (done) => {
+    const wrapper = listFactory({ collection, payload, remoteMethod, resolveResult, keyField })
     collection.push({ key: 122 })
     Vue.nextTick().then(() => {
-      expect(wrapper.findAll('li').length).toBe(13)
+      expect(wrapper.findAll('li').length).toBe(payload)
       expect(remoteMethod).toBeCalledTimes(1)
       expect(resolveResult).toBeCalledTimes(1)
       done()
     })
   })
   it ('removes element with key = 99 from [collection]', done => {
+    const wrapper = listFactory({ collection, payload, remoteMethod, resolveResult, keyField })
     expect(wrapper.findAll('li').filter(f => f.text().includes(2)).length).toBe(3)
     collection.splice(1, 1)
     Vue.nextTick().then(() => {
@@ -187,6 +276,7 @@ describe ('[CD-LIST] Collection Manipulation', () => {
     })
   })
   it ('replaces element by index', done => {
+    const wrapper = listFactory({ collection, payload, remoteMethod, resolveResult, keyField })
     expect(wrapper.findAll('li').length).toBe(collection.length)
     expect(wrapper.findAll('li').filter(li => li.text().includes(999)).length).toBe(0)
     collection.splice(3, 1, { key: 999 })
