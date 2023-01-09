@@ -23,6 +23,16 @@ const resolvePropertyClass = ({ propClass }, payload) => {
     ? propClass(payload)
     : propClass
 }
+const resolveValueClass = ({ valueClass }, payload) => {
+    return valueClass !== undefined && typeof valueClass === 'function'
+        ? valueClass(payload)
+        : valueClass
+}
+const resolveLabelClass = ({ labelClass }, payload) => {
+    return labelClass !== undefined && typeof labelClass === 'function'
+        ? labelClass(payload)
+        : labelClass
+}
 export default {
     hasDescriptor,
     propertyKey,
@@ -31,5 +41,7 @@ export default {
     isVisible,
     isEditable,
     isPropertyVisible,
-    resolvePropertyClass
+    resolvePropertyClass,
+    resolveLabelClass,
+    resolveValueClass
 }
