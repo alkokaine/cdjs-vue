@@ -9,16 +9,16 @@
     </template>
     <template v-else-if="input.select">
       <el-select class="cd-select" :placeholder="property.placeholder"
-        :remote="property.remote" :filterable="property.filterable"
-        :value="value" :disabled="disabled" :clearable="property.clearable"
+        :filterable="property.filterable" :value="value" :disabled="disabled" :clearable="property.clearable"
         :multiple="property.multiple" :collapse-tags="property.collapseTags"
         :value-key="property.valuekey" :label-key="property.labelkey"
         v-on:remove-tag="onTagRemove({ $event, value, property }, onRemove)" 
-        v-on:clear="onCellClear({ $event, property }, onClear)"
-        :remote-method="query => fetch(query, resolveOptions)">
-        <cd-list class="cd-select--options" row-class="cd-option" 
-          :list-class="['list-unstyled', property.listClass]"
-          :collection="collection" :payload="payload"
+        v-on:clear="onCellClear({ $event, property }, onClear)">
+        <cd-get-list class="cd-select--options" row-class="cd-option" 
+          :list-class="['list-unstyled', property.listClass]" :get="property.url"
+          :collection="collection" :payload="payload" :headers="property.headers"
+          :on-before="property.onBefore" :on-error="property.onError" 
+          :resolve-result="property.resolveResult" :resolve-payload="property.resolvePayload"
           :key-field="property.valuekey">
           <el-option slot-scope="{ row }" :value="row[property.valuekey]"
             :label="row[property.labelkey]" :disabled="optionDisabled(row, property.isdisabled)"
@@ -32,16 +32,16 @@
               {{ row[property.labelkey] }}
             </template>
           </el-option>
-        </cd-list>
+        </cd-get-list>
       </el-select>
     </template>
     <template v-else-if="input.autocomplete">
       <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder"
-        :value="value" :fetch-suggestions="fetch" :disabled="disabled"
+        v-model="editvalue" :fetch-suggestions="fetch(property)" :disabled="disabled"
         :clearable="property.clearable" :value-key="property.valuekey"
         :trigger-on-focus="property.triggerOnFocus"
         v-on:clear="onCellClear({ $event, property }, onClear)"
-        v-on:input="onCellChange({ $event, property }, onChange)">
+        v-on:change="onCellChange({ $event, property }, onChange)">
         <div class="cd-autocomplete-item--wrap" slot-scope="{ item }"
           v-on:click.capture="onOptionSelect({ $event, item, property }, onSelect)">
           <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item"
@@ -62,12 +62,14 @@
     </template>
     <template v-else-if="input.date">
       <el-date-picker class="cd-date" :placeholder="property.placeholder" :format="property.format" :value-format="property.valueformat"
+        :picker-options="datePickerOptions"
         :value="value" :disabled="disabled" :clearable="property.clearable"
         v-on:clear="onCellClear({ $event, property }, onClear)"
         v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
     </template>
     <template v-else-if="input.datetime">
       <el-date-picker class="cd-date-time" :placeholder="property.placeholder"
+      :picker-options="datePickerOptions"
         type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"
         v-on:clear="onCellClear({ $event, property }, onClear)"
         v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
@@ -105,7 +107,7 @@
   </div>
 </template>
 <script>
-  import CDList from './cd-list.vue'
+  import CDGetList from './cd-get-list.vue'
   import CDProps from './cd-props.vue'
   export default {
     name: 'cd-cell',
@@ -132,12 +134,14 @@
       onInput: { type: Function }
     },
     components: {
-      'cd-list': CDList,
+      'cd-get-list': CDGetList,
       'cd-props': CDProps
     },
     data (cell) {
       return {
-        collection: (cell.property.values || [])
+        collection: (cell.property.values || []),
+        editvalue: cell.value,
+        datePickerOptions: Object.assign({ firstDayOfWeek: 1 }, cell.property.pickerOptions)
       }
     },
 
@@ -244,6 +248,9 @@
   .cd-autocomplete {
     width: 100%;
   }
+  .el-autocomplete-suggestion {
+    width: unset!important;
+  }
 </style>
 <style scoped>
   input::-webkit-outer-spin-button,
@@ -268,7 +275,7 @@
   input[type=”range”]::-moz-range-track{}
 
   input[type=”range”]::-ms-track{}
-
+  
 
 
 </style>
