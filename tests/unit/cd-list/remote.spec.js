@@ -12,7 +12,7 @@ const listFactory = (propsData) => (mount(CDList, {
     default: '<div slot-scope="{ row }">{{ row }}</div>'
   }
 }))
-import keys from '@/../keys'
+
 expect.extend({ toBeArrayOfSize })
 const m_before = jest.fn((beforeconfig) => {
     return beforeconfig
