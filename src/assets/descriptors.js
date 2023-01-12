@@ -352,7 +352,22 @@ export default {
                 {
                   datafield: 'LawAddress',
                   text: 'Юридический адрес',
-                  input: 'autocomplete'
+                  input: 'autocomplete',
+                  url: 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+                  headers: keys.dadata,
+                  labelkey: 'unrestricted_value',
+                  method: 'post',
+                  resolvePayload (query, payload) {
+                    return {
+                      query: query === null ? '': query,
+                      'locations_boost': [{
+                        'kladr_id': '51'
+                      }]
+                    }
+                  },
+                  resolveResult (response, callback) {
+                    callback(response.data.suggestions.map(m => (Object.assign({ unrestricted_value: m.unrestricted_value }, m.data))))
+                  }
                 },
               ],
               propClass: 'row row-cols-2 align-items-end border border-1 border-white my-2 py-2'

@@ -6,7 +6,7 @@
         <el-form-item class="text-start cd-form-item--wrap mb-0" slot-scope="{ property, config }" :prop="property.datafield" :rules="resolveRules(property)">
           <slot :model="formobject" :property="property">
             <span slot="label" class="fw-bold cd-form--label" :class="labelClass(property)">{{ property.text }}</span>
-            <cd-cell :fetch="fetch(property)" :property="property" 
+            <cd-cell :fetch="fetch" :property="property" 
               v-model="formobject[property.datafield]" 
               :option-disabled="isOptionDisabled" 
               :input="config" :class="[inputClass(property)]"
@@ -107,8 +107,11 @@ export default {
             method: property.method,
             url: property.url,
             headers: property.headers,
+            before: property.onBefore,
+            after: property.onAfter,
+            error: property.onError,
             payload: property.resolvePayload !== undefined && typeof property.resolvePayload === 'function'
-              ? (property.filterable ? property.resolvePayload(query, formobject) : property.resolvePayload(formobject))
+              ? property.resolvePayload(query, formobject)
               : query,
             timeout: property.timeout,
           }).then((response) => {

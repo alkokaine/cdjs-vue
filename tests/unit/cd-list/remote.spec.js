@@ -1,7 +1,17 @@
 
 import fetchData from '@/common/fetch-data'
 import adapter from 'axios/lib/adapters/http'
+import keys from '@/../keys'
 import { toBeArrayOfSize } from 'jest-extended'
+import { mount } from "@vue/test-utils"
+import CDList from '@/components/cd-list'
+
+const listFactory = (propsData) => (mount(CDList, {
+  propsData,
+  scopedSlots: {
+    default: '<div slot-scope="{ row }">{{ row }}</div>'
+  }
+}))
 import keys from '@/../keys'
 expect.extend({ toBeArrayOfSize })
 const m_before = jest.fn((beforeconfig) => {
@@ -43,10 +53,7 @@ describe('remote', () => {
         error: m_error,
         after: m_after,
         before: m_before,
-        headers: {
-            'X-RapidAPI-Key': '0d6efbd8a7msh8fcd0fa4c7e36a4p15464ejsn34c8169d4000',
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-          }
+        headers: keys.geo
     }
 
     it ('fetching data', done => {
@@ -74,4 +81,9 @@ describe('remote', () => {
         fetchData(geodb).then(callback)
     }, 10000)
     
+    // it ('[cd-list] immediate loaded', done => {
+    //   const list = listFactory({
+
+    //   })
+    // }, 10000)
 })

@@ -7,7 +7,9 @@
         </slot>
       </cd-props>
       <div v-else class="cd-property" :data-property="property.datafield" :class="resolvePropertyClass(property)">
-        <slot :property="property" :parent="parent" :config="config" :value="payload[property.datafield]"></slot>
+        <div :class="resolveValueClass(property)">
+          <slot :property="property" :parent="parent" :config="config" :value="payload[property.datafield]"></slot>
+        </div>
       </div>
     </template>
     <div v-if="$slots.content" slot="content">
@@ -34,8 +36,11 @@ export default {
     }
   },
   computed: {
-    resolvePropertyClass (vm) {
-      return (property) => decorator.resolvePropertyClass(property, vm.payload)
+    resolvePropertyClass ({ payload }) {
+      return (property) => decorator.resolvePropertyClass(property, payload)
+    },
+    resolveValueClass({ payload }) {
+      return (property) => decorator.resolveValueClass(property, payload)
     },
     propertyConfig ({ isPropConfig, propConfig }) {
       return (property) => (Object.assign({ hasDescriptor: decorator.hasDescriptor(property) }, isPropConfig ? propConfig(property) : {}))

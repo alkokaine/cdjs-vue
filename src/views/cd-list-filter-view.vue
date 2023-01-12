@@ -1,6 +1,6 @@
 <template>
   <div class="cd-list-filter">
-    <cd-list name="countries" :collection="collection" :payload="payload" key-field="code" :resolve-result="resolveResult" :remote-method="getData">
+    <cd-list-base name="countries" :collection="collection" :payload="payload" key-field="code" :resolve-result="resolveResult" :remote-method="getData">
       <cd-form slot="header" :payload="payload" :descriptor="descriptor" :sync="true"></cd-form>
       <div class="country" slot-scope="{ row }">
         <span>{{ row }}</span><el-button type="text" @click="showCountryDetails(row)">Дополнительно</el-button>
@@ -23,7 +23,7 @@
             <p>Всего регионов {{ country.numRegions }}</p>
           </div>
           <cd-form name="regions-filter" :payload="regionPayload" :descriptor="descriptor" :sync="true">
-            <cd-list slot="footer" v-if="showDialog" name="regions" :collection="regions" key-field="wikiDataId" :payload="regionPayload" :resolve-result="resolveRegions" :remote-method="getRegions" list-class="row list-unstyled" :row-class="resolveRegionClass">
+            <cd-list-base slot="footer" v-if="showDialog" name="regions" :collection="regions" key-field="wikiDataId" :payload="regionPayload" :resolve-result="resolveRegions" :remote-method="getRegions" list-class="row list-unstyled" :row-class="resolveRegionClass">
               <div slot-scope="{ row }">
                 <div @click="getRegionDetails($event, row)">{{ row.name }}</div>
                 <cd-props v-if="isregiondetails(row)" class="container-sm text-start border region-details" :payload="region" :descriptor="regiondetails">
@@ -36,7 +36,7 @@
                       <span>{{ value }}</span>
                     </template>
                   </div>
-                  <cd-list v-if="showCityList" class="region-cities mx-3" slot="content" key-field="id" name="cities" :remote-method="getCities" :payload="cityPayload" :resolve-result="resolveCities" :collection="cities" list-class="list-unstyled row mx-auto" row-class="city-tile m-2 p-2 border border-1 border-white bg-white rounded-3">
+                  <cd-list-base v-if="showCityList" class="region-cities mx-3" slot="content" key-field="id" name="cities" :remote-method="getCities" :payload="cityPayload" :resolve-result="resolveCities" :collection="cities" list-class="list-unstyled row mx-auto" row-class="city-tile m-2 p-2 border border-1 border-white bg-white rounded-3">
                     <cd-form slot="header" :payload="cityPayload" :descriptor="descriptor" :sync="true">
                       <el-pagination slot="footer" :current-page="cityPage" :total="totalcities" :layout="layout" :page-size="cityPayload.limit" v-on:current-change="onPageChange($event, cityPayload)"></el-pagination>
                     </cd-form>
@@ -51,17 +51,17 @@
                         </cd-props>
                       </div>
                     </cd-props>
-                  </cd-list>  
+                  </cd-list-base>  
                 </cd-props>
               </div>
               <div slot="footer">
                 <el-pagination :current-page="currentPage" :total="country.numRegions" :layout="layout" :page-size="regionPayload.limit" v-on:current-change="onPageChange($event, regionPayload)"></el-pagination>
               </div>
-            </cd-list>
+            </cd-list-base>
           </cd-form>
         </el-dialog>
       </div>
-    </cd-list> 
+    </cd-list-base> 
   </div>
 </template>
 
@@ -70,14 +70,15 @@ import keys from '../../keys'
 import adapter from 'axios/lib/adapters/http'
 import fetchData from '@/common/fetch-data'
 import CDForm from '@/components/cd-form'
-import CDList from '@/components/cd-list'
+import CDListBase from '@/components/cd-list-base.vue'
 import CDProps from '@/components/cd-props'
 import AxiosError from 'axios/lib/core/AxiosError'
+import CdListBase from '@/components/cd-list-base.vue'
 
 export default {
   name: 'cd-list-filter',
   components: {
-    'cd-list': CDList,
+    'cd-list-base': CDListBase,
     'cd-form': CDForm,
     'cd-props': CDProps
   },

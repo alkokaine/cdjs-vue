@@ -1,5 +1,5 @@
 <template>
-  <cd-list class="cd-tabs container" :class="{ 'row': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
+  <cd-list-base class="cd-tabs container" :class="{ 'row': isCol, 'col': isRow}" :collection="tabs" :key-field="tabKey" 
     :list-class="['cd-tabs--wrap list-unstyled nav nav-tabs border-0 px-0', tabListClass,
       { 
         'flex-column w-auto': isCol, 
@@ -42,15 +42,15 @@
         <slot name="content"></slot>
       </div>
     </template>
-  </cd-list>
+  </cd-list-base>
 </template>
 
 <script>
-import CDList from './cd-list.vue'
+import CDListBase from './cd-list-base.vue'
 export default {
   name: 'cd-tabs',
   components: {
-    'cd-list': CDList
+    'cd-list-base': CDListBase
   },
   props: {
     tabListClass: { type: [String, Object, Array], description: 'CSS классы для списка вкладок' },
