@@ -6,7 +6,7 @@
       <span slot="header">{{ tabCaption(tab) }}</span>
     </div>
     <div slot="content" class="p-2 m-2">
-      <cd-list :collection="selectedDays" key-field="daykey" list-class="list-unstyled" row-class="month-day--details row">
+      <cd-list-base :collection="selectedDays" key-field="daykey" list-class="list-unstyled" row-class="month-day--details row">
         <cd-day slot-scope="{ row }" :day="getDay(row)">
           <div class="cd-day--details fw-bold" slot="header">
             {{ tabCaption(row) }}
@@ -15,7 +15,7 @@
             <slot :day="day"></slot>
           </div>
         </cd-day>
-      </cd-list>
+      </cd-list-base>
     </div>
   </cd-tabs>
 </template>
@@ -23,14 +23,15 @@
 <script>
 import CDTabs from '@/components/cd-tabs.vue'
 import CDDay from '@/components/cd-day.vue'
-import CDList from '@/components/cd-list.vue'
+import CDListBase from './cd-list-base.vue'
 const formatter = Intl.DateTimeFormat('ru-RU')
 export default {
   name: 'cd-day-tabs',
   components: {
     'cd-tabs': CDTabs,
     'cd-day': CDDay,
-    'cd-list': CDList
+    'cd-list-base': CDListBase,
+
   },
   props: {
     days: { type: Array, required: true, description: 'Коллекция дней' },

@@ -1,5 +1,5 @@
 <template>
-  <cd-list :collection="collection" :key-field="keyField" list-class="list-unstyled row" row-class="col">
+  <cd-list-base :collection="collection" :key-field="keyField" list-class="list-unstyled row" row-class="col">
     <div v-if="$slots.header" slot="header">
       <slot name="header"></slot>
     </div>
@@ -13,15 +13,15 @@
         <slot :li="row"></slot>
       </template>
     </template>
-  </cd-list>
+  </cd-list-base>
 </template>
 
 <script>
-import CDList from '@/components/cd-list.vue'
+import CDListBase from '@/components/cd-list-base.vue'
 export default {
   name: 'cd-rec-list',
   components: {
-    'cd-list': CDList
+    'cd-list-base': CDListBase
   },
   props: {
     collection: { type: Array, description: 'Содержимое списка' },

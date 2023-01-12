@@ -4,7 +4,7 @@
       <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
         <h3 slot="header">CD-MONTH</h3>
       </cd-prop-editor>
-      <cd-list slot-scope="{ day }" :show-items="!settings.compact" :collection="dayContent(day)" key-field="_id" 
+      <cd-list-base slot-scope="{ day }" :show-items="!settings.compact" :collection="dayContent(day)" key-field="_id" 
         class="py-2 match-list" list-class="list-unstyled my-0" :row-class="['match-short py-2 mx-2', { 'w-auto': !isSchedule }]">
         <div slot-scope="{ row }" :class="['row', { 'justify-content-center' : isSchedule }]">
           <template v-if="isSchedule">
@@ -29,7 +29,7 @@
             <el-button type="text" size="mini" v-on:click.capture.stop="createEvent($event, day)">Добавить</el-button>
           </div>
         </template>
-      </cd-list>
+      </cd-list-base>
       <el-dialog slot="month-footer" :visible="isDialog">
         <cd-form v-if="isDialog" :descriptor="eventDescriptor" :payload="newEvent" :on-submit="onSubmit" :on-reset="onReset" :show-controls="true">
           <div slot="header" slot-scope="{ payload }">{{ payload }}</div>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import CDList from '@/components/cd-list.vue'
+import CDListBase from '@/components/cd-list-base.vue'
 import CDMonth from '@/components/cd-month.vue'
 import CDForm from '@/components/cd-form.vue'
 import MatchInfo from './match-info.vue'
@@ -54,7 +54,7 @@ import Vue from 'vue'
 export default {
   components: {
     'cd-month': CDMonth,
-    'cd-list': CDList,
+    'cd-list-base': CDListBase,
     'cd-prop-editor': CDPropEditor,
     'match-info': MatchInfo,
     'cd-form': CDForm
