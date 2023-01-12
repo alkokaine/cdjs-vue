@@ -1,5 +1,5 @@
 <template>
-  <cd-list
+  <cd-list-base
     :collection="collection"
     :key-field="keyField"
     list-class="list-unstyled row"
@@ -26,15 +26,15 @@
         <slot :li="row" />
       </template>
     </template>
-  </cd-list>
+  </cd-list-base>
 </template>
 
 <script>
-import CDList from '@/components/cd-list.vue'
+import CDListBase from '@/components/cd-list-base.vue'
 export default {
   name: 'CdRecList',
   components: {
-    'cd-list': CDList
+    'cd-list-base': CDListBase
   },
   props: {
     collection: { type: Array, description: 'Содержимое списка' },
