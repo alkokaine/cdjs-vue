@@ -12,11 +12,13 @@ function noTransform (response, headers) {
 
 export default function (config) {
   const _transform = config.responseType === 'text' ? noTransform : undefined
+  
   const _config = {
     method: config.method,
     adapter: config.adapter,
     responseType: (config.responseType === undefined ? 'json' : config.responseType),
-    params: config.payload,
+    params: config.method === 'get' ? config.payload : undefined,
+    data: config.method === 'post' ? config.payload : undefined,
     headers: config.headers,
     timeout: (isNaN(config.timeout) ? 0 : (+config.timeout)),
     transformResponse: _transform

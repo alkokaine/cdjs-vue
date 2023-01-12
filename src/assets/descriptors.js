@@ -4,7 +4,8 @@ import adapter from 'axios/lib/adapters/http'
 const generalPropClass = (payload) => {
   if (payload.BIC === '014705901') return 'cd-custom-property-class'
 }
-
+import matchInfo from '@/assets/match-info'
+import keys from '@/../keys'
 export default {
   objectDescriptor: [
     {
@@ -349,7 +350,22 @@ export default {
                 {
                   datafield: 'LawAddress',
                   text: 'Юридический адрес',
-                  input: 'autocomplete'
+                  input: 'autocomplete',
+                  url: 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+                  headers: keys.dadata,
+                  labelkey: 'unrestricted_value',
+                  method: 'post',
+                  resolvePayload (query, payload) {
+                    return {
+                      query: query === null ? '': query,
+                      'locations_boost': [{
+                        'kladr_id': '51'
+                      }]
+                    }
+                  },
+                  resolveResult (response, callback) {
+                    callback(response.data.suggestions.map(m => (Object.assign({ unrestricted_value: m.unrestricted_value }, m.data))))
+                  }
                 },
               ],
               propClass: 'row row-cols-2 align-items-end border border-1 border-white my-2 py-2'
@@ -430,13 +446,14 @@ export default {
     textarea: 4,
     checkbox: false,
     date: new Date(Date.now()),
-    datetime: 7,
+    datetime: new Date(Date.now()),
     email: 'foo@bar.net',
     radio: 'no',
     tel: '+791113121488',
     url: 'bar.net',
     text: 'aaa',
-    file: null
+    file: null,
+    team: [],
   },
   inputs: [
     {
@@ -456,6 +473,19 @@ export default {
           label: 'second'
         }
       ]
+    },
+    {
+      input: 'select',
+      datafield: 'team',
+      text: 'team',
+      placeholder: 'team',
+      valuekey: 'id',
+      collapseTags: true,
+      clearable: true,
+      filterable: true,
+      values: matchInfo.teams,
+      labelkey: 'name_en',
+      multiple: true,
     },
     {
       input: 'select',
@@ -490,7 +520,7 @@ export default {
       text: 'autocomplete',
       labelkey: 'name',
       valuekey: 'wikiDataId',
-      triggerOnFocus: true,
+      triggerOnFocus: false,
       url: 'https://wft-geo-db.p.rapidapi.com/v1/geo/countries',
       //adapter: adapter,
       method: 'get',
@@ -534,7 +564,9 @@ export default {
     {
       input: 'date',
       datafield: 'date',
-      text: 'date'
+      text: 'date',
+      format: 'dd MMMM yyyy',
+      valueformat: 'timestamp'
     },
     {
       input: 'datetime',

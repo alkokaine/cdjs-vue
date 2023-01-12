@@ -5,19 +5,20 @@
         class="el-input__inner cd-input__inner" 
         :min="property.min" :max="property.max" 
         :value="value" :disabled="disabled"
-        :clearable="property.clearable"
         @change="onCellChange({ $event, property }, onChange)"/>
     </template>
     <template v-else-if="input.select">
       <el-select class="cd-select" :placeholder="property.placeholder"
-        :remote="property.remote" :filterable="property.filterable"
-        :value="value" :disabled="disabled" :clearable="property.clearable"
+        :filterable="property.filterable" :value="value" :disabled="disabled" :clearable="property.clearable"
         :multiple="property.multiple" :collapse-tags="property.collapseTags"
         :value-key="property.valuekey" :label-key="property.labelkey"
-        :remote-method="query => fetch(query, resolveOptions)">
-        <cd-list class="cd-select--options" row-class="cd-option" 
-          :list-class="['list-unstyled', property.listClass]"
-          :collection="collection" :payload="payload"
+        v-on:remove-tag="onTagRemove({ $event, value, property }, onRemove)" 
+        v-on:clear="onCellClear({ $event, property }, onClear)">
+        <cd-get-list class="cd-select--options" row-class="cd-option" 
+          :list-class="['list-unstyled', property.listClass]" :get="property.url"
+          :collection="collection" :payload="payload" :headers="property.headers"
+          :on-before="property.onBefore" :on-error="property.onError" 
+          :resolve-result="property.resolveResult" :resolve-payload="property.resolvePayload"
           :key-field="property.valuekey">
           <el-option slot-scope="{ row }" :value="row[property.valuekey]"
             :label="row[property.labelkey]" :disabled="optionDisabled(row, property.isdisabled)"
@@ -31,14 +32,16 @@
               {{ row[property.labelkey] }}
             </template>
           </el-option>
-        </cd-list>
+        </cd-get-list>
       </el-select>
     </template>
     <template v-else-if="input.autocomplete">
       <el-autocomplete class="cd-autocomplete" :placeholder="property.placeholder"
-        :value="value" :fetch-suggestions="fetch" :disabled="disabled"
+        v-model="editvalue" :fetch-suggestions="fetch(property)" :disabled="disabled"
         :clearable="property.clearable" :value-key="property.valuekey"
-        :trigger-on-focus="property.triggerOnFocus">
+        :trigger-on-focus="property.triggerOnFocus"
+        v-on:clear="onCellClear({ $event, property }, onClear)"
+        v-on:change="onCellChange({ $event, property }, onChange)">
         <div class="cd-autocomplete-item--wrap" slot-scope="{ item }"
           v-on:click.capture="onOptionSelect({ $event, item, property }, onSelect)">
           <cd-props v-if="property.slotdescriptor" class="cd-autocomplete--item"
@@ -58,12 +61,18 @@
       <el-checkbox class="cd-checkbox" :value="value" :disabled="disabled" v-on:change="onCellChange({ $event, property }, onChange)"></el-checkbox>
     </template>
     <template v-else-if="input.date">
-      <el-date-picker class="cd-date" :placeholder="property.placeholder"
-        :value="value" :disabled="disabled" :clearable="property.clearable"></el-date-picker>
+      <el-date-picker class="cd-date" :placeholder="property.placeholder" :format="property.format" :value-format="property.valueformat"
+        :picker-options="datePickerOptions"
+        :value="value" :disabled="disabled" :clearable="property.clearable"
+        v-on:clear="onCellClear({ $event, property }, onClear)"
+        v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
     </template>
     <template v-else-if="input.datetime">
       <el-date-picker class="cd-date-time" :placeholder="property.placeholder"
-        type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"></el-date-picker>
+      :picker-options="datePickerOptions"
+        type="datetime" :value="value" :disabled="disabled" :clearable="property.clearable"
+        v-on:clear="onCellClear({ $event, property }, onClear)"
+        v-on:input="onCellChange({ $event, property }, onChange)"></el-date-picker>
     </template>
     <template v-else-if="input.email">
       <input type="email" class="el-input__inner cd-input__inner" 
@@ -98,7 +107,7 @@
   </div>
 </template>
 <script>
-  import CDList from './cd-list.vue'
+  import CDGetList from './cd-get-list.vue'
   import CDProps from './cd-props.vue'
   export default {
     name: 'cd-cell',
@@ -119,16 +128,20 @@
       },
       fetch: { type: Function },
       onSelect: { type: Function },
+      onClear: { type: Function },
+      onRemove: { type: Function },
       onChange: { type: Function },
       onInput: { type: Function }
     },
     components: {
-      'cd-list': CDList,
+      'cd-get-list': CDGetList,
       'cd-props': CDProps
     },
     data (cell) {
       return {
-        collection: (cell.property.values || [])
+        collection: (cell.property.values || []),
+        editvalue: cell.value,
+        datePickerOptions: Object.assign({ firstDayOfWeek: 1 }, cell.property.pickerOptions)
       }
     },
 
@@ -138,6 +151,14 @@
       }
     },
     methods: {
+      onCellClear ({ property }, callback) {
+        if (property.multiple) {
+          this.$emit('input', [])
+        } else {
+          this.$emit('input', null)
+        }
+        if (callback !== undefined && typeof callback === 'function') callback(property)
+      },
       onCellChange ({ property, $event }, callback ) {
         if (['range', 'number'].indexOf(property.input) != -1 && $event instanceof Event) {
           try {
@@ -151,10 +172,12 @@
         else if (['checkbox'].indexOf(property.input) != -1) {
           this.$emit('input', $event)
         }
+        else if (['date', 'datetime'].indexOf(property.input) != -1) {
+          this.$emit('input', $event)
+        }
         else if ([undefined, 'textarea', 'text', 'email', 'tel', 'url'].indexOf(property.input) != -1 && $event instanceof Event) {
           this.$emit('input', $event.target.value)
         }
-        // this.$emit('input', $event)
       },
       onCellInput ({ property, $event }, callback) {
       },
@@ -165,8 +188,24 @@
           else 
             this.$emit('input', item[property.labelkey])
         } else {
-          this.$emit('input', item[property.valuekey]) 
+          if (property.multiple) {
+            try {
+              const value = this.value
+              const fi = value.findIndex(i => i === item[property.valuekey])
+              if (fi < 0) this.$emit('input', value.concat([item[property.valuekey]]))
+              else this.$emit('input', value.filter(v => v !== item[property.valuekey]))
+            } catch (err) {
+              this.$emit('input', [item[property.valuekey]])
+            }
+          } else {
+            this.$emit('input', item[property.valuekey]) 
+          }
+          
         }
+        if (callback !== undefined && typeof callback === 'function') callback(property, item)
+      },
+      onTagRemove ({ $event, value, property }, callback) {
+        this.$emit('input', value.filter(v => v !== $event))
       },
       resolveOptions (data) {
         this.collection = data
@@ -209,6 +248,9 @@
   .cd-autocomplete {
     width: 100%;
   }
+  .el-autocomplete-suggestion {
+    width: unset!important;
+  }
 </style>
 <style scoped>
   input::-webkit-outer-spin-button,
@@ -233,7 +275,7 @@
   input[type=”range”]::-moz-range-track{}
 
   input[type=”range”]::-ms-track{}
-
+  
 
 
 </style>

@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --target lib --dest dist/cdjs --name cdjs ./src/index.js"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
@@ -16,7 +17,7 @@
     "bootstrap-icons": "^1.9.1",
     "core-js": "^3.8.3",
     "currency-codes": "^2.1.0",
-    "element-ui": "^2.15.8",
+    "element-ui": "2.15.6",
     "moment": "^2.29.4",
     "selenium-webdriver": "^4.7.1",
     "vue": "^2.7.8",

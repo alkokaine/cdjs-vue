@@ -6,14 +6,16 @@
         <el-form-item class="text-start cd-form-item--wrap mb-0" slot-scope="{ property, config }" :prop="property.datafield" :rules="resolveRules(property)">
           <slot :model="formobject" :property="property">
             <span slot="label" class="fw-bold cd-form--label" :class="labelClass(property)">{{ property.text }}</span>
-            <cd-cell :fetch="fetch(property)" :property="property" 
+            <cd-cell :fetch="fetch" :property="property" 
               v-model="formobject[property.datafield]" 
               :option-disabled="isOptionDisabled" 
               :input="config" :class="[inputClass(property)]"
               :payload="resolvePayload(property)"
-              :on-select="onSelect(property)"
-              :on-change="onChange(property)"
-              :on-input="onInput(property)">
+              :on-select="onSelect"
+              :on-remove="onRemove"
+              :on-clear="onClear"
+              :on-change="onChange"
+              :on-input="onInput">
             </cd-cell>
           </slot>
         </el-form-item>
@@ -70,9 +72,19 @@ export default {
         return inputClass
       }
     },
+    onRemove ({ formobject }) {
+      return ({ onRemove }, option) => {
+        if (onRemove !== undefined && typeof onRemove === 'function') onRemove(option, formobject)
+      }
+    },
+    onClear ({ formobject }) {
+      return ({ onClear }) => {
+        if (onClear !== undefined && typeof onClear === 'function') onClear(formobject)
+      }
+    },
     onSelect ({ formobject }) {
-      return ({ onSelect }) => {
-        if (onSelect !== undefined && typeof onSelect === 'function') onSelect(formobject)
+      return ({ onSelect }, option) => {
+        if (onSelect !== undefined && typeof onSelect === 'function') onSelect(option, formobject)
       }
     },
     onChange ({ formobject }) {
@@ -95,8 +107,11 @@ export default {
             method: property.method,
             url: property.url,
             headers: property.headers,
+            before: property.onBefore,
+            after: property.onAfter,
+            error: property.onError,
             payload: property.resolvePayload !== undefined && typeof property.resolvePayload === 'function'
-              ? (property.filterable ? property.resolvePayload(query, formobject) : property.resolvePayload(formobject))
+              ? property.resolvePayload(query, formobject)
               : query,
             timeout: property.timeout,
           }).then((response) => {
