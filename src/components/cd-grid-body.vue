@@ -48,9 +48,12 @@
   import CDRow from './cd-row'
   import Vue from 'vue'
   import { Loading } from 'element-ui'
+  import collectionBase from '@/common/collection-base'
+  import collectionDecorator from '@/common/collection-decorator'
   Vue.use(Loading)
   export default {
     name: 'cd-grid-body',
+    mixins: [collectionBase, collectionDecorator],
     components: {
       'cd-row': CDRow
     },
@@ -59,13 +62,9 @@
     },
     props: {
       rowKey: { type: Function },
-      collection: { type: Array, required: true },
       columns: { type: Array, required: true },
       rowDetails: { type: Boolean, default: false },
-      keyField: { type: String, required: true },
       selectRows: { type: Boolean },
-      isLoading: { type: Boolean, default: false },
-      rowClass: { type: [String, Object, Array, Function], default: 'cd-body-row--base' },
       cellClass: { type: [String, Object, Array, Function], default: 'cd-grid-body--cell-base' }
     },
     data (body) {

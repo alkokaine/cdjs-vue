@@ -4,10 +4,10 @@
     <span slot-scope="{ row }">
       {{ row.name }}
     </span>
-    <template v-if="error.code" slot="error" slot-scope="{ config, fetch }">
+    <template v-if="hasError" slot="error" slot-scope="{ config, fetch }">
       <button v-on:click="fetch(config)">Получить</button> 
     </template>
-    <template v-if="more && !error.code" slot="footer">
+    <template v-if="more" slot="footer">
       <button v-on:click="newPayload($event, page)">Получить</button> 
     </template>
   </cd-get-list>
@@ -38,6 +38,9 @@ export default {
     }
   },
   computed: {
+    hasError ({ error }) {
+      return error.code !== undefined
+    },
     get ({ country }) {
       return `https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${country}/regions`
     },
