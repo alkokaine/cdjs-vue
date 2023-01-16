@@ -1,6 +1,6 @@
 <template>
   <div class="cd-month-view">
-    <cd-month v-if="matches.length" :select-weekdays="settings.selectWeekdays" :date="date" :schedule="matches" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation" :multiple="settings.multiple">
+    <cd-month v-if="matches.length" :select-weekdays="settings.selectWeekdays" :date="date" :compact="settings.compact" :compareDate="compareDate" :mode="settings.mode" :orientation="settings.orientation" :multiple="settings.multiple">
       <cd-prop-editor slot="month-header" :payload="settings" :descriptor="descriptor">
         <h3 slot="header">CD-MONTH</h3>
       </cd-prop-editor>
@@ -61,6 +61,7 @@ export default {
   },
   data (view) {
     return {
+      headers: keys.qatar2022,
       matches: [],
       settings: {
         compact: false,
