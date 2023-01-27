@@ -1,7 +1,7 @@
 <template>
-  <cd-grid class="cd-days--grid container" :collection="weeks" :descriptor="descriptor" key-field="week" :class="[{ 'w-auto': compact }]" :small="compact">
-    <template slot-scope="{ header, row, property }">
-      <div v-if="header" class="cd-weekday--header">
+  <cd-grid class="cd-days--grid container" :collection="weeks" :descriptor="descriptor" key-field="week" :class="[{ 'w-auto': compact }]" :small="compact" :headers="headers" :get="get">
+    <template slot="header" slot-scope="{ property }">
+      <div class="cd-weekday--header">
         <template v-if="selectWeekdays">
           <el-checkbox :label="property.text"></el-checkbox>
         </template>
@@ -9,10 +9,12 @@
           {{ property.text }}
         </template>
       </div>
-      <div v-else-if="row[property.datafield]" class="cd-day--grid-cell">
-        <cd-day class="cd-grid--day" :day="getDay(row[property.datafield])" 
+    </template>
+    <template slot-scope="{ row, property }">
+      <div v-if="row && property" class="cd-day--grid-cell">
+        <cd-day v-if="row[property.datafield]" class="cd-grid--day" :day="getDay(row[property.datafield])" 
           v-on:click.native="selectDay($event, row[property.datafield], row)">
-          <span slot="header"></span>
+          <span slot="header">{{ row[property.datafield] }}</span>
           <div slot-scope="{ day }" class="cd-day--cell-content text-center">
             <slot :day="day" :week="row"></slot>
           </div>
@@ -23,7 +25,7 @@
 </template>
 <script>
 import CDGrid from '@/components/cd-grid.vue'
-
+import collection from '@/common/collection'
 import { weekDescriptor } from '@/common/month-days'
 import CdDay from './cd-day.vue'
 
@@ -31,8 +33,9 @@ export default {
   name: 'cd-day-grid',
   components: {
     'cd-grid': CDGrid,
-    CdDay
+    'cd-day': CdDay
   },
+  mixins: [collection],
   props: {
     selectWeekdays: { type: Boolean, default: false, description: 'Показывать ли чекбоксы у дней недели' },
     compact: { type: Boolean, default: false, description: 'Компактный режим' },

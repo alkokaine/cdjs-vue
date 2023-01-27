@@ -3,7 +3,7 @@
     <slot name="month-header"></slot>
     <template v-if="ischedule">
       <cd-day-grid class="cd-month" key-field="week" :compact="compact"
-        :week-range="weekRange" :days="keyedDays" :compare-date="compareDate" :select-day="onDaySelect"
+        :week-range="weekRange" :days="keyedDays" :compare-date="compareDate" :select-day="onDaySelect" :headers="headers"
         :select-weekdays="selectWeekdays" :multiple="multiple"> 
         <div slot-scope="{ day, week }">
           <slot :day="day" :week="week"></slot>
@@ -27,14 +27,14 @@ import { createDate, weekdays, prevMonthDays } from '@/common/month-days'
 import fromRange from '@/common/utils'
 import CDDayGrid from '@/components/cd-day-grid.vue'
 import CDDayTabs from '@/components/cd-day-tabs.vue'
-
+import collection from '@/common/collection'
 export default {
   name: 'cd-month',
   components: {
     'cd-day-grid': CDDayGrid,
     'cd-day-tabs': CDDayTabs
-    // 'el-checkbox': Checkbox
   },
+  mixins: [collection],
   props: {
     mode: { 
       type: String, 
@@ -99,17 +99,16 @@ export default {
     maxWeekNumber ({ weekNumbers }) {
       return Math.max(...weekNumbers)
     },
-    weekRange ({ minWeekNumber, maxWeekNumber }) {
-      return fromRange(minWeekNumber, maxWeekNumber, 1)
+    weekRange ({ minWeekNumber, maxWeekNumber, weekNumbers }) {
+      return fromRange(minWeekNumber, maxWeekNumber, 1).filter(w => weekNumbers.indexOf(w) !== -1)
     },
    
     checkboxid () {
         return ({ day }) => `wd_${day}`
     },
-    isChecked () {
-      const calendar = this
+    isChecked ({ selectedWeekdays }) {
       return (row) => {
-        return calendar.selectedWeekdays.indexOf(row.day) >= 0
+        return selectedWeekdays.indexOf(row.day) >= 0
       }
     },
     weekdayClass ({ selectedWeekdays, sixDays }) {
@@ -122,10 +121,9 @@ export default {
         }]
       }
     },
-    isDaySelected () {
-      const calendar = this
+    isDaySelected ({ selectedDays }) {
       return ({ row }) => {
-        return calendar.selectedDays.findIndex(d => d.date.date() === row.date.date() && d.date.month() === row.date.month()) >= 0
+        return selectedDays.findIndex(d => d.date.date() === row.date.date() && d.date.month() === row.date.month()) >= 0
       }
     }
   }
