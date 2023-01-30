@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/home-view.vue'
 import CdPropsView from '../views/cd-props-view.vue'
 import CDListView from '../views/cd-list-view.vue'
-
+import CDListMil from '../views/cd-list-file-mil.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,6 +21,11 @@ const routes = [
     path: '/cd-list',
     name: 'cd-list',
     component: CDListView
+  },
+  {
+    path: '/cd-mil',
+    name: 'cd-mil',
+    component: CDListMil
   }
 ]
 
