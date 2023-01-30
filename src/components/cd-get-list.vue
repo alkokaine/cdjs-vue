@@ -11,13 +11,6 @@
     </template>
     <li v-if="error.code" slot="pre" class="error-content position-absolute mx-auto">
       <slot name="error" :error="error" :config="config" :fetch="loadData">
-        <!-- <div class="error-info position-relative mx-auto p-3">
-          <a href="#">
-            <cd-props :payload="error" :descriptor="errorDescriptor" v-on:click.native="loadData(config)">
-              <span slot-scope="{ value }">{{ value }}</span>
-            </cd-props>
-          </a>
-        </div> -->
       </slot>
     </li>
     <template slot="footer">
