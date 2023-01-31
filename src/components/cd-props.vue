@@ -1,5 +1,8 @@
 <template>
   <cd-props-base :descriptor="descriptor" :payload="payload" :owner="owner" :config="propertyConfig">
+    <template v-if="$slots.header" slot="text">
+      <slot name="header"></slot>
+    </template>
     <template slot-scope="{ property, config, parent }">
       <cd-props v-if="config.hasDescriptor" :descriptor="property.descriptor" :payload="payload" :owner="property" :prop-config="propConfig">
         <slot slot-scope="child" :property="child.property" :value="child.value" :parent="property" :config="child.config">
