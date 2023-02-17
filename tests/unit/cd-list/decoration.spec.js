@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils"
-import CDList from '@/components/cd-list'
+import CDListBase from '@/components/cd-list'
 import Vue from "vue"
-const listFactory = (propsData) => (mount(CDList, {
+const listFactory = (propsData) => (mount(CDListBase, {
   propsData,
   scopedSlots: {
     default: '<div slot-scope="{ row }">{{ row }}</div>'

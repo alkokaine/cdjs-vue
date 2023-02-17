@@ -4,9 +4,9 @@ import adapter from 'axios/lib/adapters/http'
 import keys from '@/../keys'
 import { toBeArrayOfSize } from 'jest-extended'
 import { mount } from "@vue/test-utils"
-import CDList from '@/components/cd-list'
+import CDGetList from '@/components/cd-get-list'
 
-const listFactory = (propsData) => (mount(CDList, {
+const listFactory = (propsData) => (mount(CDGetList, {
   propsData,
   scopedSlots: {
     default: '<div slot-scope="{ row }">{{ row }}</div>'

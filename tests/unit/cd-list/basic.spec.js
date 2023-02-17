@@ -1,9 +1,9 @@
 import { mount } from "@vue/test-utils"
 import utils from '@/common/cd-vue-utils'
-import CDList from '@/components/cd-list'
+import CDListBase from '@/components/cd-list-base'
 import Vue from "vue"
 console.log(utils)
-const listFactory = (propsData, slots) => (mount(CDList, {
+const listFactory = (propsData, slots) => (mount(CDListBase, {
   propsData,
   slots
 }))
@@ -40,7 +40,7 @@ describe('[CD-LIST] Basics', () => {
   const consoleErrorSpy = jest.spyOn(console, 'error')
   const emptyList = listFactory({})
   it ('[cd-list] has described properties', done => {
-    expect(utils.isComponentDescribed(CDList)).toBe(true)
+    expect(utils.isComponentDescribed(CDListBase)).toBe(true)
     done()
   })
   it ('screams about required properties', (done) => {
