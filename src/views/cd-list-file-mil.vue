@@ -1,10 +1,9 @@
 <template>
-  <cd-list-base class="container" :get="url" :collection="pagesLoaded" key-field="href" list-class="list-unstyled">
-    <input slot="header" v-model.lazy="url">
-    <cd-get-list slot-scope="{ row }" :get="row.href" :collection="row.links" key-field="href" list-class="list-unstyled row row-cols-6" 
-      row-class="border border-1 m-3 p-3" :resolve-result="resolveLinks" :on-error="onError" :error="error">
+  <cd-list-base class="container mb-5" :collection="pagesLoaded" key-field="href" list-class="list-unstyled">
+    <cd-get-list class="px-4" slot-scope="{ row }" :get="row.href" :collection="row.links" key-field="href" list-class="list-unstyled row row-cols-6" 
+      row-class="border border-1 m-2" :resolve-result="resolveLinks" :on-error="onError" :error="error">
       <div :id="row.innerText" slot="header">Страница {{ row.innerText }}</div>
-      <notice-file class="my-auto" slot-scope="{ row }" :file="row"></notice-file>  
+      <notice-file class="m-1" slot-scope="{ row }" :file="row" :format="bytes"></notice-file>  
     </cd-get-list>
     <cd-list-base slot="footer" :collection="pages" class="position-fixed bottom-0 border border-1 mt-2 bg-light" key-field="href" list-class="list-unstyled row" row-class="w-auto">
       <template slot-scope="{ row }">
@@ -30,7 +29,14 @@ import CDListBase from '@/components/cd-list-base.vue'
 import NoticeFile from './notice-file.vue'
 import { AxiosError } from 'axios'
 const replaceMil = (text) => (text.replace('http://', 'https://').replace('https://structure.mil.ru', '/mil'))
-
+const getBytes = function prettySize(bytes, separator = '', postFix = '') {
+    if (bytes) {
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.min(parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10), sizes.length - 1);
+        return `${(bytes / (1024 ** i)).toFixed(i ? 1 : 0)}${separator}${sizes[i]}${postFix}`;
+    }
+    return 'n/a';
+}
 const domParser = new DOMParser()
 export default {
   name: 'file-list',
@@ -94,7 +100,8 @@ export default {
     },
     getPage (event, { row }) {
       this.pagesLoaded.push(row)
-    }
+    },
+    bytes: (value) => getBytes(value, ' ')
   }
 }
 </script>
